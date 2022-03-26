@@ -23,7 +23,7 @@ public class OpponentActions : MonoBehaviour
     public void AgentAttack(Vector3 dest, NavMeshAgent agent)
     {
         Debug.Log($"AgentAttack is about to be set!");
-        SetOpponentMode(OpponentMode.Attacking);
+        SetOpponentMode(OpponentMode.Rushing);
         opponentUtils.WalkTowardCoordinates(dest, agent);
 
     }
@@ -55,7 +55,7 @@ public class OpponentActions : MonoBehaviour
                 speed = walkingSpeed;
                 break;
             }
-            case OpponentMode.Attacking:
+            case OpponentMode.Rushing:
             {
                 speed = runningSpeed;
                 break;
