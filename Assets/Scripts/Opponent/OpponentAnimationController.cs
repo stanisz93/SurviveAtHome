@@ -31,6 +31,13 @@ public class OpponentAnimationController : MonoBehaviour
             case OpponentMode.Rushing:
             {
                 animator.SetBool("Rushing", true);
+                animator.SetBool("Attack", false);
+                break;
+            }
+            case OpponentMode.Attacking:
+            {
+                animator.SetBool("Attack", true);
+                animator.SetBool("Rushing", false);
                 break;
             }
         

@@ -7,12 +7,14 @@ public class Opponent : MonoBehaviour
 {
     private delegate void Task(Vector3 dest, NavMeshAgent agent);
 
-    public bool RandomExplore = true;
+    public bool RandomExplore = false;
     public bool debug = false;
     private OpponentActions opponentActions;
     private NavMeshAgent agent;
     // private Task performTask;
     private OpponentUtils opponentUtils;
+    private GameObject victim;
+    private OpponentNavigationCoroutines coroutines;
 
     // Start is called before the first frame update
     void Start()
@@ -20,6 +22,7 @@ public class Opponent : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         opponentActions = GetComponent<OpponentActions>();
         opponentUtils = GetComponent<OpponentUtils>();
+        coroutines = GetComponent<OpponentNavigationCoroutines>();
     }
 
 
@@ -45,12 +48,13 @@ public class Opponent : MonoBehaviour
 
     }
 
-    public void Attack(Vector3 player)
-    {   
-        if(debug)
-        Debug.Log("Try ATTACK!");
-        ForceTask(opponentActions.AgentAttack, player);
+
+    public void FindVictim(GameObject victim)
+    {
+        victim = victim;
+        coroutines.TryToForceTask("RushingToAttack",  true, victim);
     }
+
 
     // Update is called once per frame
     void Update() 
@@ -65,10 +69,10 @@ public class Opponent : MonoBehaviour
                     ForceTask(opponentActions.Wander, randomDest);
                 }
         }
-        else
-        {
-            opponentActions.WalkFollowMouseClick(agent);
-        }
+        // else
+        // {
+        //     opponentActions.WalkFollowMouseClick(agent);
+        // }
     }
 }
 

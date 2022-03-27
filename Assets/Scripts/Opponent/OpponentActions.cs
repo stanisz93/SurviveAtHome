@@ -9,6 +9,7 @@ public class OpponentActions : MonoBehaviour
     public float walkingSpeed = 0.5f;
     public float runningSpeed = 3.0f;
     private float speed = 1.5f;
+    public float stoppingDistance = 0.0f;
     OpponentMode opponentMode = OpponentMode.Exploring;
     private OpponentUtils opponentUtils;
     private NavMeshAgent agent;
@@ -53,16 +54,19 @@ public class OpponentActions : MonoBehaviour
             case OpponentMode.Exploring:
             {
                 speed = walkingSpeed;
+                stoppingDistance = 0.0f;
                 break;
             }
             case OpponentMode.Rushing:
             {
                 speed = runningSpeed;
+                stoppingDistance = 1.2f;
                 break;
             }
 
         }
         agent.speed = speed;
+        agent.stoppingDistance = stoppingDistance;
     }
     public OpponentMode GetOpponentMode()
     {
