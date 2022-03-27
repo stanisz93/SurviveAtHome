@@ -14,7 +14,7 @@ public class OpponentUtils : MonoBehaviour
         agent.destination = destination;
     }
 
-    public Vector3 GetMouseClickVector()
+    public Vector3 GetMousePosition()
     {   Vector3 result = new Vector3(0, 0, 0);
         RaycastHit hit;   
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100)) {
@@ -46,10 +46,10 @@ public class OpponentUtils : MonoBehaviour
         Vector3 destination;
         Vector3 random_position = explorationSquare.GetARandomTreePos();
         looker.transform.position = random_position;
-        // Debug.Log($"Random values {random_position}");
+        Debug.Log($"Random values {random_position}");
         bool found_path = RandomPoint(random_position, out destination);
         if(!found_path)
-            Debug.Log("Path haven't founded!");
+            {if(GameSystem.Instance.opponentDebug) Debug.Log("Path haven't founded!");}
         return destination;
     }
 

@@ -5,16 +5,18 @@ using UnityEngine.AI;
 
 public class Opponent : MonoBehaviour
 {
-    private delegate void Task(Vector3 dest, NavMeshAgent agent);
-
-    public bool RandomExplore = false;
     public bool debug = false;
+    public float reactionDelay = .4f;
+    public float changeRushingDecision = .1f;
+    public float damageSpeed = 1f;
+    public int damage = 20;
     private OpponentActions opponentActions;
     private NavMeshAgent agent;
     // private Task performTask;
     private OpponentUtils opponentUtils;
-    private GameObject victim;
-    private OpponentNavigationCoroutines coroutines;
+    private bool duringTask = false;
+    private bool interrupted = false;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -22,57 +24,38 @@ public class Opponent : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         opponentActions = GetComponent<OpponentActions>();
         opponentUtils = GetComponent<OpponentUtils>();
-        coroutines = GetComponent<OpponentNavigationCoroutines>();
+        StartCoroutine("ActivateOpponent");
+
     }
 
-
-
-    void TryToSetTask(Task task, Vector3 coords)
+    public void StartTask()
     {
-        if(AgentIsFree())
-        {
-            task(coords, agent);
-        }
+        duringTask = true;
     }
-
-    bool AgentIsFree()
+    public void FinishTask()
     {
-        return agent.remainingDistance == 0.0 ? true : false;
+        duringTask = false;
     }
+    public bool IsDuringTask(){return duringTask;}
 
-    private void ForceTask(Task task, Vector3 coords)
+    public void SetInterruption(bool isInterrupted)
     {
-        if(debug)
-        Debug.Log($"Forced task {task} to an agent {agent}");
-        task(coords, agent);
-
+        interrupted = isInterrupted;
     }
-
-
-    public void FindVictim(GameObject victim)
-    {
-        victim = victim;
-        coroutines.TryToForceTask("RushingToAttack",  true, victim);
-    }
+    public bool IsInterrupted() {return interrupted;}
 
 
     // Update is called once per frame
-    void Update() 
+    public IEnumerator ActivateOpponent() 
     {
-        
-        if (RandomExplore)
-        {   
-            if(AgentIsFree())
-                {   
-                    if (debug) Debug.Log("Agent is free, adding task"); 
-                    Vector3 randomDest = opponentUtils.FindRandomDestination();
-                    ForceTask(opponentActions.Wander, randomDest);
-                }
-        }
-        // else
-        // {
-        //     opponentActions.WalkFollowMouseClick(agent);
-        // }
+        while(true)
+        {
+            while(duringTask)
+                yield return null;
+            yield return new WaitForSeconds(reactionDelay);
+            yield return StartCoroutine(opponentActions.Exploring());
+            }
     }
+
 }
 

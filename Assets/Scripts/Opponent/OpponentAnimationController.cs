@@ -26,6 +26,7 @@ public class OpponentAnimationController : MonoBehaviour
             {
                 animator.SetFloat("OpponentVelocity", agent.velocity.magnitude);
                 animator.SetBool("Rushing", false);
+                animator.SetBool("Attack", false);
                 break;
             }
             case OpponentMode.Rushing:

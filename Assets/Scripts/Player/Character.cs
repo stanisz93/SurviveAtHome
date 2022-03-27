@@ -7,6 +7,7 @@ public class Character : MonoBehaviour
     public Camera mainCamera;
     private float forwardInput;
     private float rightInput;
+    private int health = 500;
 
 
     // Start is called before the first frame update
@@ -15,8 +16,7 @@ public class Character : MonoBehaviour
 
     void Start() {
         characterMovement = GetComponent<CharacterMovement>();
-        
-    
+        health = 500;
         }
 
     private Vector3 AdjustRelativeToCamera(float forward, float right)
@@ -45,24 +45,16 @@ public class Character : MonoBehaviour
         }
         return velocity.normalized;
     }
+
+    public void ReduceHealth(int damage)
+    {
+        health -= damage;
+    }
+    public int GetHealth(){return health;}
+    
     public void AddMovementInput(float forward, float right)
     {
-        // Vector3 movement = new Vector3(forward, 0f, right);
-    //    if (movement.magnitude > 0)
-    //         {
-    //             velocity = AdjustRelativeToCamera(forward, right);
-    //             // movement.Normalize();
-    //             Debug.Log(movement.magnitude);
-    //             // movement *= characterMovement.speed * Time.deltaTime;
-    //             // transform.Translate(movement, Space.World);
-    //         }
-    //     else
-    //     {
-    //         velocity = Vector3.zero;
-    //     }
         characterMovement.Velocity = AdjustRelativeToCamera(forward, right);
-
- 
     }
     public float getVelocity()
     {
@@ -86,7 +78,6 @@ public class Character : MonoBehaviour
         {
             if (characterMovement.GetMovementMode() != mode)
             {
-                // Debug.Log($"State changed! {mode}");
                 characterMovement.SetMovementMode(mode);
             }
             else
