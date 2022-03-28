@@ -10,115 +10,92 @@ public class OpponentActions : MonoBehaviour
     public float runningSpeed = 3.0f;
     private float speed = 1.5f;
     public float stoppingDistance = 0.0f;
+    public float attackMinDist = 1.2f;
+
+    public float reactionDelay = .4f;
+    public float changeRushingDecision = .1f;
     OpponentMode opponentMode = OpponentMode.Exploring;
     private OpponentUtils opponentUtils;
     private NavMeshAgent agent;
     private VisionFieldOfView vfov;
-    private Opponent opponent;
     private Coroutine startedCoroutine;
+    private TaskManager taskManager;
     
     void Start() 
     {
-        opponent = GetComponent<Opponent>();
         agent = GetComponent<NavMeshAgent>();
         opponentUtils = GetComponent<OpponentUtils>();
         vfov = GetComponentInChildren<VisionFieldOfView>();
-        StartCoroutine(ListenToInterruptions());
+        taskManager = GetComponent<TaskManager>();
         
     }
-    IEnumerator ListenToInterruptions()
-    {
-        while(true)
-        {
-            if (vfov.GetPlayerTarget() != null && !opponent.IsDuringTask())
-            {
-                if(startedCoroutine!=null)
-                    StopCoroutine(startedCoroutine);
-                startedCoroutine = StartCoroutine("AgentAttack", vfov.GetPlayerTarget());
-            }
-            else if(Input.GetMouseButtonDown(0))
-            {
-                if(startedCoroutine!=null)
-                    StopCoroutine(startedCoroutine);
-                startedCoroutine = StartCoroutine("WalkFollowMousePosition");
-            }
-            yield return null;
 
-        }
-
-
-
-    }
 
     // Update is called once per frame
 
     private bool ReachPlayerRange(Vector3 position)
     {
-        return Vector3.Distance(transform.position, position) < agent.stoppingDistance;
+        return Vector3.Distance(transform.position, position) < attackMinDist;
     }
-    IEnumerator AgentAttack(Transform player)
+
+
+    public IEnumerator AgentAttack(Transform player, int damage)
     {
-        opponent.StartTask();
-        opponent.SetInterruption(true);
         SetOpponentMode(OpponentMode.Rushing);
         if(GameSystem.Instance.opponentDebug) Debug.Log($"Agent is trying to reach player!");
         while(!ReachPlayerRange(player.position))
         {
             agent.destination = player.position;
-            yield return new WaitForSeconds(opponent.changeRushingDecision);
+            yield return new WaitForSeconds(changeRushingDecision);
         }
     
-        yield return StartCoroutine("HitUntilDead", player);
-        opponent.SetInterruption(false);
-        opponent.FinishTask();
+        yield return StartCoroutine(HitUntilDead(player, damage));
 
     }
-    IEnumerator HitUntilDead(Transform player)
+    IEnumerator HitUntilDead(Transform player, int damage)
     {
         SetOpponentMode(OpponentMode.Attacking);
         var plr = player.gameObject.GetComponent<Character>();
-        while(!opponent.IsInterrupted() && Vector3.Distance(transform.position, player.position) <= agent.stoppingDistance)
+        while(ReachPlayerRange(player.position))
         {
-            plr.ReduceHealth(opponent.damage);
+            plr.ReduceHealth(damage);
             int currentHealth = plr.GetHealth();
-            if(GameSystem.Instance.opponentDebug) Debug.Log($"Opponent takes {opponent.damage} damage, player has {currentHealth} health.");
+            if(GameSystem.Instance.opponentDebug) Debug.Log($"Opponent takes {damage} damage, player has {currentHealth} health.");
             yield return null;
-            // yield return new WaitForSeconds(opponent.damageSpeed);
         }
+        taskManager.TaskSetToFinish();
+
     }
 
 
     public IEnumerator Exploring()
     {
         Vector3 randomDest = opponentUtils.FindRandomDestination();  
-        yield return StartCoroutine("WalkTowardCoordinates", randomDest);
+        return WalkTowardCoordinates(randomDest);
         
     }
     
-    IEnumerator WalkFollowMousePosition()
+    public IEnumerator WalkFollowMousePosition()
     {       Vector3 mousePosition = opponentUtils.GetMousePosition();
-            opponent.StartTask();
-            opponent.SetInterruption(true);
-            yield return StartCoroutine("WalkTowardCoordinates", mousePosition);
-            opponent.FinishTask();
-            opponent.SetInterruption(false);
+            yield return WalkTowardCoordinates(mousePosition);
     }
 
     IEnumerator WalkTowardCoordinates(Vector3 coordinats)
     {
+        // This could be expanded in more interesting way of walking,
+        // Brown motion, or at least more smooth that is now using Slerp and
+        // turning off agent.updatePositon
             opponentUtils.WalkTowardCoordinates(coordinats, agent);
-            SetOpponentMode(OpponentMode.Exploring);
-            opponent.SetInterruption(false);
-            while(agent.remainingDistance != 0)
-            {   
-                if (opponent.IsInterrupted())
-                    {
-                        yield break;
-                    }
-                yield return new WaitForSeconds(.2f);
-            }
             if(GameSystem.Instance.opponentDebug) Debug.Log($"Agent destination: {agent.destination}");
-    }
+    
+            SetOpponentMode(OpponentMode.Exploring);
+            while(agent.remainingDistance > 0)
+            {   
+                yield return null;
+            }
+                yield return new WaitForSeconds(reactionDelay);
+        taskManager.TaskSetToFinish();
+}
 
 
 
@@ -136,7 +113,7 @@ public class OpponentActions : MonoBehaviour
             case OpponentMode.Rushing:
             {
                 speed = runningSpeed;
-                stoppingDistance = 1.2f;
+                stoppingDistance = attackMinDist;
                 break;
             }
             case OpponentMode.Attacking:

@@ -46,7 +46,7 @@ public class OpponentUtils : MonoBehaviour
         Vector3 destination;
         Vector3 random_position = explorationSquare.GetARandomTreePos();
         looker.transform.position = random_position;
-        Debug.Log($"Random values {random_position}");
+        if (GameSystem.Instance.opponentDebug) Debug.Log($"Random values {random_position}");
         bool found_path = RandomPoint(random_position, out destination);
         if(!found_path)
             {if(GameSystem.Instance.opponentDebug) Debug.Log("Path haven't founded!");}

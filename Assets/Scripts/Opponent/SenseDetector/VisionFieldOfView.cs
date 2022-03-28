@@ -17,8 +17,12 @@ public class VisionFieldOfView : MonoBehaviour
 
     [HideInInspector]
     public List<Transform> visibleTargets = new List<Transform>();
-
+    private Opponent opponent;
+    private OpponentActions opponentActions;
+    private TaskManager taskManager;
     
+
+
     void Start()
     {
         StartCoroutine("FindTargetsWithDelay", searchDelay);
@@ -58,7 +62,6 @@ public class VisionFieldOfView : MonoBehaviour
         }
         if (visibleTargets.Count > 1)
             Debug.LogWarning("There is found more than one object in visible scanner!");
-
     }
     public Vector3 DirFromAngle(float angleInDegrees, bool angleIsGlobal)
     {

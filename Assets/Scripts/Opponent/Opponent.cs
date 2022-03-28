@@ -6,16 +6,20 @@ using UnityEngine.AI;
 public class Opponent : MonoBehaviour
 {
     public bool debug = false;
-    public float reactionDelay = .4f;
-    public float changeRushingDecision = .1f;
     public float damageSpeed = 1f;
     public int damage = 20;
+
+
     private OpponentActions opponentActions;
     private NavMeshAgent agent;
     // private Task performTask;
     private OpponentUtils opponentUtils;
-    private bool duringTask = false;
-    private bool interrupted = false;
+    private VisionFieldOfView vfov;
+    public TaskManager taskManager;
+
+    
+
+   
     
 
     // Start is called before the first frame update
@@ -24,38 +28,30 @@ public class Opponent : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         opponentActions = GetComponent<OpponentActions>();
         opponentUtils = GetComponent<OpponentUtils>();
-        StartCoroutine("ActivateOpponent");
+        taskManager = GetComponent<TaskManager>();
+        vfov = GetComponentInChildren<VisionFieldOfView>();
 
     }
-
-    public void StartTask()
-    {
-        duringTask = true;
-    }
-    public void FinishTask()
-    {
-        duringTask = false;
-    }
-    public bool IsDuringTask(){return duringTask;}
-
-    public void SetInterruption(bool isInterrupted)
-    {
-        interrupted = isInterrupted;
-    }
-    public bool IsInterrupted() {return interrupted;}
 
 
     // Update is called once per frame
-    public IEnumerator ActivateOpponent() 
-    {
-        while(true)
-        {
-            while(duringTask)
-                yield return null;
-            yield return new WaitForSeconds(reactionDelay);
-            yield return StartCoroutine(opponentActions.Exploring());
-            }
-    }
 
+    void Update() {
+        if(Input.GetMouseButtonDown(0))
+        {
+            taskManager.ForceToRun(opponentActions.WalkFollowMousePosition());
+        }
+        else if (vfov.visibleTargets.Count == 1)
+            {
+                taskManager.ForceToRun(opponentActions.AgentAttack(vfov.visibleTargets[0], damage));
+            }
+        else if(taskManager.TaskIsEmpty())
+        {
+            {
+                taskManager.ForceToRun(opponentActions.Exploring());
+            }
+        }
+    }
+    
 }
 

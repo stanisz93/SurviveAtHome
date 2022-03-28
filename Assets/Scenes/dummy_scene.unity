@@ -1250,6 +1250,7 @@ GameObject:
   - component: {fileID: 1201745215}
   - component: {fileID: 1201745214}
   - component: {fileID: 1201745213}
+  - component: {fileID: 1201745216}
   m_Layer: 0
   m_Name: Opponent
   m_TagString: Untagged
@@ -1326,6 +1327,18 @@ MonoBehaviour:
   walkingSpeed: 0.5
   runningSpeed: 3
   stoppingDistance: 0
+--- !u!114 &1201745216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1201745211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6afa261ad065c1a41975289dfa67e69a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1201745217
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1343,6 +1356,8 @@ MonoBehaviour:
   changeRushingDecision: 0.1
   damageSpeed: 1
   damage: 20
+  taskManager: {fileID: 0}
+  attackMinDist: 1.2
 --- !u!114 &1201745218
 MonoBehaviour:
   m_ObjectHideFlags: 0
