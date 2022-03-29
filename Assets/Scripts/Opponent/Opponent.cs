@@ -5,7 +5,6 @@ using UnityEngine.AI;
 
 public class Opponent : MonoBehaviour
 {
-    public bool debug = false;
 
     public int damage = 20;
 

@@ -8,9 +8,11 @@ public class HealthBar : MonoBehaviour
     public Slider slider;
     public Gradient gradient;
     public Image plus;
+    public StressReceiver stressReceiver;
     public float pulseSpeed =0.5f;
     private float alarmHealth = 0.2f;
     private IEnumerator alreadyRun;
+
 
 
     IEnumerator RunPulsingHealth()
@@ -46,6 +48,7 @@ public class HealthBar : MonoBehaviour
     public void SetHealth(int health)
     {
         slider.value = health;
+        stressReceiver.InduceStress(1f);
         if (slider.normalizedValue < alarmHealth && alreadyRun == null)
         {
             alreadyRun = RunPulsingHealth();

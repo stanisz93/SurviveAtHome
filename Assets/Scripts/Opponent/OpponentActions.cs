@@ -11,11 +11,12 @@ public class OpponentActions : MonoBehaviour
     public float walkingSpeed = 0.5f;
     public float runningSpeed = 3.0f;
     private float speed = 1.5f;
-    public float stoppingDistance = 0.0f;
-    public float attackMinDist = 1.2f;
+    public float attackMinDist = 1f;
     public float damageSpeed = 1f;
     public float reactionDelay = .4f;
     public float changeRushingDecision = .1f;
+
+    private float stoppingDistance = 0.0f;
     
     OpponentMode opponentMode = OpponentMode.Exploring;
     private OpponentUtils opponentUtils;
@@ -54,6 +55,7 @@ public class OpponentActions : MonoBehaviour
             yield return new WaitForSeconds(changeRushingDecision);
         }
         // yield return new WaitForSeconds(0.05f);
+        agent.destination = transform.position;
         yield return HitUntilDead(player, damage);
 
     }
