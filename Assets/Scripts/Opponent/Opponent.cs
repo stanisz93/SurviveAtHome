@@ -6,16 +6,15 @@ using UnityEngine.AI;
 public class Opponent : MonoBehaviour
 {
     public bool debug = false;
-    public float damageSpeed = 1f;
-    public int damage = 20;
 
+    public int damage = 20;
 
     private OpponentActions opponentActions;
     private NavMeshAgent agent;
     // private Task performTask;
     private OpponentUtils opponentUtils;
     private VisionFieldOfView vfov;
-    public TaskManager taskManager;
+    private TaskManager taskManager;
 
     
 
@@ -37,11 +36,12 @@ public class Opponent : MonoBehaviour
     // Update is called once per frame
 
     void Update() {
+        
         if(Input.GetMouseButtonDown(0))
         {
             taskManager.ForceToRun(opponentActions.WalkFollowMousePosition());
         }
-        else if (vfov.visibleTargets.Count == 1)
+        else if (vfov.visibleTargets.Count == 1 && opponentActions.currentAction == ActionType.AllowToStop)
             {
                 taskManager.ForceToRun(opponentActions.AgentAttack(vfov.visibleTargets[0], damage));
             }

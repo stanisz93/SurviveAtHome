@@ -10,11 +10,12 @@ public class TaskManager : MonoBehaviour {
     private bool isEmpty = true;
 
 
-    private void StartTask(IEnumerator task)
+    private IEnumerator StartTask(IEnumerator task)
     {
         currentTask = task;
         StartCoroutine(currentTask);
         isEmpty = false;
+        return currentTask;
     }
 
     public bool TaskIsEmpty()
@@ -30,15 +31,19 @@ public class TaskManager : MonoBehaviour {
     {
         if(currentTask != null)
         {
+            if(GameSystem.Instance.taskManagerDebug)
+            {
+                Debug.Log($"{currentTask} Task stops.");
+            }
             StopCoroutine(currentTask);
             isEmpty = true;
         }
     }
 
-    public void ForceToRun(IEnumerator task)
+    public IEnumerator ForceToRun(IEnumerator task)
     {
         StopCurrentTask();
-        StartTask(task);
+        return StartTask(task);
     }
 
     public bool TryToRun(IEnumerator task, string desc="")

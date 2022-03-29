@@ -5,9 +5,12 @@ public class Character : MonoBehaviour
 {
     private CharacterMovement characterMovement;
     public Camera mainCamera;
+    public HealthBar healthBar;
+    public int maxHealth = 500;
     private float forwardInput;
     private float rightInput;
-    private int health = 500;
+    
+    private int health;
 
 
     // Start is called before the first frame update
@@ -16,7 +19,8 @@ public class Character : MonoBehaviour
 
     void Start() {
         characterMovement = GetComponent<CharacterMovement>();
-        health = 500;
+        health = maxHealth;
+        healthBar.SetMaxHealth(maxHealth);
         }
 
     private Vector3 AdjustRelativeToCamera(float forward, float right)
@@ -49,6 +53,7 @@ public class Character : MonoBehaviour
     public void ReduceHealth(int damage)
     {
         health -= damage;
+        healthBar.SetHealth(health);
     }
     public int GetHealth(){return health;}
     
