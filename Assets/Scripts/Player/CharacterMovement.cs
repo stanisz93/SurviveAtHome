@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum MovementMode {Walking, Running, Crouching, Proning, Staying};
+public enum FightMode {Default, ReceiveDamage};
 
 [RequireComponent(typeof(Rigidbody))]
 public class CharacterMovement : MonoBehaviour
@@ -15,10 +16,12 @@ public class CharacterMovement : MonoBehaviour
     private float rotateSpeed = 10f;
     private float smoothSpeed;
     MovementMode movementMode = MovementMode.Staying;
+    FightMode fightMode = FightMode.Default;
+    private float currentHitWeight = 0.0f;
 
     private Rigidbody rigidbody;
     private Vector3 velocity;
-  
+    private int maxHitAnimSteps = 60;
     
 
     
@@ -46,6 +49,32 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
+    public void SetFightmode(FightMode mode)
+    {
+        fightMode = mode;
+        if (fightMode == FightMode.ReceiveDamage)
+        {
+            currentHitWeight = 1f;
+        }
+               
+    }
+
+    public float GetHitLayerWeight() {return currentHitWeight;}
+
+    public IEnumerator SmoothlyDecreaseHitLayer()
+    {
+        SetFightmode(FightMode.Default);
+        float currentAnimHitStep = 0f;
+        float ratio = 0f;
+        while(ratio < 1f)
+        {
+            currentAnimHitStep += 1;
+            ratio = (float)currentAnimHitStep / maxHitAnimSteps;
+            currentHitWeight = Mathf.Lerp(1f, 0.0f, ratio);
+            yield return null;
+        }
+    }
+    public FightMode GetFightMode() {return fightMode;}
     public void SetMovementMode(MovementMode mode)
     {   
         movementMode = mode;

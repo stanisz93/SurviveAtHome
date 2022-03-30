@@ -563,8 +563,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53c8f1bd402631749a2914d15daffd18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewRadius: 3.39
-  viewAngle: 110
+  viewRadius: 5
+  viewAngle: 150
   searchDelay: 0.1
   visionMask:
     serializedVersion: 2
@@ -1471,7 +1471,7 @@ MonoBehaviour:
   attackMinDist: 1
   damageInterval: 0.4
   reactionDelay: 0.4
-  rotationSpeed: 0.4
+  rotationSpeed: 10
   changeRushingDecision: 0.1
   currentAction: 0
 --- !u!114 &1201745216

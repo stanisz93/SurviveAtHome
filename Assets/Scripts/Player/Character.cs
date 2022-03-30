@@ -12,6 +12,7 @@ public class Character : MonoBehaviour
     private float rightInput;
     
     private int health;
+    private bool gettingHurt = false;
 
 
     // Start is called before the first frame update
@@ -51,10 +52,23 @@ public class Character : MonoBehaviour
         return velocity.normalized;
     }
 
+
     public void ReduceHealth(int damage)
     {
-        health -= damage;
-        healthBar.SetHealth(health);
+        if(!gettingHurt)
+        {
+            health -= damage;
+            healthBar.SetHealth(health);
+            StartCoroutine(EndReceivingDamageAnim());
+        }
+    }
+    IEnumerator EndReceivingDamageAnim()
+    {
+        gettingHurt = true;
+        characterMovement.SetFightmode(FightMode.ReceiveDamage);
+        yield return new WaitForSeconds(0.5f);
+        yield return characterMovement.SmoothlyDecreaseHitLayer();
+        gettingHurt = false;
     }
     public int GetHealth(){return health;}
     
@@ -90,6 +104,8 @@ public class Character : MonoBehaviour
             {
             }
         }
+    public FightMode GetFightMode(){return characterMovement.GetFightMode();}
+
     public MovementMode GetMovement(){return characterMovement.GetMovementMode();}
 
 }

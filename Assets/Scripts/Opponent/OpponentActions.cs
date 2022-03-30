@@ -86,12 +86,10 @@ public class OpponentActions : MonoBehaviour
         currentAction = ActionType.ForbiddenStop;
         var plr = player.gameObject.GetComponent<Character>();
         var hits = 0;
-        IEnumerator rotateTowardPlayer = null;
         SetOpponentMode(OpponentMode.Attacking);
         // Coroutine rotateCoroutine = StartCoroutine(RotateToPlayer(player));
         while(ReachPlayerRange(player.position, 0.05f))
         {
-
             plr.ReduceHealth(damage);
             hits += 1;
             int currentHealth = plr.GetHealth();
