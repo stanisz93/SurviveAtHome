@@ -13,8 +13,8 @@ public class TaskManager : MonoBehaviour {
     private IEnumerator StartTask(IEnumerator task)
     {
         currentTask = task;
-        StartCoroutine(currentTask);
         isEmpty = false;
+        StartCoroutine(currentTask);
         return currentTask;
     }
 

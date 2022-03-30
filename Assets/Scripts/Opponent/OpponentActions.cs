@@ -12,8 +12,9 @@ public class OpponentActions : MonoBehaviour
     public float runningSpeed = 3.0f;
     private float speed = 1.5f;
     public float attackMinDist = 1f;
-    public float damageSpeed = 1f;
+    public float damageInterval = 0.4f;
     public float reactionDelay = .4f;
+    public float rotationSpeed = 10f;
     public float changeRushingDecision = .1f;
 
     private float stoppingDistance = 0.0f;
@@ -25,6 +26,8 @@ public class OpponentActions : MonoBehaviour
     private Coroutine startedCoroutine;
     private TaskManager taskManager;
     public ActionType currentAction;
+    private bool alerted = false;
+    private Vector3 playerSeen;
     
     void Start() 
     {
@@ -38,11 +41,14 @@ public class OpponentActions : MonoBehaviour
 
     // Update is called once per frame
 
-    private bool ReachPlayerRange(Vector3 position)
+    private bool ReachPlayerRange(Vector3 position, float deltaDist = 0.0f)
     {
-        return Vector3.Distance(transform.position, position) < attackMinDist;
+        return Vector3.Distance(transform.position, position) <= (attackMinDist + deltaDist);
     }
 
+    public bool isAlerted() {return alerted;}
+
+    void SetLastPlayerPosition(Transform player) { playerSeen = player.position;}
 
     public IEnumerator AgentAttack(Transform player, int damage)
     {
@@ -57,16 +63,35 @@ public class OpponentActions : MonoBehaviour
         // yield return new WaitForSeconds(0.05f);
         agent.destination = transform.position;
         yield return HitUntilDead(player, damage);
-
+        taskManager.TaskSetToFinish();
     }
+
+    public IEnumerator RotateTowardPlayer()
+    {       
+            // agent.updateRotation = false;
+            
+            while(Vector3.Angle(transform.forward, (playerSeen - transform.position).normalized) > 5)
+            {
+                Vector3 targetDirection = playerSeen - transform.position;
+                Vector3 newDirection = Vector3.RotateTowards(transform.forward, targetDirection, rotationSpeed * Time.deltaTime, 0f);
+                transform.rotation = Quaternion.LookRotation(newDirection);
+                yield return null;
+            }
+            // agent.updateRotation = true;
+    }
+ 
+
     IEnumerator HitUntilDead(Transform player, int damage)
     {
         currentAction = ActionType.ForbiddenStop;
-        SetOpponentMode(OpponentMode.Attacking);
         var plr = player.gameObject.GetComponent<Character>();
         var hits = 0;
-        while(ReachPlayerRange(player.position))
+        IEnumerator rotateTowardPlayer = null;
+        SetOpponentMode(OpponentMode.Attacking);
+        // Coroutine rotateCoroutine = StartCoroutine(RotateToPlayer(player));
+        while(ReachPlayerRange(player.position, 0.05f))
         {
+
             plr.ReduceHealth(damage);
             hits += 1;
             int currentHealth = plr.GetHealth();
@@ -75,9 +100,10 @@ public class OpponentActions : MonoBehaviour
                 Debug.Log($"Opponent takes {damage} damage, player has {currentHealth} health.");
                 Debug.Log($"{hits}th Hit during that task!");
             }
-            yield return new WaitForSeconds(damageSpeed);
+            yield return new WaitForSeconds(damageInterval);
+            SetLastPlayerPosition(player);
+            yield return RotateTowardPlayer();
         }
-        taskManager.TaskSetToFinish();
 
     }
 

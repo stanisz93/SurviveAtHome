@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class Opponent : MonoBehaviour
 {
 
-    public int damage = 20;
+    public int damage = 60;
 
     private OpponentActions opponentActions;
     private NavMeshAgent agent;
@@ -44,6 +44,10 @@ public class Opponent : MonoBehaviour
             {
                 taskManager.ForceToRun(opponentActions.AgentAttack(vfov.visibleTargets[0], damage));
             }
+        // else if(opponentActions.isAlerted() && taskManager.TaskIsEmpty())
+        // {
+        //     taskManager.ForceToRun(opponentActions.RotateTowardPlayer());
+        // }
         else if(taskManager.TaskIsEmpty())
         {
             {

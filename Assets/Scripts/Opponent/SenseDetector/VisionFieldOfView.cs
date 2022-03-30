@@ -6,10 +6,10 @@ using UnityEngine;
 public class VisionFieldOfView : MonoBehaviour
 {
     // Start is called before the first frame update
-    public float viewRadius;
+    public float viewRadius = 5f;
     [Range(0,360)]
-    public float viewAngle;
-    public float searchDelay = 0.2f;
+    public float viewAngle = 150f;
+    public float searchDelay = 0.1f;
     
 
     public LayerMask visionMask;
