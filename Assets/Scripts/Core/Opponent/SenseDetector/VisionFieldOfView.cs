@@ -14,19 +14,29 @@ public class VisionFieldOfView : MonoBehaviour
 
     public LayerMask visionMask;
     public LayerMask obstacleMask;
-
+    public float maxAlertScore = 100f;
+    public float increasePoint = 2;
+    public float decreasePoint = 2;
     [HideInInspector]
     public List<Transform> visibleTargets = new List<Transform>();
 
+    public Alert alertUI;
+    
     private bool founded = false;
+    
     private Opponent opponent;
     private OpponentActions opponentActions;
     private TaskManager taskManager;
+
+    private float currentAlertScore  = 0;
     
+    private Canvas alertBody;
 
 
     void Start()
     {
+        alertBody = alertUI.GetComponentInParent<Canvas>();
+        alertUI.SetDefault(maxAlertScore);
         StartCoroutine("FindTargetsWithDelay", searchDelay);
     }
     IEnumerator FindTargetsWithDelay(float delay)
@@ -52,7 +62,7 @@ public class VisionFieldOfView : MonoBehaviour
 
 
 
-    void FindVisibleTargets()
+    async void FindVisibleTargets()
     {
         visibleTargets.Clear();
         founded = false;
@@ -73,7 +83,27 @@ public class VisionFieldOfView : MonoBehaviour
         if (visibleTargets.Count > 1)
             Debug.LogWarning("There is found more than one object in visible scanner!");
         if(visibleTargets.Count == 1)
-            founded = true;
+            {
+                if (!alertBody.enabled)
+                alertBody.enabled = true;
+
+                currentAlertScore += increasePoint;
+                alertUI.SetAlertLevel(currentAlertScore);
+                if (currentAlertScore >= maxAlertScore)
+                {
+                    currentAlertScore = maxAlertScore;
+                    founded = true;
+                }
+            }
+        else
+        {
+            currentAlertScore -= decreasePoint;
+            if(currentAlertScore <= 0f)
+            {
+                currentAlertScore = 0f;
+                alertBody.enabled = false;
+            }
+        }
 
 
     }
