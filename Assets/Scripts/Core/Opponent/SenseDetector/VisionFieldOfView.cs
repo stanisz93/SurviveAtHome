@@ -35,6 +35,7 @@ public class VisionFieldOfView : MonoBehaviour
     private Indicator alertIndicator;
     
     private Canvas alertBody;
+    private Transform lastSeen;
 
 
     void Start()
@@ -57,7 +58,7 @@ public class VisionFieldOfView : MonoBehaviour
     public Transform GetPlayerTarget()
     {
         if (founded)
-            return visibleTargets[0];
+            return lastSeen;
         return null;
     }
 
@@ -95,7 +96,10 @@ public class VisionFieldOfView : MonoBehaviour
                 if (founded)
                     calmIndicator.Decrease();
                 else if(alertIndicator.ReachedMax())
-                    founded = true;
+                    {
+                        founded = true;
+                        lastSeen = visibleTargets[0];
+                    }
 
             }
 
@@ -114,7 +118,7 @@ public class VisionFieldOfView : MonoBehaviour
                 alertBody.enabled = false;
             
         }
-        alertUI.SetAlertLevel(alertIndicator.GetCurrentValue());
+        alertUI.SetAlertLevel(alertIndicator.GetCurrentValue(), founded);
 
 
     }
