@@ -55,7 +55,7 @@ public class OpponentActions : MonoBehaviour
         currentAction = ActionType.ForbiddenStop;
         SetOpponentMode(OpponentMode.Rushing);
         if(GameSystem.Instance.opponentDebug) Debug.Log($"Agent is trying to reach player!");
-        while(!ReachPlayerRange(player.position))
+        while(!ReachPlayerRange(player.position) && vfov.FoundedObject())
         {
             agent.destination = player.position;
             yield return new WaitForSeconds(changeRushingDecision);

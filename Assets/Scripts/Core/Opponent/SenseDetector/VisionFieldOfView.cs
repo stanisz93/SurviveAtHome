@@ -15,8 +15,10 @@ public class VisionFieldOfView : MonoBehaviour
     public LayerMask visionMask;
     public LayerMask obstacleMask;
     public float maxAlertScore = 100f;
-    public float increasePoint = 2;
-    public float decreasePoint = 2;
+    public float maxCalmingScore = 100f;
+    public float calmDownThreshold = 50f;
+    public float AlertStep = 2;
+    public float calmingStep = 2;
     [HideInInspector]
     public List<Transform> visibleTargets = new List<Transform>();
 
@@ -28,7 +30,9 @@ public class VisionFieldOfView : MonoBehaviour
     private OpponentActions opponentActions;
     private TaskManager taskManager;
 
-    private float currentAlertScore  = 0;
+
+    private Indicator calmIndicator;
+    private Indicator alertIndicator;
     
     private Canvas alertBody;
 
@@ -37,6 +41,8 @@ public class VisionFieldOfView : MonoBehaviour
     {
         alertBody = alertUI.GetComponentInParent<Canvas>();
         alertUI.SetDefault(maxAlertScore);
+        calmIndicator = new Indicator(maxCalmingScore, maxCalmingScore, calmingStep);
+        alertIndicator = new Indicator(0f, maxAlertScore, AlertStep);
         StartCoroutine("FindTargetsWithDelay", searchDelay);
     }
     IEnumerator FindTargetsWithDelay(float delay)
@@ -61,11 +67,9 @@ public class VisionFieldOfView : MonoBehaviour
     }
 
 
-
-    async void FindVisibleTargets()
+    public void FindVisibleTargets()
     {
         visibleTargets.Clear();
-        founded = false;
         Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, visionMask);
         for (int i=0; i < targetsInViewRadius.Length; i++)
         {
@@ -87,23 +91,30 @@ public class VisionFieldOfView : MonoBehaviour
                 if (!alertBody.enabled)
                 alertBody.enabled = true;
 
-                currentAlertScore += increasePoint;
-                alertUI.SetAlertLevel(currentAlertScore);
-                if (currentAlertScore >= maxAlertScore)
-                {
-                    currentAlertScore = maxAlertScore;
+                alertIndicator.Increase();
+                if (founded)
+                    calmIndicator.Decrease();
+                else if(alertIndicator.ReachedMax())
                     founded = true;
-                }
+
             }
+
         else
         {
-            currentAlertScore -= decreasePoint;
-            if(currentAlertScore <= 0f)
+            if(founded)
             {
-                currentAlertScore = 0f;
-                alertBody.enabled = false;
+                calmIndicator.Increase();
+                if(calmIndicator.ReachedMax())
+                    founded = false;
             }
+            else
+                alertIndicator.Decrease();
+
+            if(alertIndicator.ReachedMin() && alertBody.enabled)
+                alertBody.enabled = false;
+            
         }
+        alertUI.SetAlertLevel(alertIndicator.GetCurrentValue());
 
 
     }
