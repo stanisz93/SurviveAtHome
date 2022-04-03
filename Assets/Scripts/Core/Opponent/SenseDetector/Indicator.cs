@@ -24,6 +24,7 @@ public class Indicator
     public bool ReachedMax() { return reachMax;}
 
     public bool ReachedMin() { return reachMin;}
+    public void SetToZero() {currentValue = 0f;}
 
     public void Increase()
     {

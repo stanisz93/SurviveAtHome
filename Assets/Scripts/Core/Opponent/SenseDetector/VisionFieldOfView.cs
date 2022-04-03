@@ -94,12 +94,15 @@ public class VisionFieldOfView : MonoBehaviour
 
                 alertIndicator.Increase();
                 if (founded)
+                {
                     calmIndicator.Decrease();
+                }
                 else if(alertIndicator.ReachedMax())
                     {
                         founded = true;
-                        lastSeen = visibleTargets[0];
+                        calmIndicator.SetToZero();
                     }
+                lastSeen = visibleTargets[0];
 
             }
 
