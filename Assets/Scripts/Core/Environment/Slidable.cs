@@ -17,20 +17,15 @@ public class Slidable : MonoBehaviour
     // Update is called once per frame
     void OnTriggerEnter(Collider other) {
         Character c = other.GetComponent<Character>();
-        Vector3 plrPos = c.transform.position;
         if (c != null)
         {
-            
+            Vector3 plrPos = c.transform.position;
             closer = slidePoint;
             further = landPoint;
             if(Vector3.Distance(landPoint.position, plrPos) < Vector3.Distance(slidePoint.position, plrPos))
             {
-                Debug.Log("Closer is landPoint");
                 closer = landPoint;
                 further = slidePoint;
-            }
-            else{
-                Debug.Log("Closer is slidePoint");
             }
             c.Slidable = this;
             // tODO: If direction is wrong the sliding behave not physical
