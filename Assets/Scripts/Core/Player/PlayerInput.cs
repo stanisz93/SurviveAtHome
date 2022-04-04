@@ -6,11 +6,15 @@ using UnityEngine;
 public class PlayerInput : MonoBehaviour
 {
     private Character character;
+    private CharacterMovement chrMvmnt;
+    private CapsuleCollider collider;
 
     // Start is called before the first frame update
     void Start()
     {
         character = GetComponent<Character>();
+        collider = GetComponent<CapsuleCollider>();
+        chrMvmnt = GetComponent<CharacterMovement>();
     }
 
     // Update is called once per frame
@@ -18,7 +22,15 @@ public class PlayerInput : MonoBehaviour
     {
         character.AddMovementInput(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
         // character.SetDefaultMovement();
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (!character.isSliding && Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.C))
+        {
+            if (character.Slidable != null)
+            {
+                character.SetToSlide();
+                character.Slide();
+            }
+        }
+        else if (Input.GetKey(KeyCode.LeftShift))
         {
             character.SetToRun();
         }

@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum MovementMode {Walking, Running, Crouching, Proning, Staying};
+
+public enum MovementMode {Walking, Running, Crouching, Sliding, Staying};
 public enum FightMode {Default, ReceiveDamage};
 
 [RequireComponent(typeof(Rigidbody))]
@@ -48,6 +49,8 @@ public class CharacterMovement : MonoBehaviour
 
     public void SetFightMode(FightMode mode) { fightMode = mode;}
     public FightMode GetFightMode() {return fightMode;}
+
+
     public void SetMovementMode(MovementMode mode)
     {   
         movementMode = mode;
@@ -68,6 +71,7 @@ public class CharacterMovement : MonoBehaviour
                 maxSpeed = 1f;
                 break;
             }
+            
         }
     }
 

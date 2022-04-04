@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using DG.Tweening;
 public class Character : MonoBehaviour
 {
     private CharacterMovement characterMovement;
@@ -13,6 +14,10 @@ public class Character : MonoBehaviour
 
     
     private int health;
+    private Slidable slidable;
+    public bool isSliding = false;
+    public Slidable Slidable { get => slidable; set => slidable = value; }
+
 
     // Start is called before the first frame update
 
@@ -73,21 +78,24 @@ public class Character : MonoBehaviour
 
     public MovementMode GetMovement(){return characterMovement.GetMovementMode();}
 
-    public void SetFightmode(FightMode mode)
-    {
-        characterMovement.SetFightMode(mode);               
-    }
+    public void SetFightmode(FightMode mode){characterMovement.SetFightMode(mode); }
 
-    public void SetToRun()
+    public void SetToRun(){characterMovement.SetMovementMode(MovementMode.Running);}
+
+    public void SetToSlide(){characterMovement.SetMovementMode(MovementMode.Sliding);}
+
+    public void SetToCrounch(){characterMovement.SetMovementMode(MovementMode.Crouching);}
+    public void SetToWalk(){characterMovement.SetMovementMode(MovementMode.Walking);}
+
+    public void Slide()
     {
-        characterMovement.SetMovementMode(MovementMode.Running);
-    }
-    public void SetToCrounch()
-    {
-        characterMovement.SetMovementMode(MovementMode.Crouching);
-    }
-    public void SetToWalk()
-    {
-        characterMovement.SetMovementMode(MovementMode.Walking);
+        isSliding = true;
+        Vector3 t_slidePoint = slidable.GetSlidePoint();
+        Vector3 t_landpoint = slidable.GetEndSlidePoint();
+        Sequence sq = DOTween.Sequence();
+        sq.Append(transform.DOMove(t_slidePoint, .1f));
+        sq.Append(transform.DOMove(t_landpoint, .8f));
+        sq.AppendCallback(()=> isSliding = false);
+        Slidable = null;
     }
 }   

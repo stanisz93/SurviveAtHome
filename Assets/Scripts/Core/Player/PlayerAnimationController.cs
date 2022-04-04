@@ -15,6 +15,7 @@ public class PlayerAnimationController : MonoBehaviour
     private Character character;
     private CharacterMovement chrMovement;
     private LayerInvoker layerInvoker;
+    private CapsuleCollider collider;
     private bool isHitAnimLaunch = false;
 
     void Start()
@@ -22,6 +23,7 @@ public class PlayerAnimationController : MonoBehaviour
         character = GetComponent<Character>();
         chrMovement = GetComponent<CharacterMovement>();
         layerInvoker = GetComponent<LayerInvoker>();
+        collider = GetComponent<CapsuleCollider>();
     }
     // Start is called before the first frame update
     // void Awake() => animator = GetComponent<Animator>();
@@ -33,7 +35,13 @@ public class PlayerAnimationController : MonoBehaviour
         animator.SetFloat("Velocity", character.getVelocity());
 
         MovementMode currentMovement = character.GetMovement();
+
         // Debug.Log(currentMovement);
+        if(currentMovement == MovementMode.Sliding)
+        {
+           animator.SetTrigger("Slide");
+        }
+        
         if (currentMovement == MovementMode.Crouching)
             {
                 animator.SetBool("isCrounch", true);
@@ -50,6 +58,8 @@ public class PlayerAnimationController : MonoBehaviour
             isHitAnimLaunch = true;
         }
     }
+
+
 
     IEnumerator ReceiveDamage()
     {
