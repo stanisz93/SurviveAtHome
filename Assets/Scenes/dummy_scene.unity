@@ -684,7 +684,7 @@ GameObject:
   - component: {fileID: 725702081}
   - component: {fileID: 725702080}
   - component: {fileID: 725702084}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: wall_vaultable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1150,9 +1150,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 989995848}
     m_Modifications:
+    - target: {fileID: 4467807968852307492, guid: 5e239ed5921eade47a735735845680cf, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4467807969142979486, guid: 5e239ed5921eade47a735735845680cf, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4467807970375434131, guid: 5e239ed5921eade47a735735845680cf, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 4469410330949927683, guid: 5e239ed5921eade47a735735845680cf, type: 3}
       propertyPath: m_Name
       value: Slidable_Desk
+      objectReference: {fileID: 0}
+    - target: {fileID: 4469410330949927683, guid: 5e239ed5921eade47a735735845680cf, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4471521229981020467, guid: 5e239ed5921eade47a735735845680cf, type: 3}
       propertyPath: m_RootOrder
@@ -4565,7 +4581,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1950640514}
   - component: {fileID: 1950640516}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}

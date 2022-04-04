@@ -53,7 +53,9 @@ public class OpponentActions : MonoBehaviour
     public IEnumerator AgentAttack(Transform player, int damage)
     {
         currentAction = ActionType.ForbiddenStop;
+        agent.destination = transform.position;
         SetOpponentMode(OpponentMode.Rushing);
+        yield return new WaitForSeconds(2f);
         if(GameSystem.Instance.opponentDebug) Debug.Log($"Agent is trying to reach player!");
         while(!ReachPlayerRange(player.position) && vfov.FoundedObject())
         {
