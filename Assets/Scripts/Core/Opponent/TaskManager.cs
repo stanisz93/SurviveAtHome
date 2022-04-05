@@ -8,13 +8,15 @@ public class TaskManager : MonoBehaviour {
 
     private IEnumerator currentTask = null;
     private bool isEmpty = true;
+    private int currentPriority = 4;
 
 
-    private IEnumerator StartTask(IEnumerator task)
+    private IEnumerator StartTask(IEnumerator task, int prior)
     {
         currentTask = task;
         isEmpty = false;
         StartCoroutine(currentTask);
+        currentPriority = prior;
         return currentTask;
     }
 
@@ -26,6 +28,7 @@ public class TaskManager : MonoBehaviour {
     public void TaskSetToFinish()
     {
         isEmpty = true;
+        currentPriority = 4;
     }
     public void StopCurrentTask()
     {
@@ -36,21 +39,24 @@ public class TaskManager : MonoBehaviour {
                 Debug.Log($"{currentTask} Task stops.");
             }
             StopCoroutine(currentTask);
+            currentPriority = 4;
             isEmpty = true;
         }
     }
 
-    public IEnumerator ForceToRun(IEnumerator task)
+    public IEnumerator ForceToRun(IEnumerator task, int prior)
     {
         StopCurrentTask();
-        return StartTask(task);
+        return StartTask(task, prior);
     }
+
+    public int GetCurrentPriority() { return currentPriority;}
 
     public void TryToRun(IEnumerator task, out bool succeed, string desc="")
     {
         if(TaskIsEmpty())
         {
-            StartTask(task);
+            StartTask(task, 3); // prior set to 3!!
             succeed = true;
         }
         else if(GameSystem.Instance.opponentDebug && desc!="")

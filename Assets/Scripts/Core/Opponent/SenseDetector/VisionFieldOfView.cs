@@ -17,14 +17,16 @@ public class VisionFieldOfView : MonoBehaviour
     public float maxAlertScore = 100f;
     public float maxCalmingScore = 100f;
     public float calmDownThreshold = 50f;
-    public float AlertStep = 2;
-    public float calmingStep = 2;
+    public float AlertStep = 15;
+    public float calmingStep = 4;
     [HideInInspector]
     public List<Transform> visibleTargets = new List<Transform>();
 
     public Alert alertUI;
+
     
     private bool founded = false;
+    private bool supsicious = false;
     
     private Opponent opponent;
     private OpponentActions opponentActions;
@@ -35,7 +37,7 @@ public class VisionFieldOfView : MonoBehaviour
     private Indicator alertIndicator;
     
     private Canvas alertBody;
-    private Transform lastSeen;
+    private Transform playerPos;
 
 
     void Start()
@@ -58,13 +60,18 @@ public class VisionFieldOfView : MonoBehaviour
     public Transform GetPlayerTarget()
     {
         if (founded)
-            return lastSeen;
+            return playerPos;
         return null;
     }
 
     public bool FoundedObject()
     {
         return founded;
+    }
+
+    public bool Suspicious()
+    {
+        return supsicious;
     }
 
 
@@ -96,14 +103,15 @@ public class VisionFieldOfView : MonoBehaviour
                 if (founded)
                 {
                     calmIndicator.Decrease();
+
                 }
                 else if(alertIndicator.ReachedMax())
                     {
                         founded = true;
+                        supsicious = false;
                         calmIndicator.SetToZero();
                     }
-                lastSeen = visibleTargets[0];
-
+                playerPos = visibleTargets[0];
             }
 
         else
@@ -112,13 +120,20 @@ public class VisionFieldOfView : MonoBehaviour
             {
                 calmIndicator.Increase();
                 if(calmIndicator.ReachedMax())
-                    founded = false;
+                    {
+                        founded = false;
+                        supsicious = true;
+                    }
             }
             else
                 alertIndicator.Decrease();
 
             if(alertIndicator.ReachedMin() && alertBody.enabled)
-                alertBody.enabled = false;
+                {
+                    alertBody.enabled = false;
+                    supsicious = false;
+
+                }
             
         }
         alertUI.SetAlertLevel(alertIndicator.GetCurrentValue(), founded);

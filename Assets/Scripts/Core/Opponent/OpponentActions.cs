@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum OpponentMode {Exploring, Rushing, Attacking, Smelling};
-
-public enum ActionType {AllowToStop, ForbiddenStop, None}
+public enum OpponentMode {Exploring, Rushing, Attacking, Checking, Smelling};
 public class OpponentActions : MonoBehaviour
 {
-    public float walkingSpeed = 0.5f;
+    public float walkingSpeed = 0.3f;
     public float runningSpeed = 3.0f;
+    public float checkingSpeed = 1.5f;
     private float speed = 1.5f;
     public float attackMinDist = 1f;
     public float damageInterval = 0.4f;
-    public float reactionDelay = .4f;
+    public float ExploringInterval = 1f;
     public float rotationSpeed = 10f;
     public float changeRushingDecision = .05f;
 
+    public Transform playerSeenHelper;
     private float stoppingDistance = 0.0f;
     
     OpponentMode opponentMode = OpponentMode.Exploring;
@@ -25,10 +25,15 @@ public class OpponentActions : MonoBehaviour
     private VisionFieldOfView vfov;
     private Coroutine startedCoroutine;
     private TaskManager taskManager;
-    public ActionType currentAction;
     private bool alerted = false;
+    private bool nextAttack = false; //this bool mean if this is next attempt after first attack
     private Vector3 playerSeen;
-    
+
+     private void Awake () 
+     {
+        playerSeenHelper.SetParent(null, true);
+    }
+
     void Start() 
     {
         agent = GetComponent<NavMeshAgent>();
@@ -48,33 +53,43 @@ public class OpponentActions : MonoBehaviour
 
     public bool isAlerted() {return alerted;}
 
-    void SetLastPlayerPosition(Transform player) { playerSeen = player.position;}
+    void SetLastPlayerPosition(Transform player)
+    { 
+        playerSeen = player.position;
+        playerSeenHelper.position = playerSeen;
+    }
 
     public IEnumerator AgentAttack(Transform player, int damage)
     {
-        currentAction = ActionType.ForbiddenStop;
         agent.destination = transform.position;
         SetOpponentMode(OpponentMode.Rushing);
         // yield return new WaitForSeconds(2f);
-        yield return RotateTowardPosUntil(player, 2f);
+        if (!nextAttack)
+            yield return RotateTowardPosUntil(player, 2f); // here reaction of seeng player is runned
         if(GameSystem.Instance.opponentDebug) Debug.Log($"Agent is trying to reach player!");
         while(!ReachPlayerRange(player.position) && vfov.FoundedObject())
         {
+            SetLastPlayerPosition(player);
             agent.destination = player.position;
             yield return new WaitForSeconds(changeRushingDecision);
         }
-        // yield return new WaitForSeconds(0.05f);
-        agent.destination = transform.position;
-        yield return HitUntilDead(player, damage);
+        if(vfov.FoundedObject())
+        {
+            yield return HitUntilDead(player, damage);
+        }
+        else
+        {
+            nextAttack = false;
+        }
         taskManager.TaskSetToFinish();
     }
 
-    public IEnumerator RotateTowardPlayer()
+    public IEnumerator RotateTowardPlayer(Transform player)
     {       
             // agent.updateRotation = false;
-            while(Vector3.Angle(transform.forward, (playerSeen - transform.position).normalized) > 5)
+            while(Vector3.Angle(transform.forward, (player.position - transform.position).normalized) > 5)
             {
-                Vector3 targetDirection = playerSeen - transform.position;
+                Vector3 targetDirection = player.position - transform.position;
                 Vector3 newDirection = Vector3.RotateTowards(transform.forward, targetDirection, rotationSpeed * Time.deltaTime, 0f);
                 transform.rotation = Quaternion.LookRotation(newDirection);
                 yield return null;
@@ -98,24 +113,25 @@ public class OpponentActions : MonoBehaviour
 
     IEnumerator HitUntilDead(Transform player, int damage)
     {
-        currentAction = ActionType.ForbiddenStop;
+         agent.destination = transform.position;
         var plr = player.gameObject.GetComponent<Character>();
         SetOpponentMode(OpponentMode.Attacking);
         // Coroutine rotateCoroutine = StartCoroutine(RotateToPlayer(player));
         while(ReachPlayerRange(player.position, 0.05f))
         {
+            SetLastPlayerPosition(player);
             plr.ReduceHealth(damage);
             yield return new WaitForSeconds(damageInterval);
-            SetLastPlayerPosition(player);
-            yield return RotateTowardPlayer();
+            yield return RotateTowardPlayer(player);
+
         }
+        nextAttack = true;
 
     }
 
 
     public IEnumerator Exploring()
     {
-        currentAction = ActionType.AllowToStop;
         Vector3 randomDest = opponentUtils.FindRandomDestination();  
         return WalkTowardCoordinates(randomDest);
         
@@ -123,33 +139,40 @@ public class OpponentActions : MonoBehaviour
     
     public IEnumerator WalkFollowMousePosition()
     {   
-        currentAction = ActionType.AllowToStop;
         Vector3 mousePosition = opponentUtils.GetMousePosition();
         yield return WalkTowardCoordinates(mousePosition);
     }
 
-    IEnumerator WalkTowardCoordinates(Vector3 coordinats)
+    public IEnumerator CheckSuspiciousPlace()
+    {
+        SetOpponentMode(OpponentMode.Checking);
+        yield return WalkTowardCoordinates(playerSeen, 0.5f, false, false);
+    }
+
+    IEnumerator WalkTowardCoordinates(Vector3 coordinats, float distErr = 0f, bool justExploring=true, bool coolOff=true)
     {
         // This could be expanded in more interesting way of walking,
         // Brown motion, or at least more smooth that is now using Slerp and
         // turning off agent.updatePositon
-            opponentUtils.WalkTowardCoordinates(coordinats, agent);
-            if(GameSystem.Instance.opponentDebug) Debug.Log($"Agent destination: {agent.destination}");
-    
-            SetOpponentMode(OpponentMode.Exploring);
-            while(agent.remainingDistance > 0)
-            {   
-                yield return null;
+        if(coolOff)
+            
+            {
+                yield return new WaitForSeconds(ExploringInterval);
+                agent.destination = transform.position;
             }
-                yield return new WaitForSeconds(reactionDelay);
+            
+        opponentUtils.WalkTowardCoordinates(coordinats, agent);
+        if(GameSystem.Instance.opponentDebug) Debug.Log($"Agent destination: {agent.destination}");
+
+        if(justExploring)
+            SetOpponentMode(OpponentMode.Exploring);
+        while(agent.remainingDistance > distErr)
+        {   
+            yield return null;
+        }
         taskManager.TaskSetToFinish();
-        SetCurrentActionToNone();
 }
 
-    private void SetCurrentActionToNone()
-    {
-        currentAction = ActionType.None;
-    }
 
         public void SetOpponentMode(OpponentMode mode)
     {   
@@ -166,6 +189,12 @@ public class OpponentActions : MonoBehaviour
             {
                 speed = runningSpeed;
                 stoppingDistance = attackMinDist;
+                break;
+            }
+            case OpponentMode.Checking:
+            {
+                speed = checkingSpeed;
+                stoppingDistance = 0.0f;
                 break;
             }
             case OpponentMode.Attacking:

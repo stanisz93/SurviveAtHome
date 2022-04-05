@@ -35,17 +35,23 @@ public class Opponent : MonoBehaviour
     // Update is called once per frame
 
     void Update() {
+
+        var currPriority = taskManager.GetCurrentPriority();
         bool busy = taskManager.TaskIsEmpty();
         if(Input.GetMouseButtonDown(0))
         {
-            taskManager.ForceToRun(opponentActions.WalkFollowMousePosition());
-        }
-        else if (vfov.FoundedObject() && opponentActions.currentAction != ActionType.ForbiddenStop)
+            taskManager.ForceToRun(opponentActions.WalkFollowMousePosition(), 1);
+    }
+        else if (vfov.FoundedObject() && currPriority > 1)
             {
-                taskManager.ForceToRun(opponentActions.AgentAttack(vfov.GetPlayerTarget(), damage));
+                taskManager.ForceToRun(opponentActions.AgentAttack(vfov.GetPlayerTarget(), damage), 1);
             }
-        else if(taskManager.TaskIsEmpty())
-        {taskManager.ForceToRun(opponentActions.Exploring());}
+        else if (vfov.Suspicious() && currPriority > 2)
+            {
+                taskManager.ForceToRun(opponentActions.CheckSuspiciousPlace(), 2);
+            }
+        else if(currPriority > 3)
+        {taskManager.ForceToRun(opponentActions.Exploring(), 3);}
 
     }
     
