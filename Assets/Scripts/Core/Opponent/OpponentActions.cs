@@ -55,7 +55,8 @@ public class OpponentActions : MonoBehaviour
         currentAction = ActionType.ForbiddenStop;
         agent.destination = transform.position;
         SetOpponentMode(OpponentMode.Rushing);
-        yield return new WaitForSeconds(2f);
+        // yield return new WaitForSeconds(2f);
+        yield return RotateTowardPosUntil(player, 2f);
         if(GameSystem.Instance.opponentDebug) Debug.Log($"Agent is trying to reach player!");
         while(!ReachPlayerRange(player.position) && vfov.FoundedObject())
         {
@@ -71,7 +72,6 @@ public class OpponentActions : MonoBehaviour
     public IEnumerator RotateTowardPlayer()
     {       
             // agent.updateRotation = false;
-            
             while(Vector3.Angle(transform.forward, (playerSeen - transform.position).normalized) > 5)
             {
                 Vector3 targetDirection = playerSeen - transform.position;
@@ -80,6 +80,19 @@ public class OpponentActions : MonoBehaviour
                 yield return null;
             }
             // agent.updateRotation = true;
+    }
+
+    public IEnumerator RotateTowardPosUntil(Transform pos, float time)
+    {       
+        float timePassed = 0;
+        while(timePassed < time)
+        {
+            Vector3 targetDirection = pos.position - transform.position;
+            Vector3 newDirection = Vector3.RotateTowards(transform.forward, targetDirection, rotationSpeed * Time.deltaTime, 0f);
+            transform.rotation = Quaternion.LookRotation(newDirection);
+            timePassed += Time.deltaTime;
+            yield return null;
+        }
     }
  
 
