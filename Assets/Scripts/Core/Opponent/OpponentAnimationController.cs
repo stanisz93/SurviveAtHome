@@ -22,8 +22,15 @@ public class OpponentAnimationController : MonoBehaviour
         OpponentMode opponentMode = opponentActions.GetOpponentMode();
         switch(opponentMode)
         {
+            case OpponentMode.Idle:
+            {
+                animator.SetBool("HistericStay", true);
+                animator.SetBool("Suspicious", false);
+                break;
+            }
             case OpponentMode.Exploring:
             {
+                animator.SetBool("HistericStay", false);
                 animator.SetFloat("OpponentVelocity", agent.velocity.magnitude);
                 animator.SetBool("Rushing", false);
                 animator.SetBool("Attack", false);
@@ -32,6 +39,7 @@ public class OpponentAnimationController : MonoBehaviour
             }
             case OpponentMode.Rushing:
             {
+                animator.SetBool("HistericStay", false);
                 animator.SetBool("Rushing", true);
                 animator.SetBool("Attack", false);
                 animator.SetBool("Suspicious", false);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum OpponentMode {Exploring, Rushing, Attacking, Checking, Smelling};
+public enum OpponentMode {Exploring, Rushing, Idle, Attacking, Checking, Smelling};
 public class OpponentActions : MonoBehaviour
 {
     public float walkingSpeed = 0.3f;
@@ -28,6 +28,7 @@ public class OpponentActions : MonoBehaviour
     private bool alerted = false;
     private bool nextAttack = false; //this bool mean if this is next attempt after first attack
     private Vector3 playerSeen;
+    
 
      private void Awake () 
      {
@@ -136,11 +137,18 @@ public class OpponentActions : MonoBehaviour
         return WalkTowardCoordinates(randomDest);
         
     }
+
+    public IEnumerator Idle()
+    {
+        SetOpponentMode(OpponentMode.Idle);
+        yield return new WaitForSeconds(4f);
+        taskManager.TaskSetToFinish();
+    }
     
     public IEnumerator WalkFollowMousePosition()
     {   
         Vector3 mousePosition = opponentUtils.GetMousePosition();
-        yield return WalkTowardCoordinates(mousePosition);
+        yield return WalkTowardCoordinates(mousePosition, 0f, true, false);
     }
 
     public IEnumerator CheckSuspiciousPlace()
@@ -149,11 +157,14 @@ public class OpponentActions : MonoBehaviour
         yield return WalkTowardCoordinates(playerSeen, 0.5f, false, false);
     }
 
-    IEnumerator WalkTowardCoordinates(Vector3 coordinats, float distErr = 0f, bool justExploring=true, bool coolOff=true)
+    IEnumerator WalkTowardCoordinates(Vector3 coordinates, float distErr = 0f, bool justExploring=true, bool coolOff=true)
     {
         // This could be expanded in more interesting way of walking,
         // Brown motion, or at least more smooth that is now using Slerp and
         // turning off agent.updatePositon
+        
+        if(justExploring)
+            SetOpponentMode(OpponentMode.Exploring);
         if(coolOff)
             
             {
@@ -161,11 +172,9 @@ public class OpponentActions : MonoBehaviour
                 agent.destination = transform.position;
             }
             
-        opponentUtils.WalkTowardCoordinates(coordinats, agent);
+        opponentUtils.WalkTowardCoordinates(coordinates, agent);
         if(GameSystem.Instance.opponentDebug) Debug.Log($"Agent destination: {agent.destination}");
 
-        if(justExploring)
-            SetOpponentMode(OpponentMode.Exploring);
         while(agent.remainingDistance > distErr)
         {   
             yield return null;
@@ -179,9 +188,15 @@ public class OpponentActions : MonoBehaviour
         opponentMode = mode;
         switch(mode)
         {
+            case OpponentMode.Idle:
+            {
+                speed = 0f;
+                break;
+            }
+
             case OpponentMode.Exploring:
             {
-                speed = walkingSpeed;
+                speed =  walkingSpeed;
                 stoppingDistance = 0.0f;
                 break;
             }
