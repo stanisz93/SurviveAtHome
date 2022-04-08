@@ -7,6 +7,8 @@ using DG.Tweening;
 public class PlayerTriggers : MonoBehaviour
 {
 
+    public List<Transform> diePoints;
+    public Camera deathCamera;
     private PlayerAnimationController playerAnimationController;
     private CharacterMovement characterMovement;
     private Character character;
@@ -43,9 +45,16 @@ public class PlayerTriggers : MonoBehaviour
 
     private IEnumerator DieRoutine()
     {       
+            character.mainCamera.enabled = false;
+            deathCamera.enabled = true;
+            deathCamera.GetComponent<DeathCamera>().chooseCameraPosition();
             yield return new WaitForSeconds(2);
+
+            
             playerAnimationController.animator.SetTrigger("resurrect");
             character.ResetPlayer();
+            character.mainCamera.enabled = true;
+            deathCamera.enabled = false;
             dying = false;
     }
 }
