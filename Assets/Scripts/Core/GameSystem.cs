@@ -10,6 +10,7 @@ using UnityEngine;
     public bool opponentDebug = false;
     public bool taskManagerDebug = false;
     public bool opponentDamageDebug = false;
+    public List<GameObject> toDisable;
     private void Awake() {
         if (Instance != null) {
             DestroyImmediate(gameObject);
@@ -17,6 +18,10 @@ using UnityEngine;
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        foreach(GameObject g in toDisable)
+        {
+            g.GetComponent<MeshRenderer>().enabled = false;
+        }
     }
      
      }

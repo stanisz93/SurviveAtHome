@@ -19,8 +19,10 @@ public class DeathCamera : MonoBehaviour
         foreach(Transform point in potentialPoints)
         {
 
+            
             Vector3 dirToTarget = (player.position - point.position).normalized;
             float dstToTarget = Vector3.Distance(transform.position, player.position);
+            
             if(!Physics.Raycast(point.position, dirToTarget, dstToTarget, obstacleMask))
             {
                 transform.position = point.position;
