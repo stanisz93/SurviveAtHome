@@ -166,7 +166,8 @@ public enum VisionState {Founded, Suspicious, None};
             Debug.LogWarning("There is found more than one object in visible scanner!");
         if(visibleTargets.Count == 1)
         {
-            alertBody.enabled = true;
+            if (isSenseActive)
+                alertBody.enabled = true;
             ControlIndicators(true);
             if(state != VisionState.Founded && alertIndicator.ReachedMax())
                 {
