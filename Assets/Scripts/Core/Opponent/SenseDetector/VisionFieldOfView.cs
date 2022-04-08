@@ -26,7 +26,8 @@ public class VisionFieldOfView : MonoBehaviour
 
     
     private bool founded = false;
-    private bool supsicious = false;
+    private bool suspicious = false;
+    private bool isSenseActive = true;
     
     private Opponent opponent;
     private OpponentActions opponentActions;
@@ -52,8 +53,15 @@ public class VisionFieldOfView : MonoBehaviour
     {
         while(true)
         {
-            yield return new WaitForSeconds(delay);
-            FindVisibleTargets();
+            if(isSenseActive)
+            {
+                yield return new WaitForSeconds(delay);
+                FindVisibleTargets();
+            }
+            else
+            {
+                yield return null;
+            }
         }
     }
 
@@ -71,10 +79,27 @@ public class VisionFieldOfView : MonoBehaviour
 
     public bool Suspicious()
     {
-        return supsicious;
+        return suspicious;
+    }
+
+    public void ResetSense()
+    {
+        calmIndicator.ResetValue();
+        alertIndicator.ResetValue();
+        founded = false;
+        suspicious = false;
+        isSenseActive = false;
+        alertUI.SetAlertLevel(alertIndicator.GetCurrentValue(), founded);
+        alertBody.enabled = false;
+        StartCoroutine(CoolOff());
     }
 
 
+    IEnumerator CoolOff()
+    {
+        yield return new WaitForSeconds(2);
+        isSenseActive = true;
+    }
     public void FindVisibleTargets()
     {
         visibleTargets.Clear();
@@ -96,7 +121,7 @@ public class VisionFieldOfView : MonoBehaviour
             Debug.LogWarning("There is found more than one object in visible scanner!");
         if(visibleTargets.Count == 1)
             {
-                if (!alertBody.enabled)
+                if (!alertBody.enabled && isSenseActive)
                 alertBody.enabled = true;
 
                 alertIndicator.Increase();
@@ -108,7 +133,7 @@ public class VisionFieldOfView : MonoBehaviour
                 else if(alertIndicator.ReachedMax())
                     {
                         founded = true;
-                        supsicious = false;
+                        suspicious = false;
                         calmIndicator.SetToZero();
                     }
                 playerPos = visibleTargets[0];
@@ -122,7 +147,7 @@ public class VisionFieldOfView : MonoBehaviour
                 if(calmIndicator.ReachedMax())
                     {
                         founded = false;
-                        supsicious = true;
+                        suspicious = true;
                     }
             }
             else
@@ -131,7 +156,7 @@ public class VisionFieldOfView : MonoBehaviour
             if(alertIndicator.ReachedMin() && alertBody.enabled)
                 {
                     alertBody.enabled = false;
-                    supsicious = false;
+                    suspicious = false;
 
                 }
             

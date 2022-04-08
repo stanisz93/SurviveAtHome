@@ -26,6 +26,7 @@ public class Indicator
     public bool ReachedMin() { return reachMin;}
     public void SetToZero() {currentValue = 0f;}
 
+    public float GetMaxValue() {return maxValue;}
     public void Increase()
     {
         currentValue += step;

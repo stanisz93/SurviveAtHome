@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+
 public enum OpponentMode {Exploring, Rushing, Idle, Attacking, Checking, Smelling};
 public class OpponentActions : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class OpponentActions : MonoBehaviour
     public float rotationSpeed = 10f;
     public float changeRushingDecision = .05f;
 
-    public Transform playerSeenHelper;
+    public Transform playerSeenHelper; 
     private float stoppingDistance = 0.0f;
     
     OpponentMode opponentMode = OpponentMode.Exploring;
@@ -68,11 +69,14 @@ public class OpponentActions : MonoBehaviour
         if (!nextAttack)
             yield return RotateTowardPosUntil(player, 2f); // here reaction of seeng player is runned
         if(GameSystem.Instance.opponentDebug) Debug.Log($"Agent is trying to reach player!");
-        while(!ReachPlayerRange(player.position) && vfov.FoundedObject())
+        while(!ReachPlayerRange(player.position))
         {
-            SetLastPlayerPosition(player);
-            agent.destination = player.position;
-            yield return new WaitForSeconds(changeRushingDecision);
+            if(vfov.FoundedObject())
+            {   
+                SetLastPlayerPosition(player);
+                agent.destination = player.position;
+                yield return new WaitForSeconds(changeRushingDecision);
+            }
         }
         if(vfov.FoundedObject())
         {
@@ -120,10 +124,20 @@ public class OpponentActions : MonoBehaviour
         // Coroutine rotateCoroutine = StartCoroutine(RotateToPlayer(player));
         while(ReachPlayerRange(player.position, 0.05f))
         {
-            SetLastPlayerPosition(player);
-            plr.ReduceHealth(damage);
-            yield return new WaitForSeconds(damageInterval);
-            yield return RotateTowardPlayer(player);
+            if (plr.justDied())
+            {
+                vfov.ResetSense();
+                SetOpponentMode(OpponentMode.Exploring);
+                nextAttack = false;
+                yield break;
+            }
+            else
+            {
+                SetLastPlayerPosition(player);
+                plr.ReduceHealth(damage);
+                yield return new WaitForSeconds(damageInterval);
+                yield return RotateTowardPlayer(player);
+            }
 
         }
         nextAttack = true;

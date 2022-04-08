@@ -16,7 +16,7 @@ public class Slidable : MonoBehaviour
 
     // Update is called once per frame
     void OnTriggerEnter(Collider other) {
-        Character c = other.GetComponent<Character>();
+        PlayerTriggers c = other.GetComponent<PlayerTriggers>();
         if (c != null)
         {
             Vector3 plrPos = c.transform.position;
@@ -35,7 +35,7 @@ public class Slidable : MonoBehaviour
     }
     void OnTriggerExit(Collider other)
     {
-        Character c = other.GetComponent<Character>();
+        PlayerTriggers c = other.GetComponent<PlayerTriggers>();
         if (c != null)
         {
             c.Slidable = null;

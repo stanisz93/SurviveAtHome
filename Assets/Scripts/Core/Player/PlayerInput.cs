@@ -9,39 +9,47 @@ public class PlayerInput : MonoBehaviour
     private CharacterMovement chrMvmnt;
     private CapsuleCollider collider;
 
+    private PlayerTriggers playerTriggers;
+
     // Start is called before the first frame update
     void Start()
     {
         character = GetComponent<Character>();
         collider = GetComponent<CapsuleCollider>();
         chrMvmnt = GetComponent<CharacterMovement>();
+        playerTriggers = GetComponent<PlayerTriggers>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        character.AddMovementInput(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
-        // character.SetDefaultMovement();
-        if (!character.isSliding && Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.C))
+        if (!playerTriggers.dying)
         {
-            if (character.Slidable != null)
+            character.AddMovementInput(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
+            // character.SetDefaultMovement();
+            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.C))
             {
-                character.SetToSlide();
-                character.Slide();
+                if (playerTriggers.Slidable != null)
+                {
+                    character.triggeredAction = playerTriggers.Slide;
+                }
+            }
+            else if (Input.GetKey(KeyCode.LeftShift))
+            {
+                character.SetToRun();
+            }
+            else if(Input.GetKey(KeyCode.C))
+            {
+                character.SetToCrounch();
+            }
+            else
+            {
+                character.SetToWalk();
             }
         }
-        else if (Input.GetKey(KeyCode.LeftShift))
-        {
-            character.SetToRun();
-        }
-        else if(Input.GetKey(KeyCode.C))
-        {
-            character.SetToCrounch();
-        }
-        else
-        {
-            character.SetToWalk();
-        }
     }
+
+    
+
     
 }

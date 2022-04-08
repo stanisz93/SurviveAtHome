@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum MovementMode {Walking, Running, Crouching, Sliding, Staying};
+public enum MovementMode {Walking, Running, Crouching, Staying};
 public enum FightMode {Default, ReceiveDamage};
 
 [RequireComponent(typeof(Rigidbody))]
@@ -30,6 +30,11 @@ public class CharacterMovement : MonoBehaviour
     }
     
     public Vector3 Velocity {get => rigidbody.velocity; set => velocity = value;}
+
+    public void ResetVelocity()
+    {
+        velocity = Vector3.zero;
+    }
     void Update()
     {
         if (velocity.magnitude > 0)

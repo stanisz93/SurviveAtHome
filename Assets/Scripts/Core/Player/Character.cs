@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using DG.Tweening;
+
 public class Character : MonoBehaviour
 {
     private CharacterMovement characterMovement;
@@ -12,12 +12,11 @@ public class Character : MonoBehaviour
     private float forwardInput;
     private float rightInput;
 
-    
     private int health;
-    private Slidable slidable;
-    public bool isSliding = false;
-    public Slidable Slidable { get => slidable; set => slidable = value; }
 
+    private PlayerTriggers playerTriggers;
+    public delegate void TriggerAction();
+    public TriggerAction triggeredAction;
 
     // Start is called before the first frame update
 
@@ -25,9 +24,22 @@ public class Character : MonoBehaviour
 
     void Start() {
         characterMovement = GetComponent<CharacterMovement>();
+        playerTriggers = GetComponent<PlayerTriggers>();
+        ResetPlayer();
+        }
+
+    public void ResetPlayer()
+    {
+        transform.position = new Vector3(0.81f, 0.79f, -14.5f);
         health = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
-        }
+    }
+
+    public bool justDied()
+    {
+        return playerTriggers.dying;
+    }
+
 
     private Vector3 AdjustRelativeToCamera(float forward, float right)
     {
@@ -57,11 +69,18 @@ public class Character : MonoBehaviour
     }
 
 
+
     public void ReduceHealth(int damage)
     {
         health -= damage;
         healthBar.SetHealth(health);
-        SetFightmode(FightMode.ReceiveDamage);
+        if (health < 0 && !playerTriggers.dying)
+        {
+            triggeredAction = playerTriggers.Die;
+        }
+        else
+            SetFightmode(FightMode.ReceiveDamage);
+
     }
     public int GetHealth(){return health;}
     
@@ -82,20 +101,7 @@ public class Character : MonoBehaviour
 
     public void SetToRun(){characterMovement.SetMovementMode(MovementMode.Running);}
 
-    public void SetToSlide(){characterMovement.SetMovementMode(MovementMode.Sliding);}
-
     public void SetToCrounch(){characterMovement.SetMovementMode(MovementMode.Crouching);}
     public void SetToWalk(){characterMovement.SetMovementMode(MovementMode.Walking);}
 
-    public void Slide()
-    {
-        isSliding = true;
-        Vector3 t_slidePoint = slidable.GetSlidePoint();
-        Vector3 t_landpoint = slidable.GetEndSlidePoint();
-        Sequence sq = DOTween.Sequence();
-        sq.Append(transform.DOMove(t_slidePoint, .1f));
-        sq.Append(transform.DOMove(t_landpoint, .8f));
-        sq.AppendCallback(()=> isSliding = false);
-        Slidable = null;
-    }
-}   
+}

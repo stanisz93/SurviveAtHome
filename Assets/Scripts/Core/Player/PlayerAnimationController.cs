@@ -12,13 +12,17 @@ public class PlayerAnimationController : MonoBehaviour
     public float hitAnimLifeTime = 0.4f;
     public float hitFadeOutTime = 0.15f;
 
+
     private Character character;
     private CharacterMovement chrMovement;
     private LayerInvoker layerInvoker;
+    private PlayerInput plrInput;
     private CapsuleCollider collider;
     private bool isHitAnimLaunch = false;
 
-    void Start()
+  
+
+    void Awake()
     {
         character = GetComponent<Character>();
         chrMovement = GetComponent<CharacterMovement>();
@@ -37,10 +41,8 @@ public class PlayerAnimationController : MonoBehaviour
         MovementMode currentMovement = character.GetMovement();
 
         // Debug.Log(currentMovement);
-        if(currentMovement == MovementMode.Sliding)
-        {
-           animator.SetTrigger("Slide");
-        }
+        character.triggeredAction?.Invoke();
+        character.triggeredAction = null;
         
         if (currentMovement == MovementMode.Crouching)
             {
@@ -69,6 +71,10 @@ public class PlayerAnimationController : MonoBehaviour
         chrMovement.SetFightMode(FightMode.Default);
         isHitAnimLaunch = false;
     }
+
+
+
+
 
 
    
