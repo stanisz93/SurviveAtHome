@@ -10,16 +10,20 @@ public class OpponentAnimationController : MonoBehaviour
 
     private NavMeshAgent agent;
     private OpponentActions opponentActions;
+    private Opponent opponent;
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         opponentActions = GetComponent<OpponentActions>();
+        opponent = GetComponent<Opponent>();
         
     }
     void LateUpdate()
     {
         if(animator==null) {Debug.LogWarning("No valid animator!"); return;}
         OpponentMode opponentMode = opponentActions.GetOpponentMode();
+        
+
         switch(opponentMode)
         {
             case OpponentMode.Agonize:
@@ -59,5 +63,6 @@ public class OpponentAnimationController : MonoBehaviour
             }
         
         }
+            
     }
 }

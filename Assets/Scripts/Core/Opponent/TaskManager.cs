@@ -8,8 +8,9 @@ public class TaskManager : MonoBehaviour {
 
     private IEnumerator currentTask = null;
     private bool isEmpty = true;
-    private int currentPriority = 4;
-
+    
+    private static int lowestPriority = 5;
+    private int currentPriority = lowestPriority;
 
     private IEnumerator StartTask(IEnumerator task, int prior)
     {
@@ -25,10 +26,12 @@ public class TaskManager : MonoBehaviour {
         return isEmpty;
     }
 
+
+
     public void TaskSetToFinish()
     {
         isEmpty = true;
-        currentPriority = 4;
+        currentPriority = lowestPriority;
     }
     public void StopCurrentTask()
     {
@@ -39,7 +42,7 @@ public class TaskManager : MonoBehaviour {
                 Debug.Log($"{currentTask} Task stops.");
             }
             StopCoroutine(currentTask);
-            currentPriority = 4;
+            currentPriority = lowestPriority;
             isEmpty = true;
         }
     }

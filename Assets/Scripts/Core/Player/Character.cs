@@ -42,6 +42,7 @@ public class Character : MonoBehaviour
 
 
 
+
     private Vector3 AdjustRelativeToCamera(float forward, float right)
     {
         forwardInput = forward;

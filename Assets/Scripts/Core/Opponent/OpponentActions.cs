@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
-public enum OpponentMode {Exploring, Rushing, Agonize, Attacking, Checking, LookAround, Smelling};
+public enum OpponentMode {Exploring, Rushing, Agonize, Fall, Attacking, Checking, LookAround, Smelling};
 public class OpponentActions : MonoBehaviour
 {
     public float walkingSpeed = 0.3f;
@@ -18,6 +18,8 @@ public class OpponentActions : MonoBehaviour
     public float changeRushingDecision = .05f;
 
     public Transform playerSeenHelper; 
+
+    public Animator animator;
     private float stoppingDistance = 0.0f;
     
     OpponentMode opponentMode = OpponentMode.Exploring;
@@ -29,6 +31,7 @@ public class OpponentActions : MonoBehaviour
     private bool alerted = false;
     private bool nextAttack = false; //this bool mean if this is next attempt after first attack
     private Vector3 playerSeen;
+    private Opponent opponent;
     
 
      private void Awake () 
@@ -42,6 +45,7 @@ public class OpponentActions : MonoBehaviour
         opponentUtils = GetComponent<OpponentUtils>();
         vfov = GetComponentInChildren<VisionFieldOfView>();
         taskManager = GetComponent<TaskManager>();
+        opponent = GetComponent<Opponent>();
         
     }
 
@@ -60,6 +64,16 @@ public class OpponentActions : MonoBehaviour
         playerSeen = player.position;
         playerSeenHelper.position = playerSeen;
     }
+
+    public IEnumerator Fall()
+    {
+        SetOpponentMode(OpponentMode.Fall);
+        animator.SetTrigger("Fall");
+        vfov.ResetSense();
+        yield return new WaitForSeconds(2f);
+        taskManager.TaskSetToFinish();    
+    }
+    
 
     public IEnumerator AgentAttack(Transform player, int damage)
     {
@@ -214,6 +228,11 @@ public class OpponentActions : MonoBehaviour
                 break;
             }
             case OpponentMode.LookAround:
+            {
+                speed = 0f;
+                break;
+            }
+            case OpponentMode.Fall:
             {
                 speed = 0f;
                 break;

@@ -14,9 +14,6 @@ public class Opponent : MonoBehaviour
     private OpponentUtils opponentUtils;
     private VisionFieldOfView vfov;
     private TaskManager taskManager;
-
-    
-
    
     
 
@@ -31,6 +28,11 @@ public class Opponent : MonoBehaviour
 
     }
 
+    public void Fall()
+    {
+        if(taskManager.GetCurrentPriority() > 1) 
+            taskManager.ForceToRun(opponentActions.Fall(), 1);
+    }
 
     // Update is called once per frame
 
@@ -40,19 +42,19 @@ public class Opponent : MonoBehaviour
         bool busy = taskManager.TaskIsEmpty();
         if(Input.GetMouseButtonDown(0))
         {
-            taskManager.ForceToRun(opponentActions.WalkFollowMousePosition(), 1);
-    }
-        else if (vfov.FoundedObject() && currPriority > 1)
+            taskManager.ForceToRun(opponentActions.WalkFollowMousePosition(), 3);
+        }
+        else if (vfov.FoundedObject() && currPriority > 2)
             {
-                taskManager.ForceToRun(opponentActions.AgentAttack(vfov.GetPlayerTarget(), damage), 1);
+                taskManager.ForceToRun(opponentActions.AgentAttack(vfov.GetPlayerTarget(), damage), 2);
             }
-        else if (vfov.Suspicious() && currPriority > 2)
+        else if (vfov.Suspicious() && currPriority > 3)
             {
-                taskManager.ForceToRun(opponentActions.CheckSuspiciousPlace(), 2);
+                taskManager.ForceToRun(opponentActions.CheckSuspiciousPlace(), 3);
             }
-        else if(currPriority > 3)
+        else if(currPriority > 4)
         {
-            taskManager.ForceToRun(opponentActions.Exploring(), 3);
+            taskManager.ForceToRun(opponentActions.Exploring(), 4);
         }
 
     }
