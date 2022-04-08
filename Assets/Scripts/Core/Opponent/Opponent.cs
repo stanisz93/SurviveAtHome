@@ -52,10 +52,7 @@ public class Opponent : MonoBehaviour
             }
         else if(currPriority > 3)
         {
-            if(Random.value >= 0.6)
-                taskManager.ForceToRun(opponentActions.Idle(), 3);
-            else
-                taskManager.ForceToRun(opponentActions.Exploring(), 3);
+            taskManager.ForceToRun(opponentActions.Exploring(), 3);
         }
 
     }

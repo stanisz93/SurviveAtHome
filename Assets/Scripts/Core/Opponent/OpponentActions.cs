@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
-public enum OpponentMode {Exploring, Rushing, Idle, Attacking, Checking, Smelling};
+public enum OpponentMode {Exploring, Rushing, Agonize, Attacking, Checking, LookAround, Smelling};
 public class OpponentActions : MonoBehaviour
 {
     public float walkingSpeed = 0.3f;
@@ -145,15 +145,21 @@ public class OpponentActions : MonoBehaviour
 
     public IEnumerator Exploring()
     {
-        Vector3 randomDest = opponentUtils.FindRandomDestination();  
-        return WalkTowardCoordinates(randomDest);
+        if(Random.value >= 0.6)
+            yield return Idle();
+        else
+        {
+            Vector3 randomDest = opponentUtils.FindRandomDestination();  
+            yield return WalkTowardCoordinates(randomDest);
+        }
         
     }
 
     public IEnumerator Idle()
     {
-        SetOpponentMode(OpponentMode.Idle);
+        SetOpponentMode(OpponentMode.Agonize);
         yield return new WaitForSeconds(4f);
+        SetOpponentMode(OpponentMode.Exploring);
         taskManager.TaskSetToFinish();
     }
     
@@ -167,6 +173,8 @@ public class OpponentActions : MonoBehaviour
     {
         SetOpponentMode(OpponentMode.Checking);
         yield return WalkTowardCoordinates(playerSeen, 0.5f, false, false);
+        SetOpponentMode(OpponentMode.LookAround);
+        yield return new WaitForSeconds(4f);
     }
 
     IEnumerator WalkTowardCoordinates(Vector3 coordinates, float distErr = 0f, bool justExploring=true, bool coolOff=true)
@@ -200,12 +208,16 @@ public class OpponentActions : MonoBehaviour
         opponentMode = mode;
         switch(mode)
         {
-            case OpponentMode.Idle:
+            case OpponentMode.Agonize:
             {
                 speed = 0f;
                 break;
             }
-
+            case OpponentMode.LookAround:
+            {
+                speed = 0f;
+                break;
+            }
             case OpponentMode.Exploring:
             {
                 speed =  walkingSpeed;
