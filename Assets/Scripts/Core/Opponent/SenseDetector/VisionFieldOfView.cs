@@ -25,8 +25,8 @@ public class VisionFieldOfView : MonoBehaviour
     public Alert alertUI;
 
     
-    private bool founded = false;
-    private bool suspicious = false;
+    private VisionState state = VisionState.None;
+    // private bool suspicious = false;
     private bool isSenseActive = true;
     
     private Opponent opponent;
@@ -40,13 +40,15 @@ public class VisionFieldOfView : MonoBehaviour
     private Canvas alertBody;
     private Transform playerPos;
 
+public enum VisionState {Founded, Suspicious, None};
 
     void Start()
     {
         alertBody = alertUI.GetComponentInParent<Canvas>();
+        alertBody.enabled = false;
         alertUI.SetDefault(maxAlertScore);
-        calmIndicator = new Indicator(maxCalmingScore, maxCalmingScore, calmingStep);
-        alertIndicator = new Indicator(0f, maxAlertScore, AlertStep);
+        calmIndicator = new Indicator(maxCalmingScore, maxCalmingScore, calmingStep, false);
+        alertIndicator = new Indicator(0f, maxAlertScore, AlertStep, true);
         StartCoroutine("FindTargetsWithDelay", searchDelay);
     }
     IEnumerator FindTargetsWithDelay(float delay)
@@ -67,38 +69,81 @@ public class VisionFieldOfView : MonoBehaviour
 
     public Transform GetPlayerTarget()
     {
-        if (founded)
+        if (state == VisionState.Founded)
             return playerPos;
         return null;
     }
 
     public bool FoundedObject()
     {
-        return founded;
+        return state == VisionState.Founded;
     }
 
     public bool Suspicious()
     {
-        return suspicious;
+        return state == VisionState.Suspicious;
     }
 
     public void ResetSense()
     {
-        calmIndicator.ResetValue();
-        alertIndicator.ResetValue();
-        founded = false;
-        suspicious = false;
+        calmIndicator.Reset();
+        alertIndicator.Reset();
+        state = VisionState.None;
         isSenseActive = false;
-        alertUI.SetAlertLevel(alertIndicator.GetCurrentValue(), founded);
+        alertUI.SetAlertLevel(alertIndicator.GetCurrentValue(), FoundedObject());
         alertBody.enabled = false;
         StartCoroutine(CoolOff());
     }
 
+    private void SetStateToFounded()
+    {
+        state = VisionState.Founded;
+        calmIndicator.Activate();
+        calmIndicator.SetToZero();
+    }
+
+    private void SetStateToSuspicious()
+    {
+        state = VisionState.Suspicious;
+        alertIndicator.SetToMax();
+        calmIndicator.Deactivate();
+    }
 
     IEnumerator CoolOff()
     {
         yield return new WaitForSeconds(2);
         isSenseActive = true;
+    }
+
+    void ControlIndicators(bool noticed)
+    {
+        switch(state)
+        {
+            case VisionState.Founded:
+            {
+                if(noticed)
+                    calmIndicator.Decrease();
+                else
+                    calmIndicator.Increase();
+                break;
+            }
+            case VisionState.Suspicious:
+            {
+                if(noticed)
+                    alertIndicator.Increase();
+                else
+                    alertIndicator.Decrease();
+                break;
+            }
+            case VisionState.None:
+            {
+                if(noticed)
+                    alertIndicator.Increase();
+                else
+                    alertIndicator.Decrease();
+                break;
+            }
+        }
     }
     public void FindVisibleTargets()
     {
@@ -120,48 +165,31 @@ public class VisionFieldOfView : MonoBehaviour
         if (visibleTargets.Count > 1)
             Debug.LogWarning("There is found more than one object in visible scanner!");
         if(visibleTargets.Count == 1)
-            {
-                if (!alertBody.enabled && isSenseActive)
-                alertBody.enabled = true;
-
-                alertIndicator.Increase();
-                if (founded)
+        {
+            alertBody.enabled = true;
+            ControlIndicators(true);
+            if(state != VisionState.Founded && alertIndicator.ReachedMax())
                 {
-                    calmIndicator.Decrease();
-
+                    SetStateToFounded();
                 }
-                else if(alertIndicator.ReachedMax())
-                    {
-                        founded = true;
-                        suspicious = false;
-                        calmIndicator.SetToZero();
-                    }
-                playerPos = visibleTargets[0];
-            }
+            playerPos = visibleTargets[0];
+        }
 
         else
         {
-            if(founded)
+            ControlIndicators(false);
+            if(calmIndicator.ReachedMax() && calmIndicator.isActive())
+                SetStateToSuspicious();
+
+            if(alertIndicator.ReachedMin())
             {
-                calmIndicator.Increase();
-                if(calmIndicator.ReachedMax())
-                    {
-                        founded = false;
-                        suspicious = true;
-                    }
+                alertBody.enabled = false;
+                state = VisionState.None;
             }
-            else
-                alertIndicator.Decrease();
-
-            if(alertIndicator.ReachedMin() && alertBody.enabled)
-                {
-                    alertBody.enabled = false;
-                    suspicious = false;
-
-                }
             
         }
-        alertUI.SetAlertLevel(alertIndicator.GetCurrentValue(), founded);
+
+        alertUI.SetAlertLevel(alertIndicator.GetCurrentValue(), FoundedObject());
 
 
     }

@@ -44,8 +44,8 @@ public class PlayerTriggers : MonoBehaviour
     private IEnumerator DieRoutine()
     {       
             yield return new WaitForSeconds(2);
-            character.ResetPlayer();
             playerAnimationController.animator.SetTrigger("resurrect");
+            character.ResetPlayer();
             dying = false;
     }
 }

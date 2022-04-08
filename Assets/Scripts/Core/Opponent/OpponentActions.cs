@@ -69,16 +69,14 @@ public class OpponentActions : MonoBehaviour
         if (!nextAttack)
             yield return RotateTowardPosUntil(player, 2f); // here reaction of seeng player is runned
         if(GameSystem.Instance.opponentDebug) Debug.Log($"Agent is trying to reach player!");
-        while(!ReachPlayerRange(player.position))
+        while(!ReachPlayerRange(player.position) && vfov.FoundedObject())
         {
-            if(vfov.FoundedObject())
-            {   
-                SetLastPlayerPosition(player);
-                agent.destination = player.position;
-                yield return new WaitForSeconds(changeRushingDecision);
-            }
+             SetLastPlayerPosition(player);
+            agent.destination = player.position;
+            yield return new WaitForSeconds(changeRushingDecision);
+            
         }
-        if(vfov.FoundedObject())
+        if(vfov.FoundedObject()) //because it means that it reach player
         {
             yield return HitUntilDead(player, damage);
         }
