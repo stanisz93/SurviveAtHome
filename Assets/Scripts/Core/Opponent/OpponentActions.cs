@@ -70,7 +70,7 @@ public class OpponentActions : MonoBehaviour
         SetOpponentMode(OpponentMode.Fall);
         animator.SetTrigger("Fall");
         vfov.ResetSense();
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(4f);
         taskManager.TaskSetToFinish();    
     }
     
