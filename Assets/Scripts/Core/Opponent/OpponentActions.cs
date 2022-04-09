@@ -69,7 +69,9 @@ public class OpponentActions : MonoBehaviour
     {
         SetOpponentMode(OpponentMode.Fall);
         animator.SetTrigger("Fall");
-        vfov.ResetSense();
+        vfov.ResetSense(7f);
+        yield return new WaitForSeconds(3f);
+        animator.SetTrigger("StandAfterFall");
         yield return new WaitForSeconds(4f);
         taskManager.TaskSetToFinish();    
     }
@@ -186,12 +188,13 @@ public class OpponentActions : MonoBehaviour
     public IEnumerator CheckSuspiciousPlace()
     {
         SetOpponentMode(OpponentMode.Checking);
-        yield return WalkTowardCoordinates(playerSeen, 0.5f, false, false);
+        yield return WalkTowardCoordinates(playerSeen, 0.5f, false, false, false);
         SetOpponentMode(OpponentMode.LookAround);
         yield return new WaitForSeconds(4f);
+        taskManager.TaskSetToFinish();
     }
 
-    IEnumerator WalkTowardCoordinates(Vector3 coordinates, float distErr = 0f, bool justExploring=true, bool coolOff=true)
+    IEnumerator WalkTowardCoordinates(Vector3 coordinates, float distErr = 0f, bool justExploring=true, bool coolOff=true, bool finishTask=true)
     {
         // This could be expanded in more interesting way of walking,
         // Brown motion, or at least more smooth that is now using Slerp and
@@ -213,7 +216,8 @@ public class OpponentActions : MonoBehaviour
         {   
             yield return null;
         }
-        taskManager.TaskSetToFinish();
+        if(finishTask)
+            taskManager.TaskSetToFinish();
 }
 
 

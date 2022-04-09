@@ -41,6 +41,11 @@ public class OpponentAnimationController : MonoBehaviour
                 animator.SetBool("Suspicious", false);
                 break;
             }
+            case OpponentMode.LookAround:
+            {
+                animator.SetBool("Suspicious", false);
+                break;
+            }
             case OpponentMode.Rushing:
             {
                 animator.SetBool("Agonize", false);
