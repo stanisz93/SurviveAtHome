@@ -16,20 +16,27 @@ public class Character : MonoBehaviour
     private int health;
 
     private PlayerTriggers playerTriggers;
+
+    private Inventory inventory;
     public delegate void TriggerAction();
     public TriggerAction triggeredAction;
+
 
     // Start is called before the first frame update
 
     // Update is called once per frame
 
-    void Start() {
+    void Awake() {
         DeathCamera.enabled = false;
         mainCamera.enabled = true;
+        inventory = new Inventory();
         characterMovement = GetComponent<CharacterMovement>();
         playerTriggers = GetComponent<PlayerTriggers>();
         ResetPlayer();
         }
+
+    public Inventory GetInventory() { return inventory;}
+
 
     public void ResetPlayer()
     {

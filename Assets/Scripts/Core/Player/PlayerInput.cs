@@ -42,6 +42,10 @@ public class PlayerInput : MonoBehaviour
             {
                 character.SetToCrounch();
             }
+            else if(Input.GetKey(KeyCode.F))
+            {
+                playerTriggers.PickItemp();
+            }
             else
             {
                 character.SetToWalk();

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-[RequireComponent(typeof(PlayerAnimationController), typeof(Character))]
+[RequireComponent(typeof(PlayerAnimationController), typeof(ItemPickupManager), typeof(Character))]
 public class PlayerTriggers : MonoBehaviour
 {
 
@@ -13,6 +13,8 @@ public class PlayerTriggers : MonoBehaviour
     private CharacterMovement characterMovement;
     private Character character;
     private Slidable slidable;
+
+    private ItemPickupManager itemPickupManager;
     public bool dying = false;
     public Slidable Slidable { get => slidable; set => slidable = value; }
 
@@ -20,6 +22,7 @@ public class PlayerTriggers : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        itemPickupManager = GetComponent<ItemPickupManager>();
         character = GetComponent<Character>();
         playerAnimationController = GetComponent<PlayerAnimationController>(); 
         characterMovement = GetComponent<CharacterMovement>();
@@ -41,6 +44,13 @@ public class PlayerTriggers : MonoBehaviour
             playerAnimationController.animator.SetTrigger("Die");
             characterMovement.ResetVelocity();
             StartCoroutine(DieRoutine());
+    }
+
+    public void PickItemp()
+    {
+        SpoonItem best = itemPickupManager.GetBestOption();
+        best.RunPickEvent();
+
     }
 
     private IEnumerator DieRoutine()
