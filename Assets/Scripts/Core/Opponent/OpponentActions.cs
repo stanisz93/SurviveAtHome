@@ -175,7 +175,6 @@ public class OpponentActions : MonoBehaviour
     {
         SetOpponentMode(OpponentMode.Agonize);
         yield return new WaitForSeconds(4f);
-        SetOpponentMode(OpponentMode.Exploring);
         taskManager.TaskSetToFinish();
     }
     

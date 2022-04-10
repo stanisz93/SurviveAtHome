@@ -7,11 +7,13 @@ public class Link : MonoBehaviour
     // Start is called before the first frame update
     public float yAxisOffset = 2f;
 
+    private CableGenerator hookRef;
     private HingeJoint joint;
     void Start()
     {
         joint = GetComponent<HingeJoint>();
         joint.connectedAnchor = new Vector3(0f, -yAxisOffset, 0f);
+        hookRef = GetComponentInParent<CableGenerator>();
     }
 
     // Update is called once per frame
@@ -27,12 +29,16 @@ public class Link : MonoBehaviour
         string triggerTag = other.transform.tag; 
         if ((triggerTag == plrTag) || (triggerTag == opponentTag))
         {
-            if(triggerTag == opponentTag)
+            if(triggerTag == opponentTag && !hookRef.IsBroken())
             {
                 other.gameObject.GetComponent<Opponent>().Fall();
                 Debug.Log($"Collide with {other.gameObject}");
                 Destroy(gameObject);
+                hookRef.RemovePoint(this);
+                
+                
             }
         }
     }
+
 }

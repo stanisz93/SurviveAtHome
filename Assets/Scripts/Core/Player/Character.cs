@@ -7,6 +7,7 @@ public class Character : MonoBehaviour
 {
     private CharacterMovement characterMovement;
     public Camera mainCamera;
+    public Camera DeathCamera;
     public HealthBar healthBar;
     public int maxHealth = 500;
     private float forwardInput;
@@ -23,6 +24,8 @@ public class Character : MonoBehaviour
     // Update is called once per frame
 
     void Start() {
+        DeathCamera.enabled = false;
+        mainCamera.enabled = true;
         characterMovement = GetComponent<CharacterMovement>();
         playerTriggers = GetComponent<PlayerTriggers>();
         ResetPlayer();

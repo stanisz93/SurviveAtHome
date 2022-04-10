@@ -11,7 +11,9 @@ public class CableGenerator : MonoBehaviour
 
     // public BreakPoint breakPoint;
     public int links = 10;
+    public List<Transform> points;
     private GameObject lastPoint;
+    private bool broken = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,10 +30,26 @@ public class CableGenerator : MonoBehaviour
 
     }
 
+
     public GameObject GetLastPoint()
     {
         return lastPoint;
     }
+
+    public void RemovePoint(Link link)
+    {
+        links -= 1;
+        broken = true;
+        points.Remove(link.transform);
+    }
+
+
+
+    public bool IsBroken()
+    {
+        return broken;
+    }
+
     void GenerateWire()
     {
         Rigidbody prevRB = hook;
@@ -40,6 +58,7 @@ public class CableGenerator : MonoBehaviour
             GameObject link = Instantiate(linkPrefab, transform);
             HingeJoint joint = link.GetComponent<HingeJoint>();
             joint.connectedBody = prevRB;
+            points.Add(link.transform);
             // if (i < links - 1)
             // {
                 prevRB = link.GetComponent<Rigidbody>();
