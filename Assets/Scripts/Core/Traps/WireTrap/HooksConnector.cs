@@ -51,7 +51,7 @@ public class HooksConnector : MonoBehaviour
             return false;
     }
 
-    async void Update()
+    void Update()
     {
         if(hookA.GetLastPoint() != null && hookB.GetLastPoint() != null && !runOnce)
         {

@@ -46,10 +46,14 @@ public class PlayerTriggers : MonoBehaviour
             StartCoroutine(DieRoutine());
     }
 
-    public void PickItemp()
+    public void PickItem()
     {
         SpoonItem best = itemPickupManager.GetBestOption();
-        best.RunPickEvent();
+        if(best != null)
+        {
+            itemPickupManager.RemovePotentialObject(best);
+            best.RunPickEvent();
+        }
 
     }
 

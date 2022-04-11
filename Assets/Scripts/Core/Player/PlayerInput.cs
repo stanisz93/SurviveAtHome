@@ -42,9 +42,9 @@ public class PlayerInput : MonoBehaviour
             {
                 character.SetToCrounch();
             }
-            else if(Input.GetKey(KeyCode.F))
+            else if(Input.GetKeyDown(KeyCode.F))
             {
-                playerTriggers.PickItemp();
+                playerTriggers.PickItem();
             }
             else
             {
