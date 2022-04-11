@@ -158,6 +158,7 @@ public class OpponentActions : MonoBehaviour
             }
 
         }
+        SetOpponentMode(OpponentMode.Rushing);
         nextAttack = true;
 
     }

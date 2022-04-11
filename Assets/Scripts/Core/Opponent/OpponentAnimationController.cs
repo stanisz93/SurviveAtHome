@@ -36,7 +36,6 @@ public class OpponentAnimationController : MonoBehaviour
             {
                 animator.SetBool("Scream", true);
                 animator.SetBool("Agonize", false);
-                animator.SetBool("Attack", false);
                 animator.SetBool("Suspicious", false);
                 break;
             }
@@ -56,6 +55,7 @@ public class OpponentAnimationController : MonoBehaviour
             }
             case OpponentMode.Rushing:
             {
+                animator.SetBool("Attack", false);
                 animator.SetBool("Scream", false);
                 animator.SetBool("Rushing", true);
 
