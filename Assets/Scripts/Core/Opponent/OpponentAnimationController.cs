@@ -32,6 +32,12 @@ public class OpponentAnimationController : MonoBehaviour
                 animator.SetBool("Suspicious", false);
                 break;
             }
+            case OpponentMode.Fall:
+            {
+                animator.SetBool("Rushing", false);
+                animator.SetBool("Suspicious", false);
+                break;
+            }
             case OpponentMode.Scream:
             {
                 animator.SetBool("Scream", true);
