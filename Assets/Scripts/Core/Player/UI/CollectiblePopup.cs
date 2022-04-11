@@ -17,6 +17,7 @@ public class CollectiblePopup : MonoBehaviour
         
         rConfig.Setup(spoon.GetAmount(), spoon.GetResourceType().ToString());
         collectible.transform.LookAt(cam.forward + collectible.transform.position);
+        // transform.LookAt(transform.position + camera.transform.rotation * Vector3.back, camera.transform.rotation * Vector3.up);
 
         // collectible.transform.LookAt(cam.transform);
     
