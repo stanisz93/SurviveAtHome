@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
-public enum OpponentMode {Exploring, Rushing, Agonize, Fall, Attacking, Checking, LookAround, Smelling};
+public enum OpponentMode {Exploring, Rushing, Scream, Agonize, Fall, Attacking, Checking, LookAround, Smelling};
 public class OpponentActions : MonoBehaviour
 {
     public float walkingSpeed = 0.3f;
@@ -80,10 +80,14 @@ public class OpponentActions : MonoBehaviour
     public IEnumerator AgentAttack(Transform player, int damage)
     {
         agent.destination = transform.position;
-        SetOpponentMode(OpponentMode.Rushing);
+        
         // yield return new WaitForSeconds(2f);
         if (!nextAttack)
-            yield return RotateTowardPosUntil(player, 2f); // here reaction of seeng player is runned
+        {
+            SetOpponentMode(OpponentMode.Scream);
+            yield return RotateTowardPosUntil(player, 2f);
+        }    
+        SetOpponentMode(OpponentMode.Rushing); // here reaction of seeng player is runned
         if(GameSystem.Instance.opponentDebug) Debug.Log($"Agent is trying to reach player!");
         while(!ReachPlayerRange(player.position) && vfov.FoundedObject())
         {
@@ -236,6 +240,11 @@ public class OpponentActions : MonoBehaviour
                 break;
             }
             case OpponentMode.Fall:
+            {
+                speed = 0f;
+                break;
+            }
+            case OpponentMode.Scream:
             {
                 speed = 0f;
                 break;

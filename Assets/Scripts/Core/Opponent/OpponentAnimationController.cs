@@ -32,6 +32,14 @@ public class OpponentAnimationController : MonoBehaviour
                 animator.SetBool("Suspicious", false);
                 break;
             }
+            case OpponentMode.Scream:
+            {
+                animator.SetBool("Scream", true);
+                animator.SetBool("Agonize", false);
+                animator.SetBool("Attack", false);
+                animator.SetBool("Suspicious", false);
+                break;
+            }
             case OpponentMode.Exploring:
             {
                 animator.SetBool("Agonize", false);
@@ -48,10 +56,9 @@ public class OpponentAnimationController : MonoBehaviour
             }
             case OpponentMode.Rushing:
             {
-                animator.SetBool("Agonize", false);
+                animator.SetBool("Scream", false);
                 animator.SetBool("Rushing", true);
-                animator.SetBool("Attack", false);
-                animator.SetBool("Suspicious", false);
+
                 break;
             }
             case OpponentMode.Checking:
