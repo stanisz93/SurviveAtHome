@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+
 [RequireComponent(typeof(Collider))]
 public class SpoonItem : MonoBehaviour
 {
@@ -54,7 +55,9 @@ public class SpoonItem : MonoBehaviour
     public float GetRelativeDirection(Transform obj)
     {
         Vector3 dir = (transform.position - obj.position).normalized;
-        return Vector3.Dot(dir, obj.forward);   
+        
+        float score = Vector3.Dot(dir, obj.forward);   
+        return score;
     }
 
     // private void Update() {

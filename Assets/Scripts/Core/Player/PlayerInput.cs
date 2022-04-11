@@ -10,6 +10,7 @@ public class PlayerInput : MonoBehaviour
     private CapsuleCollider collider;
 
     private PlayerTriggers playerTriggers;
+    private ItemPickupManager itemPickupManager;
 
     // Start is called before the first frame update
     void Start()
@@ -18,6 +19,7 @@ public class PlayerInput : MonoBehaviour
         collider = GetComponent<CapsuleCollider>();
         chrMvmnt = GetComponent<CharacterMovement>();
         playerTriggers = GetComponent<PlayerTriggers>();
+        itemPickupManager = GetComponent<ItemPickupManager>();
     }
 
     // Update is called once per frame
@@ -44,7 +46,7 @@ public class PlayerInput : MonoBehaviour
             }
             else if(Input.GetKeyDown(KeyCode.F))
             {
-                playerTriggers.PickItem();
+                itemPickupManager.PickItem();
             }
             else
             {

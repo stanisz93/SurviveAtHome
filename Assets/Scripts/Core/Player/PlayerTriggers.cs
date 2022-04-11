@@ -13,8 +13,6 @@ public class PlayerTriggers : MonoBehaviour
     private CharacterMovement characterMovement;
     private Character character;
     private Slidable slidable;
-
-    private ItemPickupManager itemPickupManager;
     public bool dying = false;
     public Slidable Slidable { get => slidable; set => slidable = value; }
 
@@ -22,7 +20,6 @@ public class PlayerTriggers : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        itemPickupManager = GetComponent<ItemPickupManager>();
         character = GetComponent<Character>();
         playerAnimationController = GetComponent<PlayerAnimationController>(); 
         characterMovement = GetComponent<CharacterMovement>();
@@ -46,16 +43,7 @@ public class PlayerTriggers : MonoBehaviour
             StartCoroutine(DieRoutine());
     }
 
-    public void PickItem()
-    {
-        SpoonItem best = itemPickupManager.GetBestOption();
-        if(best != null)
-        {
-            itemPickupManager.RemovePotentialObject(best);
-            best.RunPickEvent();
-        }
 
-    }
 
     private IEnumerator DieRoutine()
     {       

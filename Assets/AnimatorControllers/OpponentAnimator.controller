@@ -284,9 +284,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 1.0824145
+  m_TransitionDuration: 0.32758704
   m_TransitionOffset: 0
-  m_ExitTime: 0.120676465
+  m_ExitTime: 0.03118006
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -368,9 +368,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 2.361061
+  m_TransitionDuration: 0.91634274
   m_TransitionOffset: 0
-  m_ExitTime: 0.720795
+  m_ExitTime: 0.67564756
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -686,9 +686,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.6591115
-  m_TransitionOffset: 0.036455017
-  m_ExitTime: 0.5090496
+  m_TransitionDuration: 0.40117693
+  m_TransitionOffset: 0.036455117
+  m_ExitTime: 0.50904965
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -732,6 +732,9 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 1
     m_ConditionEvent: Rushing
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: Scream
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -5789651697528194635}

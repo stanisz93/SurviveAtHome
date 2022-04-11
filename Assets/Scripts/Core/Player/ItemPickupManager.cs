@@ -9,6 +9,7 @@ public class ItemPickupManager : MonoBehaviour
 // Highlity one that is directed the most toward player.
 
     public Transform t_mesh; // needed for proper direction
+    public CollectiblePopup collectiblePopup;
     private Character character;
     public bool debugDistance=false;
     
@@ -31,17 +32,37 @@ public class ItemPickupManager : MonoBehaviour
             PossibleToPicked.Remove(spoon);
     }
 
+    public void PickItem()
+    {
+        SpoonItem best = GetBestOption();
+        if(best != null)
+        {
+            RemovePotentialObject(best);
+            collectiblePopup.PopUp(best);
+            best.RunPickEvent();
+        }
+
+    }
+
+
+
 
     public SpoonItem GetBestOption() {return bestOption;}
     void SetBestOption()
     {
-        int size = PossibleToPicked.Count();
+        List <SpoonItem> PreprocessL = new List<SpoonItem>(); // Checking again if objects are directed properly
+        foreach(SpoonItem spoon in PossibleToPicked)
+        {
+            if(spoon.GetRelativeDirection(t_mesh) > 0f)
+            PreprocessL.Add(spoon);
+        }
+        int size = PreprocessL.Count();
         if(size == 0)
             bestOption = null;
         else if(size == 1)
-            bestOption = PossibleToPicked[0];
+            bestOption = PreprocessL[0];
         else
-            bestOption = PossibleToPicked.Aggregate((i1,i2) => i1.GetRelativeDirection(t_mesh) > i2.GetRelativeDirection(t_mesh) ? i1 : i2);
+            bestOption = PreprocessL.Aggregate((i1,i2) => i1.GetRelativeDirection(t_mesh) > i2.GetRelativeDirection(t_mesh) ? i1 : i2);
         if(debugDistance && size > 1)
         {
             Debug.Log($"Best current option: {bestOption}");
