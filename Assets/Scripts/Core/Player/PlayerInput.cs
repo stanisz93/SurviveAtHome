@@ -1,10 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+public enum ControllerMode {Normal, Inventory};
+
 [RequireComponent(typeof(Character))]
 [RequireComponent(typeof(CharacterMovement))]
 public class PlayerInput : MonoBehaviour
 {
+
+    public InventoryUI inventoryUI;
     private Character character;
     private CharacterMovement chrMvmnt;
     private CapsuleCollider collider;
@@ -12,9 +17,15 @@ public class PlayerInput : MonoBehaviour
     private PlayerTriggers playerTriggers;
     private ItemPickupManager itemPickupManager;
 
+    private ControllerMode controllerMode;
+
+    
+
+
     // Start is called before the first frame update
     void Start()
     {
+        controllerMode = ControllerMode.Normal;
         character = GetComponent<Character>();
         collider = GetComponent<CapsuleCollider>();
         chrMvmnt = GetComponent<CharacterMovement>();
@@ -28,6 +39,27 @@ public class PlayerInput : MonoBehaviour
         if (!playerTriggers.dying)
         {
             character.AddMovementInput(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
+  
+            if (controllerMode == ControllerMode.Normal)
+            {
+                ManageNormalControl();
+            }
+            else if(controllerMode == ControllerMode.Inventory)
+            {   
+
+                inventoryUI.ContainsAnyTile(Input.mousePosition);
+                if(!Input.GetKey(KeyCode.Tab))
+                {
+                    
+                    inventoryUI.LeftInventory();
+                    controllerMode = ControllerMode.Normal;
+                }
+            }
+        }
+    }
+
+    void ManageNormalControl()
+    {
             // character.SetDefaultMovement();
             if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.C))
             {
@@ -48,11 +80,15 @@ public class PlayerInput : MonoBehaviour
             {
                 itemPickupManager.PickItem();
             }
+            else if(Input.GetKey(KeyCode.Tab))
+            {
+                inventoryUI.GoToInventory();
+                controllerMode = ControllerMode.Inventory;
+            }
             else
             {
                 character.SetToWalk();
             }
-        }
     }
 
     
