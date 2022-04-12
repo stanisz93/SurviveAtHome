@@ -26,24 +26,45 @@ public class InventoryUI : MonoBehaviour
         foreach(InventoryTile tile in tiles)
         {
             if (RectTransformUtility.RectangleContainsScreenPoint(tile.GetRectTransform(), mousePos))
-                            ChangeTile(tile);
-        } 
+                SwampFocus(tile);
+        }
+        if(currentTile != null)
+            ContainsAnySubtile(mousePos);
 
     }
 
+    public void ChooseSubtile(Vector3 mousePos)
+    {
+        /// Here mechanique for manage all subtiles
+        
+    }
 
-    void ChangeTile(InventoryTile newTile)
+    
+    void ContainsAnySubtile(Vector3 mousePos)
+    {
+        foreach(InventoryTile subtile in currentTile.subtiles)
+        {
+            if (RectTransformUtility.RectangleContainsScreenPoint(subtile.GetRectTransform(), mousePos))
+                currentTile.SwampSubtileFocus(subtile);
+        } 
+    }
+
+
+    void SwampFocus(InventoryTile newTile)
     {
         if(currentTile != null)
-            currentTile.TurnOffBorder();
+            currentTile.SwitchFocus(false);
         currentTile = newTile;
-        currentTile.TurnOnBorder();
+        currentTile.SwitchFocus(true);
     }
 
     void ResetUI()
     {
         if(currentTile != null)
+        {
             currentTile.TurnOffBorder();
+            currentTile.DeactivateTileGroup();
+        }
         currentTile = null;
     }
 
@@ -63,6 +84,7 @@ public class InventoryUI : MonoBehaviour
     public void LeftInventory()
     {
         backpack.enabled = false;
+
         ResetUI();
         foreach(InventoryTile tile in tiles)
         {

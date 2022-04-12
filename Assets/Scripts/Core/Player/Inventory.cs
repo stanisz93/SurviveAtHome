@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 public enum ResourceType {Metal, Rope};
+public enum TrapType {Wire};
 public class Inventory
 {
     // Start is called before the first frame update
