@@ -250,9 +250,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9038542567287572618}
-  - component: {fileID: 4153347558414195692}
+  - component: {fileID: 419360536750453185}
   m_Layer: 0
-  m_Name: InventoryTile
+  m_Name: ItemTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -275,7 +275,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4153347558414195692
+--- !u!114 &419360536750453185
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -284,11 +284,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7417331216699896363}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6a8dc918338ef7449175892dede6691, type: 3}
+  m_Script: {fileID: 11500000, guid: 7b472c35975d47d449b98cae7c6a0177, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   reactibleArea: {fileID: 333856581667840230}
   Border: {fileID: 1952289005236589781}
   OutlineBorder: {fileID: 3337374894106512352}
   image: {fileID: 0}
-  subtiles: []
