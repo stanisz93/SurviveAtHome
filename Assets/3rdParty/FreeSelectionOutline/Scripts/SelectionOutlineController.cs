@@ -202,8 +202,8 @@ public class SelectionOutlineController : MonoBehaviour
             // {
 
             // TargetRenderer = hit.transform.GetComponent<Renderer>();
-            SpoonItem bestItem = itemPickupManager.GetBestOption();
-            TargetRenderer = bestItem.GetComponent<Renderer>();
+            var bestOption = itemPickupManager.GetBestOption();
+            TargetRenderer = bestOption.gameObject.GetComponent<Renderer>();
             if (lastTarget == null) lastTarget = TargetRenderer;
             if (SelectionMode == SelMode.AndChildren)
             {
@@ -211,7 +211,7 @@ public class SelectionOutlineController : MonoBehaviour
                 {
                     Array.Clear(ChildrenRenderers, 0, ChildrenRenderers.Length);
                 }
-                ChildrenRenderers = bestItem.GetComponentsInChildren<Renderer>();
+                ChildrenRenderers = bestOption.GetComponentsInChildren<Renderer>();
             }
 
 

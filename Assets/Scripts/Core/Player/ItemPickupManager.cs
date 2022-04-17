@@ -13,30 +13,30 @@ public class ItemPickupManager : MonoBehaviour
     private Character character;
     public bool debugDistance=false;
     
-    List <SpoonItem> PossibleToPicked; 
-    SpoonItem bestOption;
+    List <Item> PossibleToPicked; 
+    Transform bestOption;
     // Start is called before the first frame update
     void Start()
     {
-        PossibleToPicked = new List<SpoonItem>();
+        PossibleToPicked = new List<Item>();
         StartCoroutine(CheckPotentialPickups());
     }
 
-    public void AddPotentialObject(SpoonItem spoon)
+    public void AddPotentialObject(Item item)
     {
-        PossibleToPicked.Add(spoon);
+        PossibleToPicked.Add(item);
     }
-    public void RemovePotentialObject(SpoonItem spoon)
+    public void RemovePotentialObject(Item item)
     {
-        if(spoon != null)
-            PossibleToPicked.Remove(spoon);
+        if(item != null)
+            PossibleToPicked.Remove(item);
     }
 
     public void PickItem()
     {
-        SpoonItem best = GetBestOption();
-        if(best != null)
+        if(bestOption != null)
         {
+            Item best = bestOption.gameObject.GetComponent<Item>();
             RemovePotentialObject(best);
             collectiblePopup.PopUp(best);
             best.RunPickEvent();
@@ -47,14 +47,22 @@ public class ItemPickupManager : MonoBehaviour
 
 
 
-    public SpoonItem GetBestOption() {return bestOption;}
+    public Transform GetBestOption() {return bestOption;}
+
+    public float GetRelativeDirection(Transform objTransform)
+    {
+        Vector3 dir = (objTransform.position - t_mesh.position).normalized;
+        
+        float score = Vector3.Dot(dir, t_mesh.forward);   
+        return score;
+    }
     void SetBestOption()
     {
-        List <SpoonItem> PreprocessL = new List<SpoonItem>(); // Checking again if objects are directed properly
-        foreach(SpoonItem spoon in PossibleToPicked)
+        List <Transform> PreprocessL = new List<Transform>(); // Checking again if objects are directed properly
+        foreach(Item item in PossibleToPicked)
         {
-            if(spoon.GetRelativeDirection(t_mesh) > 0f)
-            PreprocessL.Add(spoon);
+            if(GetRelativeDirection(item.transform) > 0f)
+                PreprocessL.Add(item.transform);
         }
         int size = PreprocessL.Count();
         if(size == 0)
@@ -62,7 +70,7 @@ public class ItemPickupManager : MonoBehaviour
         else if(size == 1)
             bestOption = PreprocessL[0];
         else
-            bestOption = PreprocessL.Aggregate((i1,i2) => i1.GetRelativeDirection(t_mesh) > i2.GetRelativeDirection(t_mesh) ? i1 : i2);
+            bestOption = PreprocessL.Aggregate((i1,i2) => GetRelativeDirection(i1) > GetRelativeDirection(i2) ? i1 : i2);
         if(debugDistance && size > 1)
         {
             Debug.Log($"Best current option: {bestOption}");

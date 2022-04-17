@@ -11,9 +11,12 @@ public class ResourceConfig : MonoBehaviour
     
     private void Awake() {
         textMesh = transform.GetComponent<TextMeshPro>();
+        textMesh.enabled = false;
     }
     public void Setup(int amount, string resType)
     {
+        if(!textMesh.enabled)
+            textMesh.enabled = true;
         textMesh.SetText($"+ {amount} {resType}");
         Sequence sequence = DOTween.Sequence();
         sequence.Append(textMesh.DOFade(0f, 1.2f)).Join(transform.DOMoveY(3, 2f, false)).AppendCallback(() => Destroy(gameObject));

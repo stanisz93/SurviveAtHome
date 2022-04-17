@@ -1,23 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class SpawnManager : MonoBehaviour
 {
 
     public List<Transform> itemLocations;
 
-    public Character character;
-    public GameObject spoonPrefab;
+    public List<GameObject> pfItems;
+    public Inventory inventory;
     // Start is called before the first frame update
-    private Inventory inventory;
     void Start()
     {
-        inventory = character.GetInventory();
-        
+        var random = new System.Random(1);
         foreach(Transform loc in itemLocations)
         {
-            SpawnSpoon(loc);
+            int index = random.Next(pfItems.Count);
+            SpawnObject(pfItems[index], loc);
         }
     }
 
@@ -33,13 +33,14 @@ public class SpawnManager : MonoBehaviour
     //     spoon.OnPickup += inventory.HandlePickup;
     // }
 
-    void SpawnSpoon(Transform spawnLocation)
+    void SpawnObject(GameObject itemPrefab, Transform spawnLocation)
     {
-        GameObject spoonObject = Instantiate(spoonPrefab, spawnLocation);
-        SpoonItem spoonItem = spoonObject.GetComponent<SpoonItem>();
-        if (spoonItem == null)
+        GameObject itemObj = Instantiate(itemPrefab, spawnLocation);
+        Item item = itemObj.GetComponent<Item>();
+
+        if (item == null)
          Debug.LogError("Spoon prefab should have attached SpoonItem script to it!");
-         spoonItem.OnPickup += inventory.HandlePickup;
+         item.OnPickup += inventory.HandlePickup;
     }
 
     // Update is called once per frame

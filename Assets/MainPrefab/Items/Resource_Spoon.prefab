@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4578222752497160683}
   - component: {fileID: 5498520683379575986}
   m_Layer: 0
-  m_Name: CollectibleSpoon
+  m_Name: Resource_Spoon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -108,3 +108,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ca3dcb4893ce7343ab0be2df639a808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  amountSet: 1

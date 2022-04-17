@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class ItemTile : InventoryTile 
 {
-    private TextMesh currentAmountText;
+    private Text currentAmountText;
     // [SerializeField]
     // private CraftableItem craftableItemPrefab; in the future
     //when I want to connect actual object to it
@@ -13,7 +13,7 @@ public class ItemTile : InventoryTile
     // }
     private void Awake() {
         image = transform.Find("Icon").GetComponent<Image>();
-        currentAmountText = gameObject.AddComponent<TextMesh>();
+        currentAmountText = gameObject.AddComponent<Text>();
         base.Awake();
     } 
 

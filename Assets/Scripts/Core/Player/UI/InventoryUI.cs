@@ -10,6 +10,8 @@ public class InventoryUI : MonoBehaviour
 
     private bool isOpen = false;
     private List<MainBlockTile> tiles;
+    private List<InventoryResource> resources;
+    private Dictionary<string, InventoryResource> inventoryResourceDict;
 
     private MainBlockTile currentBlockTile = null;
 
@@ -17,6 +19,13 @@ public class InventoryUI : MonoBehaviour
     void Start()
     {
         tiles = new List<MainBlockTile>(gameObject.GetComponentsInChildren<MainBlockTile>());
+        resources = new List<InventoryResource>(gameObject.GetComponentsInChildren<InventoryResource>());
+        inventoryResourceDict = new Dictionary<string, InventoryResource>();
+        foreach(var res in resources)
+        {
+            inventoryResourceDict.Add(res.resourceType.ToString(), res);
+        }
+        
         LeftInventory();
         // GoToInventory();
     }
@@ -39,6 +48,17 @@ public class InventoryUI : MonoBehaviour
     {
         /// Here mechanique for manage all subtiles
         
+    }
+
+    public void UpdateMetalResource(int value)
+    {
+        inventoryResourceDict[ResourceType.Metal.ToString()].SetValue(value);
+    }
+
+    
+    public void UpdateClothResource(int value)
+    {
+        inventoryResourceDict[ResourceType.Cloth.ToString()].SetValue(value);
     }
 
 
@@ -70,6 +90,10 @@ public class InventoryUI : MonoBehaviour
             {
                 tile.Activate();
             }
+            foreach(InventoryResource res in resources)
+        {
+            res.Switch(true);
+        }
             isOpen = true;
         }
     }
@@ -82,6 +106,10 @@ public class InventoryUI : MonoBehaviour
         foreach(MainBlockTile tile in tiles)
         {
             tile.Deactivate();
+        }
+        foreach(InventoryResource res in resources)
+        {
+            res.Switch(false);
         }
         isOpen = false;
     }

@@ -9,13 +9,13 @@ public class CollectiblePopup : MonoBehaviour
     [SerializeField]
     private GameObject pfCollectPopUp;
     private GameObject collectible;
-    public void PopUp(SpoonItem spoon)
+    public void PopUp(Item item)
     {
-        Vector3 v = spoon.transform.position;
+        Vector3 v = item.transform.position;
         collectible = Instantiate(pfCollectPopUp, v, Quaternion.identity);
         ResourceConfig rConfig = collectible.GetComponent<ResourceConfig>();
         
-        rConfig.Setup(spoon.GetAmount(), spoon.GetResourceType().ToString());
+        rConfig.Setup(item.amount, item.GetItemName().ToString());
         collectible.transform.LookAt(cam.forward + collectible.transform.position);
         // transform.LookAt(transform.position + camera.transform.rotation * Vector3.back, camera.transform.rotation * Vector3.up);
 

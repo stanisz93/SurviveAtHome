@@ -2,22 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-
+[RequireComponent(typeof(Inventory))]
 public class Character : MonoBehaviour
 {
     private CharacterMovement characterMovement;
     public Camera mainCamera;
+
     public Camera DeathCamera;
     public HealthBar healthBar;
     public int maxHealth = 500;
     private float forwardInput;
     private float rightInput;
-
+    public Inventory inventory;
     private int health;
 
     private PlayerTriggers playerTriggers;
 
-    private Inventory inventory;
     public delegate void TriggerAction();
     public TriggerAction triggeredAction;
 
@@ -29,7 +29,6 @@ public class Character : MonoBehaviour
     void Awake() {
         DeathCamera.enabled = false;
         mainCamera.enabled = true;
-        inventory = new Inventory();
         characterMovement = GetComponent<CharacterMovement>();
         playerTriggers = GetComponent<PlayerTriggers>();
         ResetPlayer();
