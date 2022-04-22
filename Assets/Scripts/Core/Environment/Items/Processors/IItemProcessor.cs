@@ -1,6 +1,9 @@
+    using UnityEngine;
+    using System;
     public interface IItemProcessor
     {
-    bool CanProcess(Item item);
+    bool CanProcess(GameObject item);
 
-    void AddToInventory(Item item, Inventory inventory);
+    void AddToInventory(GameObject item);
+
     }

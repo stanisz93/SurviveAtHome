@@ -13,14 +13,13 @@ public class Character : MonoBehaviour
     public int maxHealth = 500;
     private float forwardInput;
     private float rightInput;
-    public Inventory inventory;
     private int health;
 
     private PlayerTriggers playerTriggers;
 
     public delegate void TriggerAction();
     public TriggerAction triggeredAction;
-
+    private Inventory Inventory;
 
     // Start is called before the first frame update
 
@@ -31,10 +30,9 @@ public class Character : MonoBehaviour
         mainCamera.enabled = true;
         characterMovement = GetComponent<CharacterMovement>();
         playerTriggers = GetComponent<PlayerTriggers>();
+        Inventory = GetComponent<Inventory>(); 
         ResetPlayer();
         }
-
-    public Inventory GetInventory() { return inventory;}
 
 
     public void ResetPlayer()

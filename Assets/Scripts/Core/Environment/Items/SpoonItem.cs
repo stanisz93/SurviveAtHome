@@ -5,17 +5,45 @@ using System;
 
 
 [RequireComponent(typeof(Collider))]
-public class SpoonItem : ResourceItem
+public class SpoonItem : MonoBehaviour, ICollectible
 {
-    public int amountSet;
-    public override int amount 
+
+   public  Action<ICollectible> OnPickup {get; set;}
+    public int GetAmount()
     {
-        get {return amountSet;}
-        set {}
+        return 1;
     }
-    private void Awake() 
+
+    public void OnTriggerEnter(Collider other) 
+   {  
+        if(other.transform.tag == "Player")
+        {
+            var itemPickuper = other.gameObject.GetComponent<ItemPickupManager>(); /// Here 
+            itemPickuper.AddPotentialObject(this);
+        }
+    }
+    public  void OnTriggerExit(Collider other) {
+        if(other.transform.tag == "Player")
+        {
+            var itemPickuper = other.gameObject.GetComponent<ItemPickupManager>();
+            itemPickuper.RemovePotentialObject(this);
+        }
+    }
+
+   public ResourceType GetResourceType()
     {
-        base.Awake();
-        enumName = ResourceType.Metal;
+        return ResourceType.Metal;
     }
+
+    public void Collect()
+    {
+        OnPickup?.Invoke(this);
+        OnPickup = null;
+    }
+
+    public void OnDestroy()
+    { 
+        Destroy(gameObject);
+    }
+
 }

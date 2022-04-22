@@ -36,11 +36,11 @@ public class SpawnManager : MonoBehaviour
     void SpawnObject(GameObject itemPrefab, Transform spawnLocation)
     {
         GameObject itemObj = Instantiate(itemPrefab, spawnLocation);
-        Item item = itemObj.GetComponent<Item>();
+        ICollectible collectItem = itemObj.GetComponent<ICollectible>();
 
-        if (item == null)
+        if (collectItem == null)
          Debug.LogError("Spoon prefab should have attached SpoonItem script to it!");
-         item.OnPickup += inventory.HandlePickup;
+         collectItem.OnPickup += inventory.HandlePickup;
     }
 
     // Update is called once per frame

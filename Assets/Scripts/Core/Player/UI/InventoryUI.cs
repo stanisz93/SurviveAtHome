@@ -7,11 +7,12 @@ public class InventoryUI : MonoBehaviour
 
     public Camera mainCam;
     public Image backpack;
-
+    public TrapManager trapManager;
     private bool isOpen = false;
     private List<MainBlockTile> tiles;
     private List<InventoryResource> resources;
     private Dictionary<string, InventoryResource> inventoryResourceDict;
+
 
     private MainBlockTile currentBlockTile = null;
 
@@ -31,6 +32,22 @@ public class InventoryUI : MonoBehaviour
     }
 
     // Update is called once per frame
+    public void CraftItemIfPressed(Vector3 mousePos)
+    {
+        if(currentBlockTile !=null)
+        {
+            if (currentBlockTile.GetCurrentSubTile() != null)
+            {
+                if(RectTransformUtility.RectangleContainsScreenPoint(currentBlockTile.GetCurrentSubTile().GetRectTransform(), mousePos))
+                {
+                    currentBlockTile.GetCurrentSubTile().TryToCraft();
+                }
+            }
+
+
+        }
+    }
+
     public void ContainsAnyTile(Vector3 mousePos)
     {
         foreach(MainBlockTile tile in tiles)
@@ -59,6 +76,18 @@ public class InventoryUI : MonoBehaviour
     public void UpdateClothResource(int value)
     {
         inventoryResourceDict[ResourceType.Cloth.ToString()].SetValue(value);
+    }
+
+    public void UpdateResourcesUI(ResourceType resType, int value)
+    {
+        if (resType == ResourceType.Metal)
+        {
+            UpdateMetalResource(value);
+        }
+        else if(resType == ResourceType.Cloth)
+        {
+            UpdateClothResource(value);
+        }
     }
 
 

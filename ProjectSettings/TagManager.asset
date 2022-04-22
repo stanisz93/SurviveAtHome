@@ -6,6 +6,8 @@ TagManager:
   tags:
   - DeathCamera
   - Opponent
+  - PlayerMesh
+  - Inventory
   layers:
   - Default
   - TransparentFX

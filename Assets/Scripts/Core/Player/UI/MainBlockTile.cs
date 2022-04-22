@@ -7,7 +7,7 @@ public class MainBlockTile : InventoryTile
 
     private List<ItemTile> subtiles;
     private ItemTile currentSubtile = null;
-    private void Awake() {
+    public override void Awake() {
         image = transform.Find("Icon").GetComponent<Image>();
         subtiles = new List<ItemTile>(gameObject.GetComponentsInChildren<ItemTile>());
 
@@ -16,6 +16,10 @@ public class MainBlockTile : InventoryTile
 
     // Update is called once per frame
 
+    public ItemTile GetCurrentSubTile()
+    {
+        return currentSubtile;
+    }
 
     public void ContainsAnySubtile(Vector3 mousePos)
     {

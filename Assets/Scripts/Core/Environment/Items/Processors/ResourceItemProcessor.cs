@@ -1,30 +1,31 @@
 using UnityEngine;
+using System;
 
 public class ResourceItemProcessor : IItemProcessor {
     
-    public bool CanProcess(Item item)
+    private Inventory inventory;
+
+    public ResourceItemProcessor(Inventory inventory)
     {
-        if (item.GetItemType().Equals(typeof(ResourceType)))
+        this.inventory = inventory;
+    }
+
+
+    public bool CanProcess(GameObject item)
+    {
+        if (item.GetComponent<ICollectible>() != null)
             return true;
         else
             return false;
     }
 
-    public void AddToInventory(Item item, Inventory inventory)
+    public void AddToInventory(GameObject item)
     {
-        inventory.resources[item.GetItemName().ToString()] += item.amount;
-
-        ResourceType addedResource = (ResourceType) item.GetItemName();
-        
-        if (addedResource == ResourceType.Metal)
-        {
-            inventory.ui.UpdateMetalResource(inventory.resources[addedResource.ToString()]);
-        }
-        else if(addedResource == ResourceType.Cloth)
-        {
-            inventory.ui.UpdateClothResource(inventory.resources[addedResource.ToString()]);
-        }
-        
+        ICollectible collectible = item.GetComponent<ICollectible>();
+        ResourceType resType = collectible.GetResourceType();
+        this.inventory.AddResource(resType, collectible.GetAmount());
     }
+
+
 
 }

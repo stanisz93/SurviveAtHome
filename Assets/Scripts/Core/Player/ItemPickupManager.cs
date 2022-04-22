@@ -13,33 +13,33 @@ public class ItemPickupManager : MonoBehaviour
     private Character character;
     public bool debugDistance=false;
     
-    List <Item> PossibleToPicked; 
+    List <ICollectible> PossibleToPicked; 
     Transform bestOption;
     // Start is called before the first frame update
     void Start()
     {
-        PossibleToPicked = new List<Item>();
+        PossibleToPicked = new List<ICollectible>();
         StartCoroutine(CheckPotentialPickups());
     }
 
-    public void AddPotentialObject(Item item)
+    public void AddPotentialObject(ICollectible item)
     {
         PossibleToPicked.Add(item);
     }
-    public void RemovePotentialObject(Item item)
+    public void RemovePotentialObject(ICollectible item)
     {
         if(item != null)
             PossibleToPicked.Remove(item);
     }
 
-    public void PickItem()
+    public void PickICollectible()
     {
         if(bestOption != null)
         {
-            Item best = bestOption.gameObject.GetComponent<Item>();
+            ICollectible best = (ICollectible)bestOption.gameObject.GetComponent<ICollectible>();
             RemovePotentialObject(best);
             collectiblePopup.PopUp(best);
-            best.RunPickEvent();
+            best.Collect();
         }
 
     }
@@ -59,7 +59,7 @@ public class ItemPickupManager : MonoBehaviour
     void SetBestOption()
     {
         List <Transform> PreprocessL = new List<Transform>(); // Checking again if objects are directed properly
-        foreach(Item item in PossibleToPicked)
+        foreach(ICollectible item in PossibleToPicked)
         {
             if(GetRelativeDirection(item.transform) > 0f)
                 PreprocessL.Add(item.transform);
@@ -74,7 +74,7 @@ public class ItemPickupManager : MonoBehaviour
         if(debugDistance && size > 1)
         {
             Debug.Log($"Best current option: {bestOption}");
-            // foreach(SpoonItem spoon in PossibleToPicked)
+            // foreach(SpoonICollectible spoon in PossibleToPicked)
             // {
             //     Debug.Log($"Spoon with coordinates {spoon.transform.position} has score {spoon.GetRelativeDirection(t_mesh)}");
             // }

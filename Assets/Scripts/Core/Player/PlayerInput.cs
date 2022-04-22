@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ControllerMode {Normal, Inventory};
+public enum ControllerMode {Normal, Inventory, SettingTrap};
 
 [RequireComponent(typeof(Character))]
 [RequireComponent(typeof(CharacterMovement))]
@@ -48,6 +48,10 @@ public class PlayerInput : MonoBehaviour
             {   
 
                 inventoryUI.ContainsAnyTile(Input.mousePosition);
+                if(Input.GetMouseButtonDown(0))
+                {
+                    inventoryUI.CraftItemIfPressed(Input.mousePosition);
+                }
                 if(!Input.GetKey(KeyCode.Tab))
                 {
                     
@@ -55,7 +59,24 @@ public class PlayerInput : MonoBehaviour
                     controllerMode = ControllerMode.Normal;
                 }
             }
+            else if (controllerMode == ControllerMode.SettingTrap)
+            {
+                if(Input.GetKey(KeyCode.Escape))
+                {
+                    controllerMode = ControllerMode.Normal;
+                }
+                else if(Input.GetKey(KeyCode.F))
+                {
+                    Debug.Log("Object has been sticked!");
+                }
+            }
         }
+    }
+
+
+    void ManageSettingTrapControl()
+    {
+
     }
 
     void ManageNormalControl()
@@ -78,7 +99,11 @@ public class PlayerInput : MonoBehaviour
             }
             else if(Input.GetKeyDown(KeyCode.F))
             {
-                itemPickupManager.PickItem();
+                itemPickupManager.PickICollectible();
+            }
+            else if(Input.GetKeyDown(KeyCode.V))
+            {
+                controllerMode = ControllerMode.SettingTrap;
             }
             else if(Input.GetKey(KeyCode.Tab))
             {

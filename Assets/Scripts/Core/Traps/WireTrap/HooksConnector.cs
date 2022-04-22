@@ -5,14 +5,25 @@ using UnityEngine;
 public class HooksConnector : MonoBehaviour
 {
     // Start is called before the first frame update
-    public CableGenerator hookA;
-    public CableGenerator hookB;
+
     private LineRenderer lr;
+
+    private CableGenerator[] hooks;
     bool runOnce = false;
 
     private void Awake() {
         lr = GetComponent<LineRenderer>();
+        hooks = GetComponentsInChildren<CableGenerator>();
+        if(hooks.Length != 2)
+            Debug.LogError("Two hooks expected!");
         
+    }
+
+    public void SetUpPositions(Transform hookA, Transform hookB)
+    {
+        hooks[0].transform.position = hookA.position;
+        hooks[1].transform.position = hookB.position;
+        InitializeConnections();
     }
 
     private void Start() {
@@ -20,59 +31,63 @@ public class HooksConnector : MonoBehaviour
     }
     void ConnectLastPointsOfTwoHooks()
     {
-        GameObject linkA = hookA.GetLastPoint();
+        GameObject linkA = hooks[0].GetLastPoint();
         float yoffset = linkA.GetComponent<Link>().GetYOffset();
         HingeJoint jointA = linkA.AddComponent<HingeJoint>();
-        jointA.connectedBody = hookB.GetLastPoint().GetComponent<Rigidbody>();
+        jointA.connectedBody = hooks[1].GetLastPoint().GetComponent<Rigidbody>();
         jointA.autoConfigureConnectedAnchor = false;
         jointA.anchor = Vector3.zero;
         jointA.connectedAnchor = new Vector3(0f, -yoffset, 0f);
 
-        HingeJoint jointB = hookB.GetLastPoint().AddComponent<HingeJoint>();
-        jointB.connectedBody = hookA.GetLastPoint().GetComponent<Rigidbody>();
+        HingeJoint jointB = hooks[1].GetLastPoint().AddComponent<HingeJoint>();
+        jointB.connectedBody = hooks[0].GetLastPoint().GetComponent<Rigidbody>();
         jointB.autoConfigureConnectedAnchor = false;
         jointB.anchor = Vector3.zero;
         jointB.connectedAnchor = new Vector3(0f, -yoffset, 0f);
-    //     hookA.GetLastPoint().GetComponent<HingeJoint>().connectedBody = hookB.GetLastPoint().GetComponent<Rigidbody>();
-    //     hookB.GetLastPoint().GetComponent<HingeJoint>().connectedBody = hookA.GetLastPoint().GetComponent<Rigidbody>();
+    //     hooks[0].GetLastPoint().GetComponent<HingeJoint>().connectedBody = hooks[1].GetLastPoint().GetComponent<Rigidbody>();
+    //     hooks[1].GetLastPoint().GetComponent<HingeJoint>().connectedBody = hooks[0].GetLastPoint().GetComponent<Rigidbody>();
     }
 
     void SetupLine()
     {
-        lr.positionCount = hookA.links + hookB.links + 2;
+        lr.positionCount = hooks[0].links + hooks[1].links + 2;
     }
 
     // Update is called once per frame
     bool CableIsBroken()
     {
-        if (hookA.IsBroken() || hookB.IsBroken())
+        if (hooks[0].IsBroken() || hooks[1].IsBroken())
             return true;
         else
             return false;
     }
 
-    void Update()
+    void InitializeConnections()
     {
-        if(hookA.GetLastPoint() != null && hookB.GetLastPoint() != null && !runOnce)
+        if(hooks[0].GetLastPoint() != null && hooks[1].GetLastPoint() != null && !runOnce)
         {
             ConnectLastPointsOfTwoHooks();
             runOnce = true;
             SetupLine();
         }
+    }
+
+    void Update()
+    {
         if (runOnce)
         {
             // if(!CableIsBroken())
             // {
-                lr.SetPosition(0, hookA.hook.gameObject.transform.position);
-                for (int i = 0; i < hookA.links; i++)
+                lr.SetPosition(0, hooks[0].hook.gameObject.transform.position);
+                for (int i = 0; i < hooks[0].links; i++)
                 {
-                    lr.SetPosition(i + 1, hookA.points[i].position);
+                    lr.SetPosition(i + 1, hooks[0].points[i].position);
                 }
-                for (int i = hookB.links - 1; i >= 0; i--)
+                for (int i = hooks[1].links - 1; i >= 0; i--)
                 {
-                    lr.SetPosition(hookA.links + hookB.links  - i, hookB.points[i].position);
+                    lr.SetPosition(hooks[0].links + hooks[1].links  - i, hooks[1].points[i].position);
                 }
-                lr.SetPosition(hookA.links + hookB.links + 1, hookB.hook.gameObject.transform.position);
+                lr.SetPosition(hooks[0].links + hooks[1].links + 1, hooks[1].hook.gameObject.transform.position);
             // }
             // else
             // {

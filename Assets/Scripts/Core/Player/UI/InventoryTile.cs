@@ -8,7 +8,7 @@ public abstract class InventoryTile : MonoBehaviour {
 
     protected Image image;
 
-    protected virtual void Awake() {
+    public virtual void Awake() {
         Deactivate();
     }
 
@@ -18,18 +18,18 @@ public abstract class InventoryTile : MonoBehaviour {
     }
 
     public virtual void Deactivate(){
-        Border.enabled = false;
-        OutlineBorder.enabled = false;
-        image.enabled = false;
+        Border.gameObject.SetActive(false);
+        OutlineBorder.gameObject.SetActive(false);
+        image.gameObject.SetActive(false);
     }
 
     public void Activate(){
-        Border.enabled = true;
-        image.enabled = true;
+        Border.gameObject.SetActive(true);
+        image.gameObject.SetActive(true);
     }
 
     public void TurnOffBorder()
-    {OutlineBorder.enabled = false;}
+    {OutlineBorder.gameObject.SetActive(false);}
     public void TurnOnBorder()
-    {OutlineBorder.enabled = true;}
+    {OutlineBorder.gameObject.SetActive(true);}
 }
