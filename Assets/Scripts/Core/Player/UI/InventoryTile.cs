@@ -6,6 +6,8 @@ public abstract class InventoryTile : MonoBehaviour {
     public Image Border;
     public Image OutlineBorder;
 
+    public Image bg;
+
     protected Image image;
 
     public virtual void Awake() {
@@ -21,11 +23,13 @@ public abstract class InventoryTile : MonoBehaviour {
         Border.gameObject.SetActive(false);
         OutlineBorder.gameObject.SetActive(false);
         image.gameObject.SetActive(false);
+        bg.gameObject.SetActive(false);
     }
 
     public void Activate(){
         Border.gameObject.SetActive(true);
         image.gameObject.SetActive(true);
+        bg.gameObject.SetActive(true);
     }
 
     public void TurnOffBorder()

@@ -10,6 +10,8 @@ public class HooksConnector : MonoBehaviour
 
     private CableGenerator[] hooks;
     bool initialized = false;
+    public Transform pointA;
+    public Transform pointB;
 
     private void Awake() {
         lr = GetComponent<LineRenderer>();

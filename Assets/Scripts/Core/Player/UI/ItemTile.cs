@@ -34,6 +34,7 @@ public class ItemTile : InventoryTile
         base.Awake();
     } 
 
+
     void SetAmount(int amount)
     {
         currentAmount.text = $"{amount.ToString()} / {maxAmount}";

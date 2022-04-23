@@ -5,16 +5,17 @@ using UnityEngine.UI;
 public class MainBlockTile : InventoryTile
 {
 
+
     private List<ItemTile> subtiles;
     private ItemTile currentSubtile = null;
     public override void Awake() {
         image = transform.Find("Icon").GetComponent<Image>();
         subtiles = new List<ItemTile>(gameObject.GetComponentsInChildren<ItemTile>());
-
         base.Awake();
     }
 
     // Update is called once per frame
+
 
     public ItemTile GetCurrentSubTile()
     {
