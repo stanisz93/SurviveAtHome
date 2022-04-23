@@ -19,6 +19,11 @@ public class PlayerInput : MonoBehaviour
 
     private ControllerMode controllerMode;
 
+    private float useClickTimeWindow = 0.1f; //after this value crafting is used
+    private float startClick;
+    private bool mouseIsClicked = false;
+    private bool craftProcess = false;
+    private ItemTile highlightedTile = null;
     
 
 
@@ -33,6 +38,27 @@ public class PlayerInput : MonoBehaviour
         itemPickupManager = GetComponent<ItemPickupManager>();
     }
 
+    IEnumerator CraftProcess(ItemTile tile)
+    {
+        yield return new WaitForSeconds(useClickTimeWindow);
+        if(!mouseIsClicked)
+            yield break;
+        craftProcess = true;
+        Coroutine craftCoroutine = StartCoroutine(tile.TryToCraft());
+
+        while(mouseIsClicked)
+        {
+            yield return null;
+        }
+        if (craftCoroutine != null)
+            {
+                StopCoroutine(craftCoroutine);
+                tile.ResetCraftProgress();
+            }
+        craftProcess = false;
+
+    }
+    
     // Update is called once per frame
     void Update()
     {
@@ -47,10 +73,21 @@ public class PlayerInput : MonoBehaviour
             else if(controllerMode == ControllerMode.Inventory)
             {   
 
-                inventoryUI.ContainsAnyTile(Input.mousePosition);
-                if(Input.GetMouseButtonDown(0))
+                var anyTile = inventoryUI.ContainsAnyTile(Input.mousePosition);
+                if(anyTile is ItemTile)
+                    highlightedTile = (ItemTile)anyTile;
+                if(Input.GetMouseButtonDown(0) && highlightedTile != null && !craftProcess)
                 {
-                    inventoryUI.CraftItemIfPressed(Input.mousePosition);
+                    // highlightedTile.TryToCraft();
+                    startClick = Time.time;
+                    mouseIsClicked = true;
+                    StartCoroutine(CraftProcess(highlightedTile));
+                }
+                if(Input.GetMouseButtonUp(0))
+                {
+                    mouseIsClicked = false;
+                    if(!craftProcess)
+                        Debug.Log("Use item method!");
                 }
                 if(!Input.GetKey(KeyCode.Tab))
                 {

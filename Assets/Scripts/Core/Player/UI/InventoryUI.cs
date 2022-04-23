@@ -32,32 +32,24 @@ public class InventoryUI : MonoBehaviour
     }
 
     // Update is called once per frame
-    public void CraftItemIfPressed(Vector3 mousePos)
+    public InventoryTile ContainsAnyTile(Vector3 mousePos)
     {
-        if(currentBlockTile !=null)
-        {
-            if (currentBlockTile.GetCurrentSubTile() != null)
-            {
-                if(RectTransformUtility.RectangleContainsScreenPoint(currentBlockTile.GetCurrentSubTile().GetRectTransform(), mousePos))
-                {
-                    currentBlockTile.GetCurrentSubTile().TryToCraft();
-                }
-            }
-
-
-        }
-    }
-
-    public void ContainsAnyTile(Vector3 mousePos)
-    {
+        InventoryTile candidateTile = null;
         foreach(MainBlockTile tile in tiles)
         {
             if (RectTransformUtility.RectangleContainsScreenPoint(tile.GetRectTransform(), mousePos))
-                SwampFocus(tile);
+                {
+                    SwampFocus(tile);
+                    candidateTile = tile;
+                }
         }
         if(currentBlockTile != null)
-            currentBlockTile.ContainsAnySubtile(mousePos);
-    
+        {
+            InventoryTile tempTile = currentBlockTile.ContainsAnySubtile(mousePos);
+            if (tempTile != null)
+                candidateTile = tempTile;
+        }
+        return candidateTile;
 
     }
 

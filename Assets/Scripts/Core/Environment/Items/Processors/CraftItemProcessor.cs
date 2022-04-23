@@ -10,17 +10,14 @@ public class CraftItemProcessor : IItemProcessor {
     {
         this.inventory = inventory;
     }
+
+    
     
     public bool CanProcess(GameObject item)
     {
         ICraftable trapable = item.GetComponent<ICraftable>();
         if (trapable != null)
-            {
-                if(this.inventory.SatisfyRequirement(trapable.GetRequirements()))
-                    return true;
-                else
-                    return false;
-            }
+            return true;
         else
             return false;
     }
@@ -36,9 +33,9 @@ public class CraftItemProcessor : IItemProcessor {
             ResourceType resType;
             Enum.TryParse(res.Key, out resType);
             inventory.SubstractResource(resType, res.Value);
-
         }
     }
+
     
     
 }

@@ -21,13 +21,18 @@ public class MainBlockTile : InventoryTile
         return currentSubtile;
     }
 
-    public void ContainsAnySubtile(Vector3 mousePos)
+    public ItemTile ContainsAnySubtile(Vector3 mousePos)
     {
+        ItemTile candidateTile = null;
         foreach(ItemTile subtile in subtiles)
         {
             if (RectTransformUtility.RectangleContainsScreenPoint(subtile.GetRectTransform(), mousePos))
-                SwampSubtileFocus(subtile);
+               {
+                   SwampSubtileFocus(subtile);
+                   candidateTile = subtile;
+               }
         } 
+        return candidateTile;
     }
 
     public void SwampSubtileFocus(ItemTile newSubtile)

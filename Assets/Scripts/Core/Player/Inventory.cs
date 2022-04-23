@@ -46,15 +46,13 @@ public class Inventory : MonoBehaviour
         return true;
     }
 
-    public void AddItem(GameObject item, out bool success)
+    public void AddItem(GameObject item)
     {
-        success = false;
         foreach(IItemProcessor p in itemProcessors)
         {
             if(p.CanProcess(item))
             {
                 p.AddToInventory(item);
-                success = true;
             }
         }
     }
@@ -84,7 +82,7 @@ public class Inventory : MonoBehaviour
     public void HandlePickup(ICollectible item)
     {
         bool success = false;
-        AddItem(item.gameObject, out success);
+        AddItem(item.gameObject);
         if(success)
             item.OnDestroy();
     }
