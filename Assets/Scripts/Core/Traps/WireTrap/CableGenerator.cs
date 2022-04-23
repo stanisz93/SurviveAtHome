@@ -15,11 +15,6 @@ public class CableGenerator : MonoBehaviour
     private GameObject lastPoint;
     private bool broken = false;
     // Start is called before the first frame update
-    void Start()
-    {
-        // CalulateExpectedLinks();
-        GenerateWire();
-    }
 
     // Update is called once per frame
     void CalulateExpectedLinks()
@@ -50,7 +45,7 @@ public class CableGenerator : MonoBehaviour
         return broken;
     }
 
-    void GenerateWire()
+    public void GenerateWire()
     {
         Rigidbody prevRB = hook;
         for(int i = 0; i < links; i++)

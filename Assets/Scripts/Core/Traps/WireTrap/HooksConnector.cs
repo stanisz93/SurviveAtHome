@@ -9,22 +9,16 @@ public class HooksConnector : MonoBehaviour
     private LineRenderer lr;
 
     private CableGenerator[] hooks;
-    bool runOnce = false;
+    bool initialized = false;
 
     private void Awake() {
         lr = GetComponent<LineRenderer>();
         hooks = GetComponentsInChildren<CableGenerator>();
         if(hooks.Length != 2)
             Debug.LogError("Two hooks expected!");
-        
-    }
-
-    public void SetUpPositions(Transform hookA, Transform hookB)
-    {
-        hooks[0].transform.position = hookA.position;
-        hooks[1].transform.position = hookB.position;
         InitializeConnections();
     }
+
 
     private void Start() {
             StartCoroutine(RemoveIfbroken());
@@ -64,17 +58,19 @@ public class HooksConnector : MonoBehaviour
 
     void InitializeConnections()
     {
-        if(hooks[0].GetLastPoint() != null && hooks[1].GetLastPoint() != null && !runOnce)
+        foreach(CableGenerator h in hooks)
+            h.GenerateWire();
+        if(hooks[0].GetLastPoint() != null && hooks[1].GetLastPoint() != null)
         {
             ConnectLastPointsOfTwoHooks();
-            runOnce = true;
+            initialized = true;
             SetupLine();
         }
     }
 
     void Update()
     {
-        if (runOnce)
+        if (initialized)
         {
             // if(!CableIsBroken())
             // {
