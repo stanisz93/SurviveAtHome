@@ -60,6 +60,9 @@ public class HooksConnector : MonoBehaviour
 
     void InitializeConnections()
     {
+        
+        hooks[0].transform.position = pointA.position;
+        hooks[1].transform.position = pointB.position;
         foreach(CableGenerator h in hooks)
             h.GenerateWire();
         if(hooks[0].GetLastPoint() != null && hooks[1].GetLastPoint() != null)

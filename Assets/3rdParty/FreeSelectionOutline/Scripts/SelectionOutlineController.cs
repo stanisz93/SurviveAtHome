@@ -202,8 +202,8 @@ public class SelectionOutlineController : MonoBehaviour
             // {
 
             // TargetRenderer = hit.transform.GetComponent<Renderer>();
-            var bestOption = itemPickupManager.GetBestOption();
-            TargetRenderer = bestOption.gameObject.GetComponent<Renderer>();
+            Transform bestOption = itemPickupManager.GetBestOption().transform;
+            TargetRenderer = bestOption.GetComponent<Renderer>();
             if (lastTarget == null) lastTarget = TargetRenderer;
             if (SelectionMode == SelMode.AndChildren)
             {

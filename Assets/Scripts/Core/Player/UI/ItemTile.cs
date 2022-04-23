@@ -82,8 +82,8 @@ public class ItemTile : InventoryTile
                 yield return CraftAnimate();
                 inventory.AddItem(this.gameObject);
                 SetAmount(inventory.crafts[craftable.GetCraftType().ToString()]);
-                DoTweenUtils.PoopUpImage(image);
-                DoTweenUtils.PoopUpTextTween(currentAmount, Color.green);
+                // DoTweenUtils.PoopUpImage(image);
+                DoTweenUtils.PoopUpTextTween(currentAmount, new Color32(153, 197, 27, 255));
                 Debug.Log("Done crafting!");
             }
         else

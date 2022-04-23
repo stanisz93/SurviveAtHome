@@ -72,48 +72,56 @@ public class PlayerInput : MonoBehaviour
             }
             else if(controllerMode == ControllerMode.Inventory)
             {   
+                ManageInventory();
 
-                var anyTile = inventoryUI.ContainsAnyTile(Input.mousePosition);
-                if(anyTile is ItemTile)
-                    highlightedTile = (ItemTile)anyTile;
-                if(Input.GetMouseButtonDown(0) && highlightedTile != null && !craftProcess)
-                {
-                    // highlightedTile.TryToCraft();
-                    startClick = Time.time;
-                    mouseIsClicked = true;
-                    StartCoroutine(CraftProcess(highlightedTile));
-                }
-                if(Input.GetMouseButtonUp(0))
-                {
-                    mouseIsClicked = false;
-                    if(!craftProcess)
-                        Debug.Log("Use item method!");
-                }
-                if(!Input.GetKey(KeyCode.Tab))
-                {
-                    
-                    inventoryUI.LeftInventory();
-                    controllerMode = ControllerMode.Normal;
-                }
             }
             else if (controllerMode == ControllerMode.SettingTrap)
             {
-                if(Input.GetKey(KeyCode.Escape))
-                {
-                    controllerMode = ControllerMode.Normal;
-                }
-                else if(Input.GetKey(KeyCode.F))
-                {
-                    Debug.Log("Object has been sticked!");
-                }
+                ManageSettingTrapControl();
             }
         }
     }
 
 
+    void ManageInventory()
+    {
+        var anyTile = inventoryUI.ContainsAnyTile(Input.mousePosition);
+        if(anyTile is ItemTile)
+            highlightedTile = (ItemTile)anyTile;
+        if(Input.GetMouseButtonDown(0) && highlightedTile != null && !craftProcess)
+        {
+            // highlightedTile.TryToCraft();
+            startClick = Time.time;
+            mouseIsClicked = true;
+            StartCoroutine(CraftProcess(highlightedTile));
+        }
+        if(Input.GetMouseButtonUp(0))
+        {
+            mouseIsClicked = false;
+            if(!craftProcess)
+            {
+                Debug.Log("Use item method!");
+                controllerMode = ControllerMode.SettingTrap;
+            }
+        }
+        if(!Input.GetKey(KeyCode.Tab))
+        {
+            
+            inventoryUI.LeftInventory();
+            controllerMode = ControllerMode.Normal;
+        }
+    }
+
     void ManageSettingTrapControl()
     {
-
+        if(Input.GetKey(KeyCode.Escape))
+        {
+            controllerMode = ControllerMode.Normal;
+        }
+        else if(Input.GetKey(KeyCode.F))
+        {
+            Debug.Log("Object has been sticked!");
+        }
     }
 
     void ManageNormalControl()
