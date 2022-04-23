@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class BestCandidateManager: MonoBehaviour
+public abstract class BestCandidateManager: MonoBehaviour
 {
     // Start is called before the first frame update
     public Transform t_mesh; // needed for proper direction
@@ -11,7 +11,7 @@ public class BestCandidateManager: MonoBehaviour
     public bool debugDistance=false;
 
     List <Transform> PossibleToPicked; 
-    private Transform bestOption;
+    protected Transform bestOption;
     // Start is called before the first frame update
     void Awake()
     {
@@ -19,17 +19,17 @@ public class BestCandidateManager: MonoBehaviour
         StartCoroutine(CheckPotentialOptions());
     }
 
-    public void AddPotentialObject(Transform item)
+    public virtual void AddPotentialObject(Transform item)
     {
         PossibleToPicked.Add(item);
     }
-    public void RemovePotentialObject(Transform item)
+    public virtual void RemovePotentialObject(Transform item)
     {
         if(item != null)
             PossibleToPicked.Remove(item);
     }
 
-    public Transform GetBestOption()
+    public virtual Transform GetBestOption()
     {
         if(bestOption != null)
             return bestOption;
@@ -38,7 +38,7 @@ public class BestCandidateManager: MonoBehaviour
     }
 
 
-    public float GetRelativeDirection(Transform objTransform)
+    public virtual float GetRelativeDirection(Transform objTransform)
     {
         Vector3 dir = (objTransform.position - t_mesh.position).normalized;
         
@@ -46,7 +46,7 @@ public class BestCandidateManager: MonoBehaviour
         return score;
     }
 
-    void SetBestOption()
+    public virtual void SetBestOption()
     {
         List <Transform> PreprocessL = new List<Transform>(); // Checking again if objects are directed properly
         foreach(Transform item in PossibleToPicked)
@@ -67,7 +67,7 @@ public class BestCandidateManager: MonoBehaviour
         }
     }
     
-    IEnumerator CheckPotentialOptions()
+    public virtual IEnumerator CheckPotentialOptions()
     {
         while(true)
         {
