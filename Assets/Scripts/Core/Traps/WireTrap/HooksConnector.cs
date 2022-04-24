@@ -10,20 +10,35 @@ public class HooksConnector : MonoBehaviour
 
     private CableGenerator[] hooks;
     bool initialized = false;
-    public Transform pointA;
-    public Transform pointB;
 
     private void Awake() {
         lr = GetComponent<LineRenderer>();
         hooks = GetComponentsInChildren<CableGenerator>();
         if(hooks.Length != 2)
             Debug.LogError("Two hooks expected!");
-        InitializeConnections();
     }
 
-
-    private void Start() {
-            StartCoroutine(RemoveIfbroken());
+    public void SetWire(Transform a, Transform b)
+    {
+        
+        hooks[0].transform.position = a.position;
+        hooks[1].transform.position = b.position;
+        foreach(CableGenerator h in hooks)
+            h.GenerateWire();
+        if(hooks[0].GetLastPoint() != null && hooks[1].GetLastPoint() != null)
+        {
+            ConnectLastPointsOfTwoHooks();
+            initialized = true;
+            lr.positionCount = hooks[0].links + hooks[1].links + 2;
+        }
+        StartCoroutine(RemoveIfbroken());
+    }
+    bool CableIsBroken()
+    {
+        if (hooks[0].IsBroken() || hooks[1].IsBroken())
+            return true;
+        else
+            return false;
     }
     void ConnectLastPointsOfTwoHooks()
     {
@@ -40,38 +55,7 @@ public class HooksConnector : MonoBehaviour
         jointB.autoConfigureConnectedAnchor = false;
         jointB.anchor = Vector3.zero;
         jointB.connectedAnchor = new Vector3(0f, -yoffset, 0f);
-    //     hooks[0].GetLastPoint().GetComponent<HingeJoint>().connectedBody = hooks[1].GetLastPoint().GetComponent<Rigidbody>();
-    //     hooks[1].GetLastPoint().GetComponent<HingeJoint>().connectedBody = hooks[0].GetLastPoint().GetComponent<Rigidbody>();
-    }
-
-    void SetupLine()
-    {
-        lr.positionCount = hooks[0].links + hooks[1].links + 2;
-    }
-
-    // Update is called once per frame
-    bool CableIsBroken()
-    {
-        if (hooks[0].IsBroken() || hooks[1].IsBroken())
-            return true;
-        else
-            return false;
-    }
-
-    void InitializeConnections()
-    {
-        
-        hooks[0].transform.position = pointA.position;
-        hooks[1].transform.position = pointB.position;
-        foreach(CableGenerator h in hooks)
-            h.GenerateWire();
-        if(hooks[0].GetLastPoint() != null && hooks[1].GetLastPoint() != null)
-        {
-            ConnectLastPointsOfTwoHooks();
-            initialized = true;
-            SetupLine();
-        }
-    }
+  }
 
     void Update()
     {

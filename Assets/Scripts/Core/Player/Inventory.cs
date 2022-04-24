@@ -78,6 +78,12 @@ public class Inventory : MonoBehaviour
         // here should be some method from ui to update value in ui for trap
     }
 
+    public void SubstractCraftItem(CraftType trapType, int amount)
+    {
+        crafts[trapType.ToString()] -= amount;
+        // here should be some method from ui to update value in ui for trap
+    }
+
 
     public void HandlePickup(ICollectible item)
     {

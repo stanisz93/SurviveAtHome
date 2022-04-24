@@ -17,6 +17,8 @@ public class PlayerInput : MonoBehaviour
     private PlayerTriggers playerTriggers;
     private ItemPickupManager itemPickupManager;
 
+    private AttachmentManager attachmentManager;
+
     private ControllerMode controllerMode;
 
     private float useClickTimeWindow = 0.1f; //after this value crafting is used
@@ -36,6 +38,8 @@ public class PlayerInput : MonoBehaviour
         chrMvmnt = GetComponent<CharacterMovement>();
         playerTriggers = GetComponent<PlayerTriggers>();
         itemPickupManager = GetComponent<ItemPickupManager>();
+        attachmentManager = GetComponent<AttachmentManager>();
+        attachmentManager.enabled = false;
     }
 
     IEnumerator CraftProcess(ItemTile tile)
@@ -101,7 +105,9 @@ public class PlayerInput : MonoBehaviour
             if(!craftProcess)
             {
                 Debug.Log("Use item method!");
+                inventoryUI.LeftInventory();
                 controllerMode = ControllerMode.SettingTrap;
+                attachmentManager.enabled = true;
             }
         }
         if(!Input.GetKey(KeyCode.Tab))
@@ -117,10 +123,14 @@ public class PlayerInput : MonoBehaviour
         if(Input.GetKey(KeyCode.Escape))
         {
             controllerMode = ControllerMode.Normal;
-        }
-        else if(Input.GetKey(KeyCode.F))
+            attachmentManager.ResetAttachmentProcess();
+            attachmentManager.enabled = false;
+            }
+        else if(Input.GetKey(KeyCode.V))
         {
             Debug.Log("Object has been sticked!");
+
+            AttachmentManager.OnSetUp?.Invoke();
         }
     }
 
@@ -145,10 +155,6 @@ public class PlayerInput : MonoBehaviour
             else if(Input.GetKeyDown(KeyCode.F))
             {
                 itemPickupManager.PickICollectible();
-            }
-            else if(Input.GetKeyDown(KeyCode.V))
-            {
-                controllerMode = ControllerMode.SettingTrap;
             }
             else if(Input.GetKey(KeyCode.Tab))
             {
