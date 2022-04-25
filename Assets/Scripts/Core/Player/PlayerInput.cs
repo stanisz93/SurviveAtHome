@@ -130,7 +130,9 @@ public class PlayerInput : MonoBehaviour
         {
             Debug.Log("Object has been sticked!");
 
-            AttachmentManager.OnSetUp?.Invoke();
+            bool finished = attachmentManager.onAttach?.Invoke() ?? false;
+            if(finished)
+                controllerMode = ControllerMode.Normal;
         }
     }
 

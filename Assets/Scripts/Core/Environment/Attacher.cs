@@ -32,9 +32,13 @@ public class Attacher : MonoBehaviour
         this.sub = sub;
     }
 
-    public void SetPoint()
+    public void SetPoint(Vector3 coord)
     {
-        freezePoint = true;
+        if(!freezePoint)
+        {
+            attachObj.transform.position = coord;
+            freezePoint = true;
+        }
     }
 
     public void Restart()
@@ -47,28 +51,4 @@ public class Attacher : MonoBehaviour
         return attachObj;
     }
 
-    
-
-    // Update is called once per frame
-    bool BeyondBoundaries(Vector3 pos)
-    {
-        // var alongWall = (pos * transform.right);
-        // if(alongWall > maxValue || alongWall < minValue)
-        // {
-        //         return true;
-        // }
-        return false;
-    }
-    void Update()
-    {
-        if(sub && !freezePoint)
-        {
-            var posXZ = new Vector3(this.sub.position.x, transform.position.y, this.sub.position.z);
-            var planePosition = Vector3.ProjectOnPlane(posXZ, transform.right) + Vector3.Dot(transform.position, transform.right) * transform.right;
-            
-            Debug.DrawLine(transform.position, planePosition);
-            if(!BeyondBoundaries(planePosition))
-                attachObj.position = planePosition + transform.right * 0.1f;
-        }
-    }
 }

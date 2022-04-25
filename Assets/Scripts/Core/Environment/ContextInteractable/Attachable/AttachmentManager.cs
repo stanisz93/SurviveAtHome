@@ -4,149 +4,152 @@ using UnityEngine;
 using System.Linq;
 using System;
 
-public class AttachmentManager: BestCandidateManager
+public class AttachmentManager: MonoBehaviour
 {
 
-public IAttachable currentAttachable = null;
-public LayerMask TrapDisturbMask;
-public Transform pfWireTrap;
-public static Action OnSetUp;
+    public Transform pfAttacker;
 
-private IAttachable AttachObjA, AttachObjB;
-private GameObject PointA, PointB;
-private bool plantingAllow = false;
-private bool firstAttached = false;
-public void AttachToObject()
-{
-    Transform best = GetBestOption();
-    if(best != null)
-    {
-        IAttachable attachable = best.GetComponent<IAttachable>();
-        if (attachable == null)
-            Debug.LogError("This is not collectible!");
-        attachable.AttachPlane();
-    }
-}
-
-private void OnEnable() {
-    OnSetUp = null;
-    OnSetUp += AttachFirstPoint;
-}
-
-private void OnDisable() {
-    OnSetUp -= AttachFirstPoint;
-    OnSetUp -= AttachSecondPoint;
-}
+    public LayerMask TrapDisturbMask;
+    public Transform pfWireTrap;
+    public delegate bool OnAttach();
+    public OnAttach onAttach; 
 
 
 
-public void AttachFirstPoint()
-{
-    if(bestOption != null)
-    {
-        AttachObjA = bestOption.GetComponent<IAttachable>();
-        AttachObjA.PlantItem();
-        Transform plantPoint = AttachObjA.GetAttachedPoint();
-        PointA = Instantiate(plantPoint.gameObject, plantPoint.position, Quaternion.identity);
-        AttachObjA.SwitchAttachedPlane(false);
-        firstAttached = true;
-        OnSetUp -= AttachFirstPoint;
-        OnSetUp += AttachSecondPoint;
+    public IAttachable currentAttachable = null;
+    private IAttachable attachObjA, attachObjB = null;
+    private Transform pointA, pointB, currentPoint;
+    private bool plantingOnePartAllow = false;
+    private bool setTrapAllow = false;
+    private Transform player; 
+    private Camera mainCamera;
+
+    private void OnEnable() {
+        // ResetAttachmentProcess();
+        onAttach = null;
+        onAttach += AttachFirstPoint;
 
     }
 
-}
+    private void OnDisable() {
+        ResetAttachmentProcess();
+        onAttach = null;
+    }
 
-public void ResetAttachmentProcess()
-{
-    currentAttachable.Restart();
-    if(AttachObjA != null)
-        AttachObjA.Restart();
-    if(AttachObjB != null)
-        AttachObjB.Restart();
-    firstAttached = false;
-}
 
-void CreateTrap()
-{
-    Transform g = Instantiate(pfWireTrap);
-    g.GetComponent<HooksConnector>().SetWire(PointA.transform, PointB.transform);
+    private void Awake() {
+            player = GameObject.FindWithTag("PlayerMesh").transform;
+            mainCamera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
+            pointA = Instantiate(pfAttacker, Vector3.zero, Quaternion.identity);
+            pointB = Instantiate(pfAttacker, Vector3.zero, Quaternion.identity);
+    }
 
-}
-
-public void AttachSecondPoint()
-{
-    if(bestOption != null && plantingAllow)
+    Vector3 MousePositon()
     {
-        AttachObjB = bestOption.GetComponent<IAttachable>();
-        AttachObjB.PlantItem();
-        Transform plantPoint = AttachObjB.GetAttachedPoint();
-        PointB = Instantiate(plantPoint.gameObject, plantPoint.position, Quaternion.identity);
-        //Here maybe instantiate trap???
-        CreateTrap();
-        this.enabled = false;
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         
+        RaycastHit hit;
+        
+        if(Physics.Raycast(ray, out hit))
+         {
+            return (hit.point - player.position).normalized;
+         }
+
+       
+        return player.TransformDirection(Vector3.forward);
     }
 
-}
 
-public bool CanPlantTrap(Transform potentialSecondPoint)
-{
-    if (Physics.Linecast(PointA.transform.position, potentialSecondPoint.position, TrapDisturbMask, QueryTriggerInteraction.Ignore))
-        return false;
-    else
-        return true;
-}
-
-
-public override IEnumerator CheckPotentialOptions()
-{
-        while(true)
-        {
-            SetBestOption();
-            if(bestOption != null)
-            {
-                IAttachable attachable = bestOption.GetComponent<IAttachable>();
-                if(currentAttachable != attachable && !attachable.Forbidden())
-                    {
-                        if(currentAttachable != null)
-                            currentAttachable.SwitchAttachedPlane(false);
-                        attachable.SwitchAttachedPlane(true);
-                        currentAttachable = attachable;
-                    }
-            }
-            yield return new WaitForSeconds(0.2f);
-        }
-}
-private void Update() {
-    
-    if(firstAttached)
+    public void CastSetTrapPoint()
     {
-        if(bestOption != null)
-        {   
-            var attachedPlane = bestOption.GetComponent<IAttachable>();
-
-            if(!attachedPlane.Forbidden())
+        RaycastHit hit;
+        Vector3 mousePos =  MousePositon();
+        if (Physics.Raycast(player.position, mousePos, out hit, 20f, TrapDisturbMask))
+        {
+            currentAttachable = hit.collider.gameObject.GetComponent<IAttachable>();
+            if(currentAttachable != null)
             {
-                Color color;
-                Transform plannedPos = attachedPlane.GetAttachedPoint();
-                if(CanPlantTrap(plannedPos))
-                {
-                    plantingAllow = true;
-                    color = Color.green;
-                }
-                else
-                {
-                    plantingAllow = false;
-                    color = Color.red;
-                }
-
-                ShapeUtils.DrawLine(PointA.transform.position,  plannedPos.position, color);
-                
+                if(!currentPoint.gameObject.active)
+                    currentPoint.gameObject.SetActive(true);
+                plantingOnePartAllow = true;
+                Debug.DrawRay(player.position, player.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+                currentPoint.position = hit.point;
+                currentPoint.position = new Vector3(currentPoint.position.x+ hit.normal.x * 0.1f, 0.5f, currentPoint.position.z + hit.normal.z * 0.1f);
             }
         }
-    
-    }
-}
+        else
+            {
+                currentAttachable = null;
+                plantingOnePartAllow = false;
+                if(currentPoint.gameObject.active)
+                    currentPoint.gameObject.SetActive(false);
 
+            }
+    }
+
+    public bool AttachFirstPoint()
+    {
+        if(plantingOnePartAllow)
+        {
+            attachObjA = currentAttachable;
+            currentPoint = pointB;
+            onAttach -= AttachFirstPoint;
+            onAttach += AttachSecondPoint;
+        }
+        return false;
+    }
+
+    public void ResetAttachmentProcess()
+    {
+        pointA.gameObject.SetActive(false);
+        pointB.gameObject.SetActive(false);
+        currentPoint = pointA;
+        plantingOnePartAllow = false;
+    }
+
+    public bool AttachSecondPoint()
+    {
+        if(plantingOnePartAllow && setTrapAllow)
+        {
+            Transform g = Instantiate(pfWireTrap);
+            g.GetComponent<HooksConnector>().SetWire(pointA.transform, pointB.transform);
+            
+            this.enabled = false;
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public bool CanPlantTrap(Transform potentialSecondPoint)
+    {
+        if (Physics.Linecast(pointA.transform.position, potentialSecondPoint.position, TrapDisturbMask, QueryTriggerInteraction.Ignore))
+            return false;
+        else
+            return true;
+    }
+
+    private void Update() 
+    {
+        CastSetTrapPoint();
+        if(currentPoint == pointB)
+        { 
+            Color color;
+            if(CanPlantTrap(currentPoint) && attachObjA != currentAttachable)
+            {
+                setTrapAllow = true;
+                color = Color.green;
+            }
+            else
+            {
+                setTrapAllow = false;
+                color = Color.red;
+            }
+
+            if(currentPoint.gameObject.active)
+                ShapeUtils.DrawLine(pointA.transform.position,  currentPoint.position, color);
+                    
+        }
+
+    }
 }
