@@ -26,6 +26,8 @@ public class PlayerInput : MonoBehaviour
     private bool mouseIsClicked = false;
     private bool craftProcess = false;
     private ItemTile highlightedTile = null;
+
+    public bool blockMovement = false;
     
 
 
@@ -41,6 +43,8 @@ public class PlayerInput : MonoBehaviour
         attachmentManager = GetComponent<AttachmentManager>();
         attachmentManager.enabled = false;
     }
+
+
 
     IEnumerator CraftProcess(ItemTile tile)
     {
@@ -68,8 +72,11 @@ public class PlayerInput : MonoBehaviour
     {
         if (!playerTriggers.dying)
         {
-            character.AddMovementInput(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
-  
+            if(blockMovement)
+                character.AddMovementInput(0f, 0f);
+            else
+                character.AddMovementInput(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
+            
             if (controllerMode == ControllerMode.Normal)
             {
                 ManageNormalControl();
@@ -141,10 +148,12 @@ public class PlayerInput : MonoBehaviour
             // character.SetDefaultMovement();
             if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.C))
             {
-                if (playerTriggers.Slidable != null)
-                {
-                    character.triggeredAction = playerTriggers.Slide;
-                }
+                if(playerTriggers.Slidable != null)
+                    character.StartTriggerAction(playerTriggers.Slide);
+            }
+            else if (Input.GetKey(KeyCode.V))
+            {
+                character.StartTriggerAction(playerTriggers.Kick);
             }
             else if (Input.GetKey(KeyCode.LeftShift))
             {

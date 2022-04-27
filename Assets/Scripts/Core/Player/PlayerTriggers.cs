@@ -12,14 +12,18 @@ public class PlayerTriggers : MonoBehaviour
     private PlayerAnimationController playerAnimationController;
     private CharacterMovement characterMovement;
     private Character character;
+    private PlayerInput playerInput;
     private Slidable slidable;
     public bool dying = false;
+
+    public bool triggerEmpty = true;
     public Slidable Slidable { get => slidable; set => slidable = value; }
 
 
     // Start is called before the first frame update
     void Start()
     {
+        playerInput = GetComponent<PlayerInput>();
         character = GetComponent<Character>();
         playerAnimationController = GetComponent<PlayerAnimationController>(); 
         characterMovement = GetComponent<CharacterMovement>();
@@ -32,7 +36,28 @@ public class PlayerTriggers : MonoBehaviour
         Sequence sq = DOTween.Sequence();
         sq.Append(transform.DOMove(t_slidePoint, .1f));
         sq.Append(transform.DOMove(t_landpoint, .8f));
-        slidable = null;
+        StartCoroutine(ReleaseTrigger(1f));
+    }
+
+    IEnumerator ReleaseTrigger(float time)
+    {
+        yield return new WaitForSeconds(time);
+        triggerEmpty = true;
+    }
+    public void Kick()
+    {
+        playerAnimationController.animator.SetTrigger("Kick");
+        StartCoroutine(BlockMovement(triggerEmpty));
+        StartCoroutine(ReleaseTrigger(1f));
+        
+    }
+
+        public IEnumerator BlockMovement(bool condition)
+    {
+        playerInput.blockMovement = true;
+        yield return new WaitUntil(() => triggerEmpty);
+        playerInput.blockMovement = false;
+
     }
 
     public void Die()

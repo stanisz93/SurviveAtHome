@@ -19,7 +19,7 @@ public class PlayerAnimationController : MonoBehaviour
     private PlayerInput plrInput;
     private CapsuleCollider collider;
     private bool isHitAnimLaunch = false;
-
+    private PlayerTriggers  plrTrigger;
   
 
     void Awake()
@@ -28,6 +28,7 @@ public class PlayerAnimationController : MonoBehaviour
         chrMovement = GetComponent<CharacterMovement>();
         layerInvoker = GetComponent<LayerInvoker>();
         collider = GetComponent<CapsuleCollider>();
+        plrTrigger = GetComponent<PlayerTriggers>();
     }
     // Start is called before the first frame update
     // void Awake() => animator = GetComponent<Animator>();

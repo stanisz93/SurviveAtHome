@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 using UnityEngine.AI;
 [RequireComponent(typeof(Inventory))]
 public class Character : MonoBehaviour
@@ -47,7 +48,14 @@ public class Character : MonoBehaviour
         return playerTriggers.dying;
     }
 
-
+    public void StartTriggerAction(TriggerAction triggerAction)
+    {
+        if(playerTriggers.triggerEmpty)
+        {
+            playerTriggers.triggerEmpty = false;
+            triggeredAction = triggerAction;
+        }
+    }
 
 
     private Vector3 AdjustRelativeToCamera(float forward, float right)
