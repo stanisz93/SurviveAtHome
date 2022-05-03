@@ -23,7 +23,9 @@ public void SwitchCollider(bool on)
         
         if(other.transform.tag == "Opponent")
         {
-            
+            Vector3 targetDirection = other.gameObject.transform.position - player.position;
+            targetDirection = new Vector3(targetDirection.x,  player.position.y, targetDirection.z);
+            player.rotation = Quaternion.LookRotation(targetDirection);
             StartCoroutine(DelayOpponentReaction(other, kickOpponentReactionDelay));
         }
     }
