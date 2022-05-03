@@ -21,6 +21,7 @@ public class Character : MonoBehaviour
     public delegate void TriggerAction();
     public TriggerAction triggeredAction;
     private Inventory Inventory;
+    public float SpeedBeforeKick;
 
     // Start is called before the first frame update
 
@@ -105,7 +106,7 @@ public class Character : MonoBehaviour
     {
         characterMovement.Velocity = AdjustRelativeToCamera(forward, right);
     }
-    public float getVelocity()
+    public float GetVelocity()
     {
         // Debug.Log(characterMovement.Velocity.magnitude);
         return characterMovement.Velocity.magnitude;

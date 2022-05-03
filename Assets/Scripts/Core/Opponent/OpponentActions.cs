@@ -90,7 +90,9 @@ public class OpponentActions : MonoBehaviour
         Sequence pushS = DOTween.Sequence();
         pushS.Append(transform.DOMove(destPos, pushTime));
         pushS.PrependInterval(0.1f);
-        transform.rotation = Quaternion.LookRotation(targetDirection);
+        transform.rotation = Quaternion.LookRotation(-player.forward);
+        float playerVelocity = player.GetComponentInParent<Character>().SpeedBeforeKick;
+        animator.SetFloat("PlayerSpeedKick", playerVelocity);
         animator.SetTrigger("beingKicked");
         vfov.ResetSense(7f);
         yield return new WaitForSeconds(1f);

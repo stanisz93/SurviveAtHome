@@ -47,10 +47,12 @@ public class PlayerTriggers : MonoBehaviour
     }
     public void Kick()
     {
+        character.SpeedBeforeKick = character.GetVelocity();
         StartCoroutine(ExposeToKickCollider());
         playerAnimationController.animator.SetTrigger("Kick");
         StartCoroutine(BlockMovement(triggerEmpty));
         StartCoroutine(ReleaseTrigger(1f));
+        
 
         
     }
