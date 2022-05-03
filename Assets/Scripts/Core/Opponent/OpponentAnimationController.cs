@@ -26,6 +26,13 @@ public class OpponentAnimationController : MonoBehaviour
 
         switch(opponentMode)
         {
+            case OpponentMode.beingKicked:
+            {
+                animator.SetBool("Rushing", false);
+                animator.SetBool("HitPlayer", false);
+
+                break;
+            }
             case OpponentMode.Agonize:
             {
                 animator.SetBool("Agonize", true);
@@ -50,8 +57,8 @@ public class OpponentAnimationController : MonoBehaviour
                 animator.SetBool("Agonize", false);
                 animator.SetFloat("OpponentVelocity", agent.velocity.magnitude);
                 animator.SetBool("Rushing", false);
-                animator.SetBool("Attack", false);
                 animator.SetBool("Suspicious", false);
+                animator.SetBool("HitPlayer", false);
                 break;
             }
             case OpponentMode.LookAround:
@@ -61,10 +68,16 @@ public class OpponentAnimationController : MonoBehaviour
             }
             case OpponentMode.Rushing:
             {
-                animator.SetBool("Attack", false);
                 animator.SetBool("Scream", false);
                 animator.SetBool("Rushing", true);
+                animator.SetBool("HitPlayer", false);
 
+                break;
+            }
+            case OpponentMode.HitPlayer:
+            {
+                animator.SetBool("HitPlayer", true);
+                 animator.SetBool("Rushing", false);
                 break;
             }
             case OpponentMode.Checking:
@@ -75,7 +88,6 @@ public class OpponentAnimationController : MonoBehaviour
             }
             case OpponentMode.Attacking:
             {
-                animator.SetBool("Attack", true);
                 animator.SetBool("Rushing", false);
                 break;
             }

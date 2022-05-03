@@ -57,7 +57,7 @@ public class PlayerTriggers : MonoBehaviour
         
     }
 
-    public IEnumerator ExposeToKickCollider(float exposeTime=0.1f)
+    public IEnumerator ExposeToKickCollider(float exposeTime=0.5f)
     {
         kickTrigger.SwitchCollider(true);
         yield return new WaitForSeconds(exposeTime);

@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using DG.Tweening;
 
 
-public enum OpponentMode {Exploring, Rushing, Scream, Agonize, Fall, beingKicked, Attacking, Checking, LookAround, Smelling};
+public enum OpponentMode {Exploring, Rushing, HitPlayer, Scream, Agonize, Fall, beingKicked, Attacking, Checking, LookAround, Smelling};
 public class OpponentActions : MonoBehaviour
 {
     public float walkingSpeed = 0.3f;
@@ -94,41 +94,79 @@ public class OpponentActions : MonoBehaviour
         float playerVelocity = player.GetComponentInParent<Character>().SpeedBeforeKick;
         animator.SetFloat("PlayerSpeedKick", playerVelocity);
         animator.SetTrigger("beingKicked");
-        vfov.ResetSense(7f);
-        yield return new WaitForSeconds(1f);
+        // vfov.ResetSense(2f);
+        if (playerVelocity > 3f)
+            yield return new WaitForSeconds(2.5f);
+        else
+            yield return new WaitForSeconds(1f);
         taskManager.TaskSetToFinish();    
     }
-    
 
-    public IEnumerator AgentAttack(Transform player, int damage)
+    public IEnumerator AttackSequenceTask(Transform player, int damage)
     {
-        agent.destination = transform.position;
-        
-        // yield return new WaitForSeconds(2f);
-        if (!nextAttack)
+        yield return NoticePlayer(player);
+        yield return RunTowardPlayer(player);
+        yield return HitPlayer(player, damage);
+        yield return new WaitForSeconds(damageInterval);
+        taskManager.TaskSetToFinish();
+
+    }
+    
+    public IEnumerator RunTowardPlayer(Transform player)
+    {
+        if (!ReachPlayerRange(player.position))
+            SetOpponentMode(OpponentMode.Rushing);
+        else
         {
-            SetOpponentMode(OpponentMode.Scream);
-            yield return RotateTowardPosUntil(player, 2f);
-        }    
-        SetOpponentMode(OpponentMode.Rushing); // here reaction of seeng player is runned
-        if(GameSystem.Instance.opponentDebug) Debug.Log($"Agent is trying to reach player!");
+            SetOpponentMode(OpponentMode.Exploring);
+        } // here reaction of seeng player is runned
         while(!ReachPlayerRange(player.position) && vfov.FoundedObject())
         {
-             SetLastPlayerPosition(player);
+            SetLastPlayerPosition(player);
             agent.destination = player.position;
             yield return new WaitForSeconds(changeRushingDecision);
-            
         }
-        if(vfov.FoundedObject()) //because it means that it reach player
+
+    }
+
+    public IEnumerator NoticePlayer(Transform player)
+    {
+        if(GetOpponentMode() != OpponentMode.Scream && !nextAttack)
+        {   
+            SetOpponentMode(OpponentMode.Scream);
+            yield return RotateTowardPosUntil(player, 2f);
+        }
+    }
+
+    IEnumerator HitPlayer(Transform player, int damage)
+    {
+        var plr = player.gameObject.GetComponent<Character>();
+        if (plr.justDied())
         {
-            yield return HitUntilDead(player, damage);
+            vfov.ResetSense();
+            SetOpponentMode(OpponentMode.Exploring);
+            nextAttack = false;
+            yield break;
+        }
+        else if(vfov.FoundedObject())
+        {   
+            yield return RotateTowardPlayer(player);
+            nextAttack = true;
+            if(ReachPlayerRange(player.position))
+            {
+                SetOpponentMode(OpponentMode.HitPlayer);
+                plr.ReduceHealth(damage); 
+            }
         }
         else
         {
             nextAttack = false;
         }
-        taskManager.TaskSetToFinish();
+            
+
+
     }
+
 
     public IEnumerator RotateTowardPlayer(Transform player)
     {       
@@ -154,36 +192,6 @@ public class OpponentActions : MonoBehaviour
             timePassed += Time.deltaTime;
             yield return null;
         }
-    }
- 
-
-    IEnumerator HitUntilDead(Transform player, int damage)
-    {
-         agent.destination = transform.position;
-        var plr = player.gameObject.GetComponent<Character>();
-        SetOpponentMode(OpponentMode.Attacking);
-        // Coroutine rotateCoroutine = StartCoroutine(RotateToPlayer(player));
-        while(ReachPlayerRange(player.position, 0.05f))
-        {
-            if (plr.justDied())
-            {
-                vfov.ResetSense();
-                SetOpponentMode(OpponentMode.Exploring);
-                nextAttack = false;
-                yield break;
-            }
-            else
-            {
-                SetLastPlayerPosition(player);
-                plr.ReduceHealth(damage);
-                yield return new WaitForSeconds(damageInterval);
-                yield return RotateTowardPlayer(player);
-            }
-
-        }
-        SetOpponentMode(OpponentMode.Rushing);
-        nextAttack = true;
-
     }
 
 
@@ -253,31 +261,7 @@ public class OpponentActions : MonoBehaviour
         opponentMode = mode;
         switch(mode)
         {
-            case OpponentMode.Agonize:
-            {
-                speed = 0f;
-                break;
-            }
-            case OpponentMode.LookAround:
-            {
-                speed = 0f;
-                break;
-            }
-            case OpponentMode.beingKicked:
-            {
-                speed = 0f;
-                break; 
-            }
-            case OpponentMode.Fall:
-            {
-                speed = 0f;
-                break;
-            }
-            case OpponentMode.Scream:
-            {
-                speed = 0f;
-                break;
-            }
+            
             case OpponentMode.Exploring:
             {
                 speed =  walkingSpeed;
@@ -296,7 +280,7 @@ public class OpponentActions : MonoBehaviour
                 stoppingDistance = 0.0f;
                 break;
             }
-            case OpponentMode.Attacking:
+            default:
             {
                 speed = 0f;
                 break;

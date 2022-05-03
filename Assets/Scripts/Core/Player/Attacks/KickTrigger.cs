@@ -23,6 +23,7 @@ public void SwitchCollider(bool on)
         
         if(other.transform.tag == "Opponent")
         {
+            Debug.Log("Enter kick area!");
             Vector3 targetDirection = other.gameObject.transform.position - player.position;
             targetDirection = new Vector3(targetDirection.x,  player.position.y, targetDirection.z);
             player.rotation = Quaternion.LookRotation(targetDirection);

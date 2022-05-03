@@ -55,7 +55,7 @@ public class Opponent : MonoBehaviour
         }
         else if (vfov.FoundedObject() && currPriority > 2)
             {
-                taskManager.ForceToRun(opponentActions.AgentAttack(vfov.GetPlayerTarget(), damage), 2);
+                taskManager.ForceToRun(opponentActions.AttackSequenceTask(vfov.GetPlayerTarget(), damage), 2);
             }
         else if (vfov.Suspicious() && currPriority > 3)
             {

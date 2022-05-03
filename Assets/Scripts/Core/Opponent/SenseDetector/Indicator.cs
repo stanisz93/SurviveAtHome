@@ -6,7 +6,8 @@ public class Indicator
 {
     private float maxValue;
     private float currentValue;
-    private float step;
+    private float increaseStep;
+    private float decreaseStep;
     private float initialValue;
 
     private bool initiallyActive;
@@ -14,12 +15,13 @@ public class Indicator
 
     private bool reachMax=false;
     private bool reachMin=false;
-    public Indicator(float initialValue, float maxValue, float step, bool initiallyActive)
+    public Indicator(float initialValue, float maxValue, float increaseStep, float decreaseStep, bool initiallyActive)
     {
         this.maxValue = maxValue;
         this.initialValue = initialValue;
         this.currentValue = initialValue;
-        this.step = step;
+        this.increaseStep = increaseStep;
+        this.decreaseStep = decreaseStep;
         this.initiallyActive = initiallyActive;
         this.active = initiallyActive;
     }
@@ -48,7 +50,7 @@ public class Indicator
     public float GetMaxValue() {return maxValue;}
     public void Increase()
     {
-        currentValue += step;
+        currentValue += increaseStep;
         if(reachMin) reachMin = false;
         if(currentValue >= maxValue)
         {
@@ -61,7 +63,7 @@ public class Indicator
     public void Decrease()
     {
          if(reachMax) reachMax = false;
-        currentValue -= step;
+        currentValue -= decreaseStep;
         if(currentValue <= 0f)
         {
             currentValue = 0f;

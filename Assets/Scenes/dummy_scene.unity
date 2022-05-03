@@ -2879,7 +2879,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stressReceiver: {fileID: 1439694880}
-  kickOpponentReactionDelay: 0.4
+  kickOpponentReactionDelay: 0.2
   player: {fileID: 303213883}
 --- !u!65 &1459826264
 BoxCollider:
@@ -4475,6 +4475,10 @@ PrefabInstance:
     - target: {fileID: 4232579744328846601, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
       propertyPath: pushDistance
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4232579744328846601, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
+      propertyPath: damageInterval
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 4232579744328846602, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
       propertyPath: m_RootOrder

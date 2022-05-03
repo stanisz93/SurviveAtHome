@@ -17,7 +17,8 @@ public class VisionFieldOfView : MonoBehaviour
     public float maxAlertScore = 100f;
     public float maxCalmingScore = 100f;
     public float calmDownThreshold = 50f;
-    public float AlertStep = 15;
+    public float AlertIncreaseStep = 15;
+    public float AlertDecreaseStep = 5;
     public float calmingStep = 4;
     [HideInInspector]
     public List<Transform> visibleTargets = new List<Transform>();
@@ -47,8 +48,8 @@ public enum VisionState {Founded, Suspicious, None};
         alertBody = alertUI.GetComponentInParent<Canvas>();
         alertBody.enabled = false;
         alertUI.SetDefault(maxAlertScore);
-        calmIndicator = new Indicator(maxCalmingScore, maxCalmingScore, calmingStep, false);
-        alertIndicator = new Indicator(0f, maxAlertScore, AlertStep, true);
+        calmIndicator = new Indicator(maxCalmingScore, maxCalmingScore, calmingStep, calmingStep, false);
+        alertIndicator = new Indicator(0f, maxAlertScore, AlertIncreaseStep, AlertDecreaseStep, true);
         StartCoroutine("FindTargetsWithDelay", searchDelay);
     }
     IEnumerator FindTargetsWithDelay(float delay)
@@ -94,6 +95,7 @@ public enum VisionState {Founded, Suspicious, None};
         alertBody.enabled = false;
         StartCoroutine(CoolOff(time));
     }
+
 
     private void SetStateToFounded()
     {
