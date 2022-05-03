@@ -374,6 +374,11 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.5761528, y: 1, z: 1}
   m_Center: {x: -0.78807664, y: 0, z: 0}
+--- !u!4 &275487320 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5206693177721646112, guid: 2f2acb786d48b2a48b1ddf17d16cd292, type: 3}
+  m_PrefabInstance: {fileID: 3398933801269008175}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &303213883 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8975323420904284637, guid: 2f2acb786d48b2a48b1ddf17d16cd292, type: 3}
@@ -2829,6 +2834,66 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: 025d7b3285e546c49b2b9fd1340255f2, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 553c18ffe8fa2394e848ff1580ceff07, type: 3}
+--- !u!1 &1459826261
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1459826262}
+  - component: {fileID: 1459826264}
+  - component: {fileID: 1459826263}
+  m_Layer: 0
+  m_Name: kickpoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1459826262
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1459826261}
+  m_LocalRotation: {x: -0.20281863, y: 0.64520234, z: 0.72970295, w: -0.10055899}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.010000016, y: 0.010000001, z: 0.010000066}
+  m_Children: []
+  m_Father: {fileID: 275487320}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1459826263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1459826261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72c8315bbcbc17c45a8b9be574c43520, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stressReceiver: {fileID: 1439694880}
+  kickOpponentReactionDelay: 0.4
+  player: {fileID: 303213883}
+--- !u!65 &1459826264
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1459826261}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.19, y: 0.67, z: 1.58}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1518481974
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4302,6 +4367,14 @@ PrefabInstance:
       propertyPath: ui
       value: 
       objectReference: {fileID: 865067402}
+    - target: {fileID: 3398933802014898923, guid: 2f2acb786d48b2a48b1ddf17d16cd292, type: 3}
+      propertyPath: kickTrigger
+      value: 
+      objectReference: {fileID: 1459826263}
+    - target: {fileID: 4117206819088981025, guid: 2f2acb786d48b2a48b1ddf17d16cd292, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4117206819088981027, guid: 2f2acb786d48b2a48b1ddf17d16cd292, type: 3}
       propertyPath: healthBar
       value: 
@@ -4389,10 +4462,18 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4232579743941799285, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4232579743941799285, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4232579744328846601, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
+      propertyPath: pushTime
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4232579744328846601, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
+      propertyPath: pushDistance
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4232579744328846602, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
@@ -4449,7 +4530,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4232579744328846605, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4232579744328846708, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
       propertyPath: looker

@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using DG.Tweening;
 
 
-public enum OpponentMode {Exploring, Rushing, Scream, Agonize, Fall, Attacking, Checking, LookAround, Smelling};
+public enum OpponentMode {Exploring, Rushing, Scream, Agonize, Fall, beingKicked, Attacking, Checking, LookAround, Smelling};
 public class OpponentActions : MonoBehaviour
 {
     public float walkingSpeed = 0.3f;
@@ -16,6 +17,9 @@ public class OpponentActions : MonoBehaviour
     public float ExploringInterval = 1f;
     public float rotationSpeed = 10f;
     public float changeRushingDecision = .05f;
+    public float pushTime = 0.1f;
+
+    public float pushDistance = 1f;
 
     public Transform playerSeenHelper; 
 
@@ -32,6 +36,7 @@ public class OpponentActions : MonoBehaviour
     private bool nextAttack = false; //this bool mean if this is next attempt after first attack
     private Vector3 playerSeen;
     private Opponent opponent;
+    private Rigidbody m_Rigidbody;
     
 
      private void Awake () 
@@ -46,7 +51,7 @@ public class OpponentActions : MonoBehaviour
         vfov = GetComponentInChildren<VisionFieldOfView>();
         taskManager = GetComponent<TaskManager>();
         opponent = GetComponent<Opponent>();
-        
+        m_Rigidbody = GetComponent<Rigidbody>();
     }
 
 
@@ -73,6 +78,22 @@ public class OpponentActions : MonoBehaviour
         yield return new WaitForSeconds(3f);
         animator.SetTrigger("StandAfterFall");
         yield return new WaitForSeconds(4f);
+        taskManager.TaskSetToFinish();    
+    }
+
+
+    public IEnumerator GotKicked(Transform player)
+    {
+        SetOpponentMode(OpponentMode.beingKicked);
+        Vector3 targetDirection = player.position - transform.position;
+        Vector3 destPos = transform.position - targetDirection.normalized * pushDistance;
+        Sequence pushS = DOTween.Sequence();
+        pushS.Append(transform.DOMove(destPos, pushTime));
+        pushS.PrependInterval(0.1f);
+        transform.rotation = Quaternion.LookRotation(targetDirection);
+        animator.SetTrigger("beingKicked");
+        vfov.ResetSense(7f);
+        yield return new WaitForSeconds(1f);
         taskManager.TaskSetToFinish();    
     }
     
@@ -122,7 +143,7 @@ public class OpponentActions : MonoBehaviour
 
     public IEnumerator RotateTowardPosUntil(Transform pos, float time)
     {       
-        float timePassed = 0;
+        float timePassed = 0f;
         while(timePassed < time)
         {
             Vector3 targetDirection = pos.position - transform.position;
@@ -239,6 +260,11 @@ public class OpponentActions : MonoBehaviour
             {
                 speed = 0f;
                 break;
+            }
+            case OpponentMode.beingKicked:
+            {
+                speed = 0f;
+                break; 
             }
             case OpponentMode.Fall:
             {

@@ -14,6 +14,9 @@ public class Opponent : MonoBehaviour
     private OpponentUtils opponentUtils;
     private VisionFieldOfView vfov;
     private TaskManager taskManager;
+
+    public delegate void InterruptTask();
+    InterruptTask interruptTask;
    
     
 
@@ -32,6 +35,12 @@ public class Opponent : MonoBehaviour
     {
         if(taskManager.GetCurrentPriority() > 1) 
             taskManager.ForceToRun(opponentActions.Fall(), 1);
+    }
+
+    public void GotKicked(Transform transform)
+    {
+        if(taskManager.GetCurrentPriority() > 1) 
+            taskManager.ForceToRun(opponentActions.GotKicked(transform), 1);
     }
 
     // Update is called once per frame

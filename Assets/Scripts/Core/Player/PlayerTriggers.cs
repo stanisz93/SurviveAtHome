@@ -19,6 +19,7 @@ public class PlayerTriggers : MonoBehaviour
     public bool triggerEmpty = true;
     public Slidable Slidable { get => slidable; set => slidable = value; }
 
+    public KickTrigger kickTrigger;
 
     // Start is called before the first frame update
     void Start()
@@ -46,11 +47,21 @@ public class PlayerTriggers : MonoBehaviour
     }
     public void Kick()
     {
+        StartCoroutine(ExposeToKickCollider());
         playerAnimationController.animator.SetTrigger("Kick");
         StartCoroutine(BlockMovement(triggerEmpty));
         StartCoroutine(ReleaseTrigger(1f));
+
         
     }
+
+    public IEnumerator ExposeToKickCollider(float exposeTime=0.1f)
+    {
+        kickTrigger.SwitchCollider(true);
+        yield return new WaitForSeconds(exposeTime);
+        kickTrigger.SwitchCollider(false);
+    }
+
 
         public IEnumerator BlockMovement(bool condition)
     {
