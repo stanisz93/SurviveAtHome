@@ -48,7 +48,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4232579743529770810}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -493,6 +493,8 @@ MonoBehaviour:
   ExploringInterval: 1
   rotationSpeed: 10
   changeRushingDecision: 0.1
+  pushTime: 0.1
+  pushDistance: 1
   playerSeenHelper: {fileID: 4232579743529770811}
   animator: {fileID: 809370125271328900}
 --- !u!54 &4232579744328846600
@@ -672,7 +674,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8001dd46ed48f9245b732bd69a6d9339, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 0}
 --- !u!1 &4232579744901849394
 GameObject:
   m_ObjectHideFlags: 0
@@ -728,7 +729,8 @@ MonoBehaviour:
   maxAlertScore: 100
   maxCalmingScore: 100
   calmDownThreshold: 50
-  AlertStep: 20
+  AlertIncreaseStep: 15
+  AlertDecreaseStep: 5
   calmingStep: 5
   visibleTargets: []
   alertUI: {fileID: 4232579743530906055}

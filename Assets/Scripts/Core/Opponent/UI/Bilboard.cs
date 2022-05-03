@@ -6,11 +6,16 @@ public class Bilboard : MonoBehaviour
 {
     // Start is called before the first frame update
     
-    public Transform cam;
+    private GameObject cam;
+
+    private void Awake() {
+        cam = GameObject.FindWithTag("MainCamera");
+            
+    }
 
     // Update is called once per frame
     void LateUpdate()
     {
-        transform.LookAt(transform.position + cam.forward);
+        transform.LookAt(transform.position + cam.transform.forward);
     }
 }
