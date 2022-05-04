@@ -28,6 +28,7 @@ public class PlayerInput : MonoBehaviour
     private ItemTile highlightedTile = null;
 
     public bool blockMovement = false;
+    private PlayerAnimationController playerAnimationController;
     
 
 
@@ -39,6 +40,7 @@ public class PlayerInput : MonoBehaviour
         collider = GetComponent<CapsuleCollider>();
         chrMvmnt = GetComponent<CharacterMovement>();
         playerTriggers = GetComponent<PlayerTriggers>();
+        playerAnimationController = GetComponent<PlayerAnimationController>(); 
         itemPickupManager = GetComponent<ItemPickupManager>();
         attachmentManager = GetComponent<AttachmentManager>();
         attachmentManager.enabled = false;
@@ -153,7 +155,12 @@ public class PlayerInput : MonoBehaviour
             }
             else if (Input.GetKey(KeyCode.V))
             {
-                character.StartTriggerAction(playerTriggers.Kick);
+                if(chrMvmnt.GetHoldMode() == HoldMode.WoddenStick)
+                {
+                    character.StartTriggerAction(playerTriggers.StickAttack);
+                }
+                else
+                    character.StartTriggerAction(playerTriggers.Kick);
             }
             else if (Input.GetKey(KeyCode.LeftShift))
             {
@@ -163,9 +170,15 @@ public class PlayerInput : MonoBehaviour
             {
                 character.SetToCrounch();
             }
+            else if(Input.GetKey(KeyCode.R))
+            {
+                Debug.Log("Here drop object");
+            }
             else if(Input.GetKeyDown(KeyCode.F))
             {
-                itemPickupManager.PickICollectible();
+                bool success = itemPickupManager.PickItem();
+                if(success)
+                    StartCoroutine(playerAnimationController.PickupItem());
             }
             else if(Input.GetKey(KeyCode.Tab))
             {

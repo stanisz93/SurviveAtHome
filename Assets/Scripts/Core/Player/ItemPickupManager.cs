@@ -9,18 +9,38 @@ public class ItemPickupManager: BestCandidateManager
     public CollectiblePopup collectiblePopup;
     private void Start() {
     }
-    public void PickICollectible()
+    public bool PickItem()
     {
         Transform best = GetBestOption();
         if(best != null)
         {
             ICollectible collectible = best.GetComponent<ICollectible>();
-            if (collectible == null)
+            IDefendable defendable = best.GetComponent<IDefendable>();
+            if (collectible == null && defendable == null)
+            {
                 Debug.LogError("This is not collectible!");
-            RemovePotentialObject(best);
-            collectiblePopup.PopUp(collectible);
-            collectible.Collect();
+                return false;
+            }
+                
+            else
+            {
+                RemovePotentialObject(best);
+                if(collectible != null)
+                {
+                    collectiblePopup.PopUp(collectible);
+                    collectible.Collect();
+                    return true;
+                }
+                else if(defendable != null)
+                {
+                    defendable.AttachToPlayer();
+                    //Here I should change player move mode to hold spear
+                }
+                return true;
+            }
         }
+        else
+            return false;
 
     }
 

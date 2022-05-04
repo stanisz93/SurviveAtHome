@@ -85,13 +85,14 @@ public class Inventory : MonoBehaviour
     }
 
 
-    public void HandlePickup(ICollectible item)
+    public void HandleResourcePickup(ICollectible item)
     {
-        bool success = false;
         AddItem(item.gameObject);
-        if(success)
-            item.OnDestroy();
+        item.OnDestroy();
     }
+
+    
+
 
 
     // public void SubstractItem(T anyItemType, int count)

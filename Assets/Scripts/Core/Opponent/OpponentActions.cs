@@ -19,7 +19,6 @@ public class OpponentActions : MonoBehaviour
     public float changeRushingDecision = .05f;
     public float pushTime = 0.1f;
 
-    public float pushDistance = 1f;
 
     public Transform playerSeenHelper; 
 
@@ -82,11 +81,11 @@ public class OpponentActions : MonoBehaviour
     }
 
 
-    public IEnumerator GotKicked(Transform player)
+    public IEnumerator GotKicked(Transform player, float pushForce)
     {
         SetOpponentMode(OpponentMode.beingKicked);
         Vector3 targetDirection = player.position - transform.position;
-        Vector3 destPos = transform.position - targetDirection.normalized * pushDistance;
+        Vector3 destPos = transform.position - targetDirection.normalized * pushForce;
         Sequence pushS = DOTween.Sequence();
         pushS.Append(transform.DOMove(destPos, pushTime));
         pushS.PrependInterval(0.1f);

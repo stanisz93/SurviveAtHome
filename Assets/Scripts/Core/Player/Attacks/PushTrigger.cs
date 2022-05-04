@@ -2,14 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KickTrigger : MonoBehaviour {
+public class PushTrigger : MonoBehaviour {
 
-public StressReceiver stressReceiver;
+
 public float kickOpponentReactionDelay = 0.2f;
-public Transform player;
+public float pushForce = 1f;
+
+private StressReceiver stressReceiver;
+private Transform player;
 private Collider collider;
 
+
 private void Awake() {
+    stressReceiver = GameObject.FindWithTag("MainCamera").GetComponent<StressReceiver>();
+    player = GameObject.FindWithTag("PlayerMesh").transform;
     collider = GetComponent<Collider>();
     collider.enabled = false;
 }
@@ -34,7 +40,7 @@ public void SwitchCollider(bool on)
     private IEnumerator DelayOpponentReaction(Collider other, float delay)
     {
             yield return new WaitForSeconds(delay);
-            other.gameObject.GetComponent<Opponent>().GotKicked(player);
+            other.gameObject.GetComponent<Opponent>().GotKicked(player, pushForce);
             stressReceiver.InduceStress(1f);
 
     }

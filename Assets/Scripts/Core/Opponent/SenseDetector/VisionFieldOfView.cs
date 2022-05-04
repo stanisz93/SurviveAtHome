@@ -10,7 +10,7 @@ public class VisionFieldOfView : MonoBehaviour
     [Range(0,360)]
     public float viewAngle = 150f;
     public float searchDelay = 0.1f;
-    
+    public bool visibleAlertBilboard = true;
 
     public LayerMask visionMask;
     public LayerMask obstacleMask;

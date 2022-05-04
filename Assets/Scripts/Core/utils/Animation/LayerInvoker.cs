@@ -22,15 +22,15 @@ class LayerInvoker : MonoBehaviour
         {
             currentAnimWeight = Mathf.Lerp(1f, 0.0f, timeElapsed / fadeOutTime);
             timeElapsed += Time.deltaTime;
-            animator.SetLayerWeight(1, currentAnimWeight);
+            animator.SetLayerWeight(layer, currentAnimWeight);
             yield return null;
         }
     }
 
-    public void Reset()
+    public void Reset(int layer)
     {
         currentAnimWeight = 1f;
-        animator.SetLayerWeight(1, 1f);
+        animator.SetLayerWeight(layer, 1f);
 
     }
 }

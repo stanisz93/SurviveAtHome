@@ -17,7 +17,7 @@ public class SpawnManager : MonoBehaviour
         foreach(Transform loc in itemLocations)
         {
             int index = random.Next(pfItems.Count);
-            SpawnObject(pfItems[index], loc);
+            SpawnResource(pfItems[index], loc);
         }
     }
 
@@ -33,14 +33,14 @@ public class SpawnManager : MonoBehaviour
     //     spoon.OnPickup += inventory.HandlePickup;
     // }
 
-    void SpawnObject(GameObject itemPrefab, Transform spawnLocation)
+    void SpawnResource(GameObject itemPrefab, Transform spawnLocation)
     {
         GameObject itemObj = Instantiate(itemPrefab, spawnLocation);
         ICollectible collectItem = itemObj.GetComponent<ICollectible>();
 
         if (collectItem == null)
          Debug.LogError("Spoon prefab should have attached SpoonItem script to it!");
-         collectItem.OnPickup += inventory.HandlePickup;
+         collectItem.OnPickup += inventory.HandleResourcePickup;
     }
 
     // Update is called once per frame

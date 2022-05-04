@@ -10,6 +10,8 @@ public class PlayerAnimationController : MonoBehaviour
     public Animator animator;
 
     public float hitAnimLifeTime = 0.4f;
+    public float pickAnimLifeTime = 0.2f;
+    public float pickFadeOutTime = 0.3f;
     public float hitFadeOutTime = 0.15f;
 
 
@@ -66,11 +68,18 @@ public class PlayerAnimationController : MonoBehaviour
 
     IEnumerator ReceiveDamage()
     {
-        layerInvoker.Reset();
+        layerInvoker.Reset(1);
         yield return layerInvoker.RunUntil("Fight.Hit", 1, hitAnimLifeTime);
         yield return layerInvoker.SmoothlyFadeOutLayer(hitFadeOutTime, 1);
         chrMovement.SetFightMode(FightMode.Default);
         isHitAnimLaunch = false;
+    }
+
+    public IEnumerator PickupItem()
+    {
+        layerInvoker.Reset(2);
+        yield return layerInvoker.RunUntil("Pickup.PickingUp", 2, pickAnimLifeTime);
+        yield return layerInvoker.SmoothlyFadeOutLayer(pickFadeOutTime, 2);
     }
 
 

@@ -19,7 +19,8 @@ public class PlayerTriggers : MonoBehaviour
     public bool triggerEmpty = true;
     public Slidable Slidable { get => slidable; set => slidable = value; }
 
-    public KickTrigger kickTrigger;
+    public PushTrigger defaultPushTrigger;
+    private PushTrigger pushTrigger;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +29,15 @@ public class PlayerTriggers : MonoBehaviour
         character = GetComponent<Character>();
         playerAnimationController = GetComponent<PlayerAnimationController>(); 
         characterMovement = GetComponent<CharacterMovement>();
+        pushTrigger = defaultPushTrigger;
+    }
+
+    public void SetPushTrigger(PushTrigger trigger)
+    {
+        if(trigger != null)
+        {
+            pushTrigger = trigger;
+        }
     }
     public void Slide()
     {
@@ -48,20 +58,26 @@ public class PlayerTriggers : MonoBehaviour
     public void Kick()
     {
         character.SpeedBeforeKick = character.GetVelocity();
-        StartCoroutine(ExposeToKickCollider());
+        StartCoroutine(ExposeToPushCollider());
         playerAnimationController.animator.SetTrigger("Kick");
         StartCoroutine(BlockMovement(triggerEmpty));
         StartCoroutine(ReleaseTrigger(1f));
-        
-
-        
     }
 
-    public IEnumerator ExposeToKickCollider(float exposeTime=0.5f)
+    public void StickAttack()
     {
-        kickTrigger.SwitchCollider(true);
+        character.SpeedBeforeKick = character.GetVelocity();
+        StartCoroutine(ExposeToPushCollider());
+        playerAnimationController.animator.SetTrigger("PushStick");
+        StartCoroutine(BlockMovement(triggerEmpty));
+        StartCoroutine(ReleaseTrigger(1f));
+    }
+
+    public IEnumerator ExposeToPushCollider(float exposeTime=0.5f)
+    {
+        pushTrigger.SwitchCollider(true);
         yield return new WaitForSeconds(exposeTime);
-        kickTrigger.SwitchCollider(false);
+        pushTrigger.SwitchCollider(false);
     }
 
 
@@ -97,4 +113,8 @@ public class PlayerTriggers : MonoBehaviour
             deathCamera.enabled = false;
             dying = false;
     }
+
+
+
+
 }
