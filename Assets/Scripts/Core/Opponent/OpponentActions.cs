@@ -84,16 +84,25 @@ public class OpponentActions : MonoBehaviour
     {
         SetOpponentMode(OpponentMode.beingKicked);
         Vector3 targetDirection = player.position - transform.position;
+        float playerVelocity = player.GetComponentInParent<Character>().SpeedBeforeKick;
+        
+        if(playerVelocity > 5f)
+        {
+            if(pushForce < 2f)
+            {
+                pushForce *= 2;
+                pushTime *= 2;
+            }
+        }
         Vector3 destPos = transform.position - targetDirection.normalized * pushForce;
         Sequence pushS = DOTween.Sequence();
         pushS.Append(transform.DOMove(destPos, pushTime));
         pushS.PrependInterval(pushDelay);
         transform.rotation = Quaternion.LookRotation(-player.forward);
-        float playerVelocity = player.GetComponentInParent<Character>().SpeedBeforeKick;
         animator.SetFloat("PlayerSpeedKick", playerVelocity);
         animator.SetTrigger("beingKicked");
         // vfov.ResetSense(2f);
-        if (playerVelocity > 3f)
+        if (playerVelocity > 5f)
             yield return new WaitForSeconds(2.5f);
         else
             yield return new WaitForSeconds(1f);

@@ -58,7 +58,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   kickOpponentReactionDelay: 0.08
+  pushDelay: 0.1
+  cameraShake: 1.5
   pushForce: 2
+  pushTime: 0.2
 --- !u!1 &7544511872196768289
 GameObject:
   m_ObjectHideFlags: 0
