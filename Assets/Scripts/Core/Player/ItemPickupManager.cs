@@ -7,6 +7,7 @@ public class ItemPickupManager: BestCandidateManager
 {
 
     public CollectiblePopup collectiblePopup;
+    public HoldWeapon holdWeapon;
     private void Start() {
     }
     public bool PickItem()
@@ -34,6 +35,7 @@ public class ItemPickupManager: BestCandidateManager
                 else if(defendable != null)
                 {
                     defendable.AttachToPlayer();
+                    holdWeapon.SetWeaponImage(defendable.GetImage());
                     //Here I should change player move mode to hold spear
                 }
                 return true;

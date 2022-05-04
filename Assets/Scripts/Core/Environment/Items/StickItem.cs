@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Collider))]
 public class StickItem : MonoBehaviour, IDefendable {
@@ -11,11 +12,14 @@ public class StickItem : MonoBehaviour, IDefendable {
     public Vector3 pickPosition;
     public PushTrigger pushTrigger;
 
+    public Image icon; 
+
     public Vector3 pickRotation;
     public Action<IDefendable> OnPickup {get; set;}
     private CharacterMovement characterMovement;
     private PlayerTriggers plrT;
     private Collider interactCollider;
+
     private void Awake() {
         var plr = GameObject.FindWithTag("Player");
         characterMovement = plr.GetComponent<CharacterMovement>();
@@ -54,6 +58,11 @@ public class StickItem : MonoBehaviour, IDefendable {
     public Vector3 GetPickPosition()
     {
         return pickPosition;
+    }
+
+    public Sprite GetImage()
+    {
+        return icon.sprite;
     }
 
     public Vector3 GetPickRotation()

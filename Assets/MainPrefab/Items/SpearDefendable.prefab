@@ -161,6 +161,7 @@ MonoBehaviour:
   hand: {fileID: 0}
   pickPosition: {x: -0.0094, y: 0.01294, z: -0.00665}
   pushTrigger: {fileID: 7989006067861340293}
+  icon: {fileID: 86086120898963748, guid: d3433ab4f92c55a40a4c222f53f16ebe, type: 3}
   pickRotation: {x: 141.415, y: 66.294, z: 6.455002}
 --- !u!65 &3089168389053002191
 BoxCollider:

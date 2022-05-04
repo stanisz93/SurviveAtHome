@@ -4,9 +4,9 @@
     class DoTweenUtils
     {
     
-        static public void PoopUpImage(Image img)
+        static public void PoopUpImage(Image img, float scale=1.5f)
         {
-            img.transform.DOScale(new Vector3(1.5f, 1.5f, 1f), 0.1f).SetLoops(2, LoopType.Yoyo);
+            img.transform.DOScale(new Vector3(scale, scale, 1f), 0.1f).SetLoops(2, LoopType.Yoyo);
         }
 
         static public void PoopUpTextTween(Text text, Color color)
