@@ -6,7 +6,10 @@ public class PushTrigger : MonoBehaviour {
 
 
 public float kickOpponentReactionDelay = 0.2f;
+public float pushDelay = 0.1f;//delay of moving with dween
+public float cameraShake = 1f;
 public float pushForce = 1f;
+public float pushTime = 0.1f;
 
 private StressReceiver stressReceiver;
 private Transform player;
@@ -40,8 +43,8 @@ public void SwitchCollider(bool on)
     private IEnumerator DelayOpponentReaction(Collider other, float delay)
     {
             yield return new WaitForSeconds(delay);
-            other.gameObject.GetComponent<Opponent>().GotKicked(player, pushForce);
-            stressReceiver.InduceStress(1f);
+            other.gameObject.GetComponent<Opponent>().GotKicked(player, pushForce, pushTime, pushDelay);
+            stressReceiver.InduceStress(cameraShake);
 
     }
 }
