@@ -73,10 +73,10 @@ public class PlayerTriggers : MonoBehaviour
         StartCoroutine(ReleaseTrigger(1f));
     }
 
-    public IEnumerator ExposeToPushCollider(float exposeTime=0.5f)
+    public IEnumerator ExposeToPushCollider()
     {
         pushTrigger.SwitchCollider(true);
-        yield return new WaitForSeconds(exposeTime);
+        yield return new WaitForSeconds(pushTrigger.triggerExposeTime);
         pushTrigger.SwitchCollider(false);
     }
 

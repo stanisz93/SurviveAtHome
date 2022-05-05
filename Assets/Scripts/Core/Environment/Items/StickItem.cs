@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class StickItem : MonoBehaviour, IDefendable {
     
     public GameObject hand;
-
+    public GameObject pfDestroyObject;
     public PushTrigger pushTrigger;
 
     public Vector3 pickPosition;
@@ -44,6 +44,17 @@ public class StickItem : MonoBehaviour, IDefendable {
         interactCollider.enabled = false;
     }
 
+    void BreakWeapon() {
+        
+        GameObject pfInstance = Instantiate(pfDestroyObject, transform.position, transform.rotation);  
+        var rigidbodies = pfInstance.GetComponentsInChildren<Rigidbody>();
+        foreach (Rigidbody body in rigidbodies)
+            body.AddForce(UnityEngine.Random.insideUnitCircle.normalized * 400, ForceMode.Impulse);
+        plrT.SetPushTrigger(plrT.defaultPushTrigger);
+        Destroy(gameObject);
+        Destroy(pfInstance, 0.15f);
+    }
+
     public int GetMaxEndurance()
     {
         return maxEndurance;
@@ -72,6 +83,10 @@ public class StickItem : MonoBehaviour, IDefendable {
     public void ReduceEndurance()
     {
         endurance -= enduranceStep;
+        if(endurance <= 0)
+        {
+            BreakWeapon();
+        }
     }
 
     public void AddActionOnHit(Action action)
