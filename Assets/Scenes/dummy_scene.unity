@@ -1165,7 +1165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.35972714, g: 1, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2265,8 +2265,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a519f8cea68368409a5ff60972d01e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gradient:
+    serializedVersion: 2
+    key0: {r: 0.36078432, g: 1, b: 0, a: 1}
+    key1: {r: 0.36078432, g: 1, b: 0, a: 1}
+    key2: {r: 1, g: 0.8581352, b: 0, a: 0}
+    key3: {r: 0.9622642, g: 0.47006616, b: 0, a: 0}
+    key4: {r: 1, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 22552
+    ctime2: 40285
+    ctime3: 52428
+    ctime4: 65535
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 5
+    m_NumAlphaKeys: 2
   slider: {fileID: 1113753581}
-  alpha: 200
   weaponImage: {fileID: 7105355523835356339}
   endurancePointer: {fileID: 696743872}
 --- !u!114 &1113753581
@@ -3476,7 +3504,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1392
+  m_Name: pb_Mesh-1396
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -5330,6 +5358,10 @@ PrefabInstance:
       propertyPath: icon
       value: 
       objectReference: {fileID: 86086120898963748, guid: d3433ab4f92c55a40a4c222f53f16ebe, type: 3}
+    - target: {fileID: 4618893059352813844, guid: cf2037ab6adf5b54b93167f9fec25996, type: 3}
+      propertyPath: maxEndurance
+      value: 500
+      objectReference: {fileID: 0}
     - target: {fileID: 4618893059352813844, guid: cf2037ab6adf5b54b93167f9fec25996, type: 3}
       propertyPath: pickPosition.x
       value: -0.0094

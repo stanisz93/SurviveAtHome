@@ -6,9 +6,9 @@ using UnityEngine.UI;
 public class WeaponPlaceholder : MonoBehaviour
 {
     // Start is called before the first frame update
+    public Gradient gradient;
     public Slider slider;
     [SerializeField]
-    private byte alpha = 200;
     public Image weaponImage;
     public Image endurancePointer;
     private IDefendable defendable;
@@ -22,7 +22,6 @@ public class WeaponPlaceholder : MonoBehaviour
     public void SetWeaponImage()
     {
         weaponImage.sprite = defendable.GetImage();
-        weaponImage.color = new Color32(255, 255, 255, alpha);
         DoTweenUtils.PoopUpImage(weaponImage, 0.8f);
     }
 
@@ -49,18 +48,18 @@ public class WeaponPlaceholder : MonoBehaviour
         slider.maxValue = defendable.GetMaxEndurance();
         slider.value = defendable.GetMaxEndurance();
         endurancePointer.enabled = true;
-        endurancePointer.color = new Color32(255, 255, 255, 255);
+        endurancePointer.color = gradient.Evaluate(0f);
 
     }
 
     public void UpdateEndurance()
     {
-        slider.value = defendable.GetCurrentEndurance();
+        var currEndurance = (float)defendable.GetCurrentEndurance();
+        slider.value = currEndurance;
         DoTweenUtils.PoopUpImage(endurancePointer, 0.16f, 0.16f);
-        if (slider.value < 0.4f * defendable.GetMaxEndurance())
-        {
-            endurancePointer.color = new Color32(138, 3, 3, 255);
-        }
+        var maxVal = (float)defendable.GetMaxEndurance();
+        var ratio = (maxVal - currEndurance) / maxVal;
+        endurancePointer.color = gradient.Evaluate(ratio);
         if( slider.value <= 0)
             RemoveWeapon();
     }
