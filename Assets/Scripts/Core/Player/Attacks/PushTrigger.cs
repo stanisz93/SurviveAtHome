@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PushTrigger : MonoBehaviour {
 
@@ -14,6 +15,8 @@ public float pushTime = 0.1f;
 private StressReceiver stressReceiver;
 private Transform player;
 private Collider collider;
+
+public Action OnHit;
 
 
 private void Awake() {
@@ -37,6 +40,7 @@ public void SwitchCollider(bool on)
             targetDirection = new Vector3(targetDirection.x,  player.position.y, targetDirection.z);
             player.rotation = Quaternion.LookRotation(targetDirection);
             StartCoroutine(DelayOpponentReaction(other, kickOpponentReactionDelay));
+            OnHit?.Invoke();
         }
     }
 

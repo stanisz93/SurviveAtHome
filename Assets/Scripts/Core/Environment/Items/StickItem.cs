@@ -9,18 +9,23 @@ public class StickItem : MonoBehaviour, IDefendable {
     
     public GameObject hand;
 
-    public Vector3 pickPosition;
     public PushTrigger pushTrigger;
 
+    public Vector3 pickPosition;
     public Image icon; 
 
     public Vector3 pickRotation;
-    public Action<IDefendable> OnPickup {get; set;}
     private CharacterMovement characterMovement;
     private PlayerTriggers plrT;
     private Collider interactCollider;
 
+    public int maxEndurance = 200;
+    private int endurance;
+    [SerializeField]
+    private int enduranceStep = 20;
+
     private void Awake() {
+        endurance = maxEndurance;
         var plr = GameObject.FindWithTag("Player");
         characterMovement = plr.GetComponent<CharacterMovement>();
         plrT = plr.GetComponent<PlayerTriggers>();
@@ -35,9 +40,19 @@ public class StickItem : MonoBehaviour, IDefendable {
         transform.localEulerAngles = GetPickRotation();
         characterMovement.SetHoldMode(HoldMode.WoddenStick);
         plrT.SetPushTrigger(pushTrigger);
+        pushTrigger.OnHit += ReduceEndurance;
         interactCollider.enabled = false;
     }
 
+    public int GetMaxEndurance()
+    {
+        return maxEndurance;
+    }
+
+    public int GetCurrentEndurance()
+    {
+        return endurance;
+    }
     public void OnTriggerEnter(Collider other) 
    {  
         if(other.transform.tag == "Player")
@@ -52,6 +67,16 @@ public class StickItem : MonoBehaviour, IDefendable {
             var itemPickuper = other.gameObject.GetComponent<ItemPickupManager>();
             itemPickuper.RemovePotentialObject(this.transform);
         }
+    }
+
+    public void ReduceEndurance()
+    {
+        endurance -= enduranceStep;
+    }
+
+    public void AddActionOnHit(Action action)
+    {
+        pushTrigger.OnHit += action;
     }
 
 

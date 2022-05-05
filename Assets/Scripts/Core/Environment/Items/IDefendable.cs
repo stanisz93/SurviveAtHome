@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public interface IDefendable
 {
-    Action <IDefendable> OnPickup {get; set;}
 
     void AttachToPlayer();
 
@@ -15,4 +14,14 @@ public interface IDefendable
     Vector3 GetPickPosition();
     
     Vector3 GetPickRotation();
+
+    void ReduceEndurance();
+
+    void AddActionOnHit(Action a);
+
+    int GetMaxEndurance();
+
+    int GetCurrentEndurance();
+
+
 }
