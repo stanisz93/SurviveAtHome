@@ -21,14 +21,14 @@ public class WeaponPlaceholder : MonoBehaviour
     // Update is called once per frame
     public void SetWeaponImage()
     {
-        
         weaponImage.sprite = defendable.GetImage();
         weaponImage.color = new Color32(255, 255, 255, alpha);
         DoTweenUtils.PoopUpImage(weaponImage, 0.8f);
     }
 
-    public void ClearImage()
+    public void RemoveWeapon()
     {
+        this.defendable = null;
         weaponImage.sprite = null;
         weaponImage.color = new Color32(255, 255, 255, 0);
         DoTweenUtils.PoopUpImage(weaponImage, 0.8f);
@@ -62,7 +62,7 @@ public class WeaponPlaceholder : MonoBehaviour
             endurancePointer.color = new Color32(138, 3, 3, 255);
         }
         if( slider.value <= 0)
-            ClearImage();
+            RemoveWeapon();
     }
 
 

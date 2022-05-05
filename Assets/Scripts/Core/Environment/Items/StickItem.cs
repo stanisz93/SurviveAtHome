@@ -51,6 +51,7 @@ public class StickItem : MonoBehaviour, IDefendable {
         foreach (Rigidbody body in rigidbodies)
             body.AddForce(UnityEngine.Random.insideUnitCircle.normalized * 400, ForceMode.Impulse);
         plrT.SetPushTrigger(plrT.defaultPushTrigger);
+        characterMovement.SetHoldMode(HoldMode.Default);
         Destroy(gameObject);
         Destroy(pfInstance, 0.15f);
     }

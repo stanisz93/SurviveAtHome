@@ -3683,7 +3683,7 @@ MonoBehaviour:
   cameraShake: 1
   pushForce: 1
   triggerExposeTime: 0.5
-  pushTime: 0.1
+  pushTime: 0.2
 --- !u!65 &1459826264
 BoxCollider:
   m_ObjectHideFlags: 0
