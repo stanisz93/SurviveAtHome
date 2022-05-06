@@ -79,6 +79,15 @@ public class PlayerInput : MonoBehaviour
             else
                 character.AddMovementInput(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
             
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                character.SetToRun();
+            }
+            else
+            {
+                character.SetToWalk();
+            }
+
             if (controllerMode == ControllerMode.Normal)
             {
                 ManageNormalControl();
@@ -162,10 +171,7 @@ public class PlayerInput : MonoBehaviour
                 else
                     character.StartTriggerAction(playerTriggers.Kick);
             }
-            else if (Input.GetKey(KeyCode.LeftShift))
-            {
-                character.SetToRun();
-            }
+
             else if(Input.GetKey(KeyCode.C))
             {
                 character.SetToCrounch();
@@ -185,10 +191,7 @@ public class PlayerInput : MonoBehaviour
                 inventoryUI.GoToInventory();
                 controllerMode = ControllerMode.Inventory;
             }
-            else
-            {
-                character.SetToWalk();
-            }
+
     }
 
     

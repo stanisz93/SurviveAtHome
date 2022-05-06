@@ -9,6 +9,7 @@ public class PlayerTriggers : MonoBehaviour
 
     public List<Transform> diePoints;
     public Camera deathCamera;
+
     private PlayerAnimationController playerAnimationController;
     private CharacterMovement characterMovement;
     private Character character;
@@ -19,8 +20,6 @@ public class PlayerTriggers : MonoBehaviour
     public bool triggerEmpty = true;
     public Slidable Slidable { get => slidable; set => slidable = value; }
 
-    public PushTrigger defaultPushTrigger;
-    private PushTrigger pushTrigger;
 
     // Start is called before the first frame update
     void Start()
@@ -29,16 +28,8 @@ public class PlayerTriggers : MonoBehaviour
         character = GetComponent<Character>();
         playerAnimationController = GetComponent<PlayerAnimationController>(); 
         characterMovement = GetComponent<CharacterMovement>();
-        pushTrigger = defaultPushTrigger;
     }
 
-    public void SetPushTrigger(PushTrigger trigger)
-    {
-        if(trigger != null)
-        {
-            pushTrigger = trigger;
-        }
-    }
     public void Slide()
     {
         playerAnimationController.animator.SetTrigger("Slide");
@@ -58,7 +49,6 @@ public class PlayerTriggers : MonoBehaviour
     public void Kick()
     {
         character.SpeedBeforeKick = character.GetVelocity();
-        StartCoroutine(ExposeToPushCollider());
         playerAnimationController.animator.SetTrigger("Kick");
         StartCoroutine(BlockMovement(triggerEmpty));
         StartCoroutine(ReleaseTrigger(1f));
@@ -67,18 +57,11 @@ public class PlayerTriggers : MonoBehaviour
     public void StickAttack()
     {
         character.SpeedBeforeKick = character.GetVelocity();
-        StartCoroutine(ExposeToPushCollider());
         playerAnimationController.animator.SetTrigger("PushStick");
         StartCoroutine(BlockMovement(triggerEmpty));
         StartCoroutine(ReleaseTrigger(1f));
     }
 
-    public IEnumerator ExposeToPushCollider()
-    {
-        pushTrigger.SwitchCollider(true);
-        yield return new WaitForSeconds(pushTrigger.triggerExposeTime);
-        pushTrigger.SwitchCollider(false);
-    }
 
 
         public IEnumerator BlockMovement(bool condition)

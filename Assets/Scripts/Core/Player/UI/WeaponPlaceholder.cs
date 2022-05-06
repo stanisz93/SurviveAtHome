@@ -22,6 +22,7 @@ public class WeaponPlaceholder : MonoBehaviour
     public void SetWeaponImage()
     {
         weaponImage.sprite = defendable.GetImage();
+        weaponImage.color = new Color32(255, 255, 255, 255);
         DoTweenUtils.PoopUpImage(weaponImage, 0.8f);
     }
 

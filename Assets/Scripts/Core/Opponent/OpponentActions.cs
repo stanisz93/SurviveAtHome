@@ -80,7 +80,7 @@ public class OpponentActions : MonoBehaviour
     }
 
 
-    public IEnumerator GotKicked(Transform player, float pushForce, float pushTime, float pushDelay)
+    public IEnumerator GotKicked(Transform player, float pushForce, float pushTime)
     {
         SetOpponentMode(OpponentMode.beingKicked);
         Vector3 targetDirection = player.position - transform.position;
@@ -97,7 +97,6 @@ public class OpponentActions : MonoBehaviour
         Vector3 destPos = transform.position - targetDirection.normalized * pushForce;
         Sequence pushS = DOTween.Sequence();
         pushS.Append(transform.DOMove(destPos, pushTime));
-        pushS.PrependInterval(pushDelay);
         transform.rotation = Quaternion.LookRotation(-player.forward);
         animator.SetFloat("PlayerSpeedKick", playerVelocity);
         animator.SetTrigger("beingKicked");

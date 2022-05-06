@@ -9,6 +9,7 @@ public class StickItem : MonoBehaviour, IDefendable {
     
     public GameObject hand;
     public GameObject pfDestroyObject;
+    public PlayerAnimatorEventController eventController;
     public PushTrigger pushTrigger;
 
     public Vector3 pickPosition;
@@ -16,7 +17,6 @@ public class StickItem : MonoBehaviour, IDefendable {
 
     public Vector3 pickRotation;
     private CharacterMovement characterMovement;
-    private PlayerTriggers plrT;
     private Collider interactCollider;
 
     public int maxEndurance = 200;
@@ -28,7 +28,6 @@ public class StickItem : MonoBehaviour, IDefendable {
         endurance = maxEndurance;
         var plr = GameObject.FindWithTag("Player");
         characterMovement = plr.GetComponent<CharacterMovement>();
-        plrT = plr.GetComponent<PlayerTriggers>();
         interactCollider = GetComponent<Collider>();
         
     }
@@ -39,7 +38,7 @@ public class StickItem : MonoBehaviour, IDefendable {
         transform.localPosition = GetPickPosition();
         transform.localEulerAngles = GetPickRotation();
         characterMovement.SetHoldMode(HoldMode.WoddenStick);
-        plrT.SetPushTrigger(pushTrigger);
+        eventController.SetPushCollider(pushTrigger);
         pushTrigger.OnHit += ReduceEndurance;
         interactCollider.enabled = false;
     }
@@ -50,7 +49,7 @@ public class StickItem : MonoBehaviour, IDefendable {
         var rigidbodies = pfInstance.GetComponentsInChildren<Rigidbody>();
         foreach (Rigidbody body in rigidbodies)
             body.AddForce(UnityEngine.Random.insideUnitCircle.normalized * 400, ForceMode.Impulse);
-        plrT.SetPushTrigger(plrT.defaultPushTrigger);
+        eventController.SetToDefaultPushTrigger();
         characterMovement.SetHoldMode(HoldMode.Default);
         Destroy(gameObject);
         Destroy(pfInstance, 0.15f);
