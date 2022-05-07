@@ -108,16 +108,22 @@ public class OpponentActions : MonoBehaviour
         // Vector3 destPos = transform.position - targetDirection.normalized * pushForce;
 
         //Estimate max distance
-         RaycastHit hit;
-        
+        RaycastHit hit;
+        bool hitTheObstacle = false;
         if (Physics.Raycast(transform.position, targetDirNorm, out hit, 1.1f * pushForce, PushStopperMask))
             {
                 pushVect = hit.point - transform.position;
+                hitTheObstacle = true;
             }
         Vector3 destPos = transform.position + 0.8f * pushVect;
         
         Sequence pushS = DOTween.Sequence();
         pushS.Append(transform.DOMove(destPos, pushTime));
+        if(hitTheObstacle)
+            {
+             pushS.AppendCallback(() => animator.SetTrigger("HitObstacleWhilePushed"));
+             pushS.Append(transform.DOMove(transform.position + 0.7f * pushVect, 0.1f));
+            }
         transform.rotation = Quaternion.LookRotation(-player.forward);
 
 
