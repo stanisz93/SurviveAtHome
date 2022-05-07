@@ -11,12 +11,6 @@ public class StressReceiver : MonoBehaviour
     public Vector3 MaximumAngularShake = Vector3.one * 5;
     [Tooltip("Maximum translation that the gameobject can receive when applying the shake effect.")]
     public Vector3 MaximumTranslationShake = Vector3.one * .75f;
-    private Transform t;
-
-    void Start() 
-        {
-            t = GetComponent<Transform>();
-        }
 
     private void Update()
     {
@@ -26,7 +20,7 @@ public class StressReceiver : MonoBehaviour
         {
             var previousRotation = _lastRotation;
             var previousPosition = _lastPosition;
-            /* In order to avoid affecting the t current position and rotation each frame we substract the previous translation and rotation */
+            /* In order to avoid affecting the transform current position and rotation each frame we substract the previous translation and rotation */
             _lastPosition = new Vector3(
                 MaximumTranslationShake.x * (Mathf.PerlinNoise(0, Time.time * 25) * 2 - 1),
                 MaximumTranslationShake.y * (Mathf.PerlinNoise(1, Time.time * 25) * 2 - 1),
@@ -39,16 +33,16 @@ public class StressReceiver : MonoBehaviour
                 MaximumAngularShake.z * (Mathf.PerlinNoise(5, Time.time * 25) * 2 - 1)
             ) * shake;
 
-            t.localPosition += _lastPosition - previousPosition;
-            t.localRotation = Quaternion.Euler(t.localRotation.eulerAngles + _lastRotation - previousRotation);
+            transform.localPosition += _lastPosition - previousPosition;
+            transform.localRotation = Quaternion.Euler(transform.localRotation.eulerAngles + _lastRotation - previousRotation);
             _trauma = Mathf.Clamp01(_trauma - Time.deltaTime);
         }
         else
         {
             if (_lastPosition == Vector3.zero && _lastRotation == Vector3.zero) return;
-            /* Clear the t of any left over translation and rotations */
-            t.localPosition -= _lastPosition;
-            t.localRotation = Quaternion.Euler(t.localRotation.eulerAngles - _lastRotation);
+            /* Clear the transform of any left over translation and rotations */
+            transform.localPosition -= _lastPosition;
+            transform.localRotation = Quaternion.Euler(transform.localRotation.eulerAngles - _lastRotation);
             _lastPosition = Vector3.zero;
             _lastRotation = Vector3.zero;
         }
