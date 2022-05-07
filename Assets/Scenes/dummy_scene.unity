@@ -861,6 +861,7 @@ GameObject:
   - component: {fileID: 392046094}
   - component: {fileID: 392046093}
   - component: {fileID: 392046092}
+  - component: {fileID: 392046095}
   m_Layer: 7
   m_Name: Wall (10)
   m_TagString: Untagged
@@ -944,6 +945,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 392046090}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &392046095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 392046090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f403a656a742e647965e1dace9e1411, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &418461447
 GameObject:
   m_ObjectHideFlags: 0
@@ -1821,7 +1834,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainCam: {fileID: 1439694877}
   backpack: {fileID: 701525767}
-  trapManager: {fileID: 0}
 --- !u!1 &866756709
 GameObject:
   m_ObjectHideFlags: 0
@@ -3535,7 +3547,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1396
+  m_Name: pb_Mesh-1414
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -4214,6 +4226,24 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1662196253}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1696116163 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8654397589755266375, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
+  m_PrefabInstance: {fileID: 4232579745526390838}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1696116166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1696116163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44be702eaf8cc244fa5419967f94dda2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blockedTask: 0
 --- !u!1 &1750115162
 GameObject:
   m_ObjectHideFlags: 0
@@ -5697,6 +5727,10 @@ PrefabInstance:
       propertyPath: damageInterval
       value: 0.7
       objectReference: {fileID: 0}
+    - target: {fileID: 4232579744328846601, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
+      propertyPath: opponentEventController
+      value: 
+      objectReference: {fileID: 1696116166}
     - target: {fileID: 4232579744328846602, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
       propertyPath: m_RootOrder
       value: 3
