@@ -7,7 +7,6 @@ public class InventoryUI : MonoBehaviour
 
     public Camera mainCam;
     public Image backpack;
-    public TrapManager trapManager;
     private bool isOpen = false;
     private List<MainBlockTile> tiles;
     private List<InventoryResource> resources;

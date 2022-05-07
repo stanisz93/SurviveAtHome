@@ -37,10 +37,10 @@ public class Opponent : MonoBehaviour
             taskManager.ForceToRun(opponentActions.Fall(), 1);
     }
 
-    public void GotKicked(Transform transform, float pushForce, float pushTime)
+    public void GotPushed(Transform transform, float pushForce, float pushTime)
     {
         if(taskManager.GetCurrentPriority() > 1) 
-            taskManager.ForceToRun(opponentActions.GotKicked(transform, pushForce, pushTime), 1);
+            taskManager.ForceToRun(opponentActions.GotPushed(transform, pushForce, pushTime), 1);
     }
 
     // Update is called once per frame

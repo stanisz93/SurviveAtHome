@@ -80,7 +80,7 @@ public class OpponentActions : MonoBehaviour
     }
 
 
-    public IEnumerator GotKicked(Transform player, float pushForce, float pushTime)
+    public IEnumerator GotPushed(Transform player, float pushForce, float pushTime)
     {
         SetOpponentMode(OpponentMode.beingKicked);
         Vector3 targetDirection = player.position - transform.position;
