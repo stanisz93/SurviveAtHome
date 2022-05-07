@@ -9,6 +9,10 @@ public enum OpponentMode {Exploring, Rushing, HitPlayer, Scream, Agonize, Fall, 
 public class OpponentActions : MonoBehaviour
 {
     public OpponentEventController opponentEventController;
+    public GameObject pfBloodEffect;
+    public GameObject pfObstacleHitEffect;
+    public Transform kickBloodHitSpot;
+    public Transform ObstacleHitSpot;
     public LayerMask PushStopperMask;
     public float walkingSpeed = 0.3f;
     public float runningSpeed = 3.0f;
@@ -88,11 +92,19 @@ public class OpponentActions : MonoBehaviour
         taskManager.TaskSetToFinish();    
     }
 
-
+    void HitObstacleWhilePush()
+    {
+        GameObject obstacleEffect = Instantiate(pfObstacleHitEffect, ObstacleHitSpot.position, ObstacleHitSpot.rotation);
+        obstacleEffect.GetComponent<ParticleSystem>().Play();
+        animator.SetTrigger("HitObstacleWhilePushed");
+    }
     public IEnumerator GotPushed(Transform player, float pushForce, float pushTime)
     {
         opponentEventController.StartTask();
         SetOpponentMode(OpponentMode.beingKicked);
+
+        GameObject bloodEffect = Instantiate(pfBloodEffect, kickBloodHitSpot.position, kickBloodHitSpot.rotation);
+        bloodEffect.GetComponent<ParticleSystem>().Play();
         Vector3 targetDir = transform.position - player.position;
         Vector3 targetDirNorm = new Vector3(targetDir.x, transform.position.y, targetDir.z).normalized;
         float playerVelocity = player.GetComponentInParent<Character>().SpeedBeforeKick;
@@ -105,9 +117,6 @@ public class OpponentActions : MonoBehaviour
             }
         }
         Vector3 pushVect = new Vector3(pushForce * targetDirNorm.x, 0f, pushForce * targetDirNorm.z);
-        // Vector3 destPos = transform.position - targetDirection.normalized * pushForce;
-
-        //Estimate max distance
         RaycastHit hit;
         bool hitTheObstacle = false;
         if (Physics.Raycast(transform.position, targetDirNorm, out hit, 1.1f * pushForce, PushStopperMask))
@@ -121,7 +130,7 @@ public class OpponentActions : MonoBehaviour
         pushS.Append(transform.DOMove(destPos, pushTime));
         if(hitTheObstacle)
             {
-             pushS.AppendCallback(() => animator.SetTrigger("HitObstacleWhilePushed"));
+             pushS.AppendCallback(() => HitObstacleWhilePush());
              pushS.Append(transform.DOMove(transform.position + 0.7f * pushVect, 0.1f));
             }
         transform.rotation = Quaternion.LookRotation(-player.forward);

@@ -8,6 +8,7 @@ public class OpponentEventController : MonoBehaviour
     
     [SerializeField]
     private bool blockedTask;
+
     void Start()
     {
         blockedTask = false;
@@ -22,6 +23,7 @@ public class OpponentEventController : MonoBehaviour
     {
         blockedTask = false;
     }
+
 
     public bool TaskIsBlocked() {return blockedTask;}
 
