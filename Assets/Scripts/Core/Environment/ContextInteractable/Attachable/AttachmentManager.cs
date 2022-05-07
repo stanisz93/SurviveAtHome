@@ -52,6 +52,7 @@ public class AttachmentManager: MonoBehaviour
         
         if(Physics.Raycast(ray, out hit))
          {
+             var modPoint = new Vector3(hit.point.x, player.position.y, hit.point.z);
             return (hit.point - player.position).normalized;
          }
 
@@ -63,8 +64,8 @@ public class AttachmentManager: MonoBehaviour
     public void CastSetTrapPoint()
     {
         RaycastHit hit;
-        Vector3 mousePos =  MousePositon();
-        if (Physics.Raycast(player.position, mousePos, out hit, 20f, TrapDisturbMask))
+        Vector3 mouseToPlayerDir =  MousePositon();
+        if (Physics.Raycast(player.position, mouseToPlayerDir, out hit, 20f, TrapDisturbMask))
         {
             currentAttachable = hit.collider.gameObject.GetComponent<IAttachable>();
             if(currentAttachable != null)

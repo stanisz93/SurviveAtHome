@@ -9,6 +9,7 @@ public enum OpponentMode {Exploring, Rushing, HitPlayer, Scream, Agonize, Fall, 
 public class OpponentActions : MonoBehaviour
 {
     public OpponentEventController opponentEventController;
+    public LayerMask PushStopperMask;
     public float walkingSpeed = 0.3f;
     public float runningSpeed = 3.0f;
     public float checkingSpeed = 1.5f;
@@ -36,6 +37,8 @@ public class OpponentActions : MonoBehaviour
     private Vector3 playerSeen;
     private Opponent opponent;
     private Rigidbody m_Rigidbody;
+
+    public Transform playerTemp;
     
 
      private void Awake () 
@@ -90,9 +93,9 @@ public class OpponentActions : MonoBehaviour
     {
         opponentEventController.StartTask();
         SetOpponentMode(OpponentMode.beingKicked);
-        Vector3 targetDirection = player.position - transform.position;
+        Vector3 targetDir = transform.position - player.position;
+        Vector3 targetDirNorm = new Vector3(targetDir.x, transform.position.y, targetDir.z).normalized;
         float playerVelocity = player.GetComponentInParent<Character>().SpeedBeforeKick;
-        
         if(playerVelocity > 5f)
         {
             if(pushForce < 2f)
@@ -101,10 +104,23 @@ public class OpponentActions : MonoBehaviour
                 pushTime *= 2;
             }
         }
-        Vector3 destPos = transform.position - targetDirection.normalized * pushForce;
+        Vector3 pushVect = new Vector3(pushForce * targetDirNorm.x, 0f, pushForce * targetDirNorm.z);
+        // Vector3 destPos = transform.position - targetDirection.normalized * pushForce;
+
+        //Estimate max distance
+         RaycastHit hit;
+        
+        if (Physics.Raycast(transform.position, targetDirNorm, out hit, 1.1f * pushForce, PushStopperMask))
+            {
+                pushVect = hit.point - transform.position;
+            }
+        Vector3 destPos = transform.position + 0.8f * pushVect;
+        
         Sequence pushS = DOTween.Sequence();
         pushS.Append(transform.DOMove(destPos, pushTime));
         transform.rotation = Quaternion.LookRotation(-player.forward);
+
+
         animator.SetFloat("PlayerSpeedKick", playerVelocity);
         animator.SetTrigger("beingKicked");
         // vfov.ResetSense(2f);
@@ -309,5 +325,22 @@ public class OpponentActions : MonoBehaviour
     }
 
 
-
+void Update()
+ {
+     //DEBUG DESTINATION PUSH POINT
+        // Vector3 targetDirection = transform.position - playerTemp.position;
+        // targetDirection = new Vector3(targetDirection.x, transform.position.y, targetDirection.z).normalized;
+        // var pushVect = new Vector3(5f * targetDirection.x, 0f, 5f * targetDirection.z);
+        // RaycastHit hit;
+        // if (Physics.Raycast(transform.position, targetDirection, out hit, 5f, PushStopperMask))
+        // {
+        //     var XYPoint = new Vector3(hit.point.x, transform.position.y, hit.point.z);
+        //     // var TowardWall
+        //     pushVect = hit.point - transform.position;
+        //     // pushVect = new Vector3(pushVect.x * targetDirection.x, 0f, pushVect.z * targetDirection.z);
+        //     ShapeUtils.DrawLine(transform.position,  hit.point, Color.white);
+        // }
+        // Vector3 targetPoint = transform.position + pushVect;
+        // ShapeUtils.DrawLine(transform.position,  targetPoint, Color.red);
+    }   
 }
