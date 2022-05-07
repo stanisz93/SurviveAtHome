@@ -31,10 +31,14 @@ public class Link : MonoBehaviour
         {
             if(triggerTag == opponentTag && !hookRef.IsBroken())
             {
-                other.gameObject.GetComponent<Opponent>().Fall();
-                Debug.Log($"Collide with {other.gameObject}");
-                Destroy(gameObject);
-                hookRef.RemovePoint(this);
+                Opponent opp = other.gameObject.GetComponent<Opponent>();
+                if(opp.GetAgentSpeed() > 0.5f)
+                {
+                    other.gameObject.GetComponent<Opponent>().Fall();
+                    Debug.Log($"Collide with {other.gameObject}");
+                    Destroy(gameObject);
+                    hookRef.RemovePoint(this);
+                }
                 
                 
             }

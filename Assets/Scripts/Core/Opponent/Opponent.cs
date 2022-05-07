@@ -31,6 +31,11 @@ public class Opponent : MonoBehaviour
 
     }
 
+    public float GetAgentSpeed()
+    {
+        return agent.velocity.magnitude;
+    }
+
     public void Fall()
     {
         if(taskManager.GetCurrentPriority() > 1) 

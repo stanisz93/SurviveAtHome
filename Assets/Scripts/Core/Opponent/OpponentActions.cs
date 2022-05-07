@@ -8,6 +8,7 @@ using DG.Tweening;
 public enum OpponentMode {Exploring, Rushing, HitPlayer, Scream, Agonize, Fall, beingKicked, Attacking, Checking, LookAround, Smelling};
 public class OpponentActions : MonoBehaviour
 {
+    public OpponentEventController opponentEventController;
     public float walkingSpeed = 0.3f;
     public float runningSpeed = 3.0f;
     public float checkingSpeed = 1.5f;
@@ -70,18 +71,24 @@ public class OpponentActions : MonoBehaviour
 
     public IEnumerator Fall()
     {
+        opponentEventController.StartTask();
         SetOpponentMode(OpponentMode.Fall);
         animator.SetTrigger("Fall");
+        transform.DOMove(m_Rigidbody.transform.position + m_Rigidbody.transform.forward * 2f, .5f);
         vfov.ResetSense(7f);
         yield return new WaitForSeconds(3f);
         animator.SetTrigger("StandAfterFall");
-        yield return new WaitForSeconds(4f);
+        while(opponentEventController.TaskIsBlocked())
+        {
+            yield return null;
+        }
         taskManager.TaskSetToFinish();    
     }
 
 
     public IEnumerator GotPushed(Transform player, float pushForce, float pushTime)
     {
+        opponentEventController.StartTask();
         SetOpponentMode(OpponentMode.beingKicked);
         Vector3 targetDirection = player.position - transform.position;
         float playerVelocity = player.GetComponentInParent<Character>().SpeedBeforeKick;
@@ -101,10 +108,10 @@ public class OpponentActions : MonoBehaviour
         animator.SetFloat("PlayerSpeedKick", playerVelocity);
         animator.SetTrigger("beingKicked");
         // vfov.ResetSense(2f);
-        if (playerVelocity > 5f)
-            yield return new WaitForSeconds(2.5f);
-        else
-            yield return new WaitForSeconds(1f);
+        while(opponentEventController.TaskIsBlocked())
+        {
+            yield return null;
+        }
         taskManager.TaskSetToFinish();    
     }
 
