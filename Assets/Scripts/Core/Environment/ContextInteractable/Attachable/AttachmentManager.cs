@@ -44,27 +44,12 @@ public class AttachmentManager: MonoBehaviour
             pointB = Instantiate(pfAttacker, Vector3.zero, Quaternion.identity);
     }
 
-    Vector3 MousePositon()
-    {
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        
-        RaycastHit hit;
-        
-        if(Physics.Raycast(ray, out hit))
-         {
-             var modPoint = new Vector3(hit.point.x, player.position.y, hit.point.z);
-            return (hit.point - player.position).normalized;
-         }
-
-       
-        return player.TransformDirection(Vector3.forward);
-    }
 
 
     public void CastSetTrapPoint()
     {
         RaycastHit hit;
-        Vector3 mouseToPlayerDir =  MousePositon();
+        Vector3 mouseToPlayerDir = MouseUtils.MousePositon(mainCamera, player);
         if (Physics.Raycast(player.position, mouseToPlayerDir, out hit, 20f, TrapDisturbMask))
         {
             currentAttachable = hit.collider.gameObject.GetComponent<IAttachable>();

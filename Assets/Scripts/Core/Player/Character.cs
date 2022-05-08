@@ -17,8 +17,6 @@ public class Character : MonoBehaviour
 
     public GameObject pfBloodEffect;
     public Transform bloodEffectPos;
-    private float forwardInput;
-    private float rightInput;
     private int health;
 
     private PlayerTriggers playerTriggers;
@@ -26,6 +24,10 @@ public class Character : MonoBehaviour
     public delegate void TriggerAction();
 
     private Inventory Inventory;
+
+    private Vector3 currrentMouseDirection {get => MouseUtils.MousePositon(mainCamera, characterMovement.t_mesh);}
+
+    private Vector3 globalVelocity;
 
     // Start is called before the first frame update
 
@@ -63,30 +65,27 @@ public class Character : MonoBehaviour
     }
 
 
-    private Vector3 AdjustRelativeToCamera(float forward, float right)
+    private void Update() {
+        // ShapeUtils.DrawLine(characterMovement.t_mesh.transform.position, characterMovement.t_mesh.transform.position + characterMovement.t_mesh.forward, Color.red);
+        var currPos = characterMovement.t_mesh.transform.position;
+        ShapeUtils.DrawLine(currPos, currPos + characterMovement.t_mesh.transform.forward, Color.red);
+        ShapeUtils.DrawLine(currPos, currPos + characterMovement.Velocity, Color.yellow);
+        
+    }
+
+    private Vector3 GetVectorRelativeToCamera(float forward, float right)
     {
-        forwardInput = forward;
-        rightInput = right;
         Vector3 CamFwd = mainCamera.transform.forward;
         Vector3 CamRight = mainCamera.transform.right;
         Vector3 translation = forward * mainCamera.transform.forward;
         translation += right * mainCamera.transform.right;
         translation.y = 0f;
-        Vector3 velocity;
-        // forward.y = 0f;
-        // right.y = 0f; 
-        // forward.Normalize();
-        // right.Normalize();
-        // Vector3 desireDirection = forward * v.z;
-        // desireDirection += right * v.x;
+        Vector3 velocity = Vector3.zero;
         if (translation.magnitude > 0)
         {
             velocity = translation;
         }
-        else
-        {
-            velocity = Vector3.zero;
-        }
+
         return velocity.normalized;
     }
 
@@ -111,14 +110,31 @@ public class Character : MonoBehaviour
     }
     public int GetHealth(){return health;}
     
-    public void AddMovementInput(float forward, float right)
+
+
+    public void AddMovementInput(float forward, float right, bool rotatePlayer=true)
     {
-        characterMovement.Velocity = AdjustRelativeToCamera(forward, right);
+        if(rotatePlayer)
+            characterMovement.t_mesh.rotation = Quaternion.LookRotation(currrentMouseDirection);
+        // var localVelocity = GetVectorRelativeToCamera(forward, right);
+        
+        Vector3 movementRelativeToCamera = GetVectorRelativeToCamera(forward, right);
+        characterMovement.Velocity = movementRelativeToCamera;
     }
     public float GetVelocity()
     {
         // Debug.Log(characterMovement.Velocity.magnitude);
         return characterMovement.Velocity.magnitude;
+    }
+    public float GetVelocityForward()
+    {
+        // Debug.Log(characterMovement.Velocity.magnitude);
+        return Vector3.Dot(characterMovement.Velocity.normalized, characterMovement.t_mesh.forward);
+
+    }
+    public float GetVelocityRight()
+    {
+        return Vector3.Dot(characterMovement.Velocity.normalized, characterMovement.t_mesh.right);
     }
     public FightMode GetFightMode(){return characterMovement.GetFightMode();}
 

@@ -29,6 +29,9 @@ public class PlayerInput : MonoBehaviour
 
     public bool blockMovement = false;
     private PlayerAnimationController playerAnimationController;
+
+    private Transform characterMesh;
+    private Camera mainCamera;
     
 
 
@@ -44,6 +47,9 @@ public class PlayerInput : MonoBehaviour
         itemPickupManager = GetComponent<ItemPickupManager>();
         attachmentManager = GetComponent<AttachmentManager>();
         attachmentManager.enabled = false;
+        characterMesh = GameObject.FindWithTag("PlayerMesh").transform;
+        mainCamera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
+            
     }
 
 
@@ -68,6 +74,7 @@ public class PlayerInput : MonoBehaviour
         craftProcess = false;
 
     }
+
     
     // Update is called once per frame
     void Update()
@@ -75,9 +82,9 @@ public class PlayerInput : MonoBehaviour
         if (!playerTriggers.dying)
         {
             if(blockMovement)
-                character.AddMovementInput(0f, 0f);
+                character.AddMovementInput(0f, 0f, false);
             else
-                character.AddMovementInput(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
+                character.AddMovementInput(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"), true);
             
             if (Input.GetKey(KeyCode.LeftShift))
             {
@@ -144,7 +151,7 @@ public class PlayerInput : MonoBehaviour
             attachmentManager.ResetAttachmentProcess();
             attachmentManager.enabled = false;
             }
-        else if(Input.GetKey(KeyCode.V))
+        else if(Input.GetMouseButtonDown(0))
         {
             Debug.Log("Object has been sticked!");
 
@@ -162,7 +169,7 @@ public class PlayerInput : MonoBehaviour
                 if(playerTriggers.Slidable != null)
                     character.StartTriggerAction(playerTriggers.Slide);
             }
-            else if (Input.GetKey(KeyCode.V))
+            else if (Input.GetMouseButtonDown(0))
             {
                 if(chrMvmnt.GetHoldMode() == HoldMode.WoddenStick)
                 {
