@@ -12,6 +12,11 @@ public class Character : MonoBehaviour
     public Camera DeathCamera;
     public HealthBar healthBar;
     public int maxHealth = 500;
+    public TriggerAction triggeredAction;
+    public float SpeedBeforeKick;
+
+    public GameObject pfBloodEffect;
+    public Transform bloodEffectPos;
     private float forwardInput;
     private float rightInput;
     private int health;
@@ -19,9 +24,8 @@ public class Character : MonoBehaviour
     private PlayerTriggers playerTriggers;
 
     public delegate void TriggerAction();
-    public TriggerAction triggeredAction;
+
     private Inventory Inventory;
-    public float SpeedBeforeKick;
 
     // Start is called before the first frame update
 
@@ -97,7 +101,12 @@ public class Character : MonoBehaviour
             triggeredAction = playerTriggers.Die;
         }
         else
+        {
             SetFightmode(FightMode.ReceiveDamage);
+            var bloodEffect = Instantiate(pfBloodEffect, bloodEffectPos.position, bloodEffectPos.rotation);
+            bloodEffect.GetComponent<ParticleSystem>().Play();
+        
+        }
 
     }
     public int GetHealth(){return health;}

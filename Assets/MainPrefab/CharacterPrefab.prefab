@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2453267416674226221
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2606903272406542680}
+  m_Layer: 0
+  m_Name: BloodBurstHit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2606903272406542680
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2453267416674226221}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: -0.01, y: 1.34, z: -0.25}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8975323420904284637}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &3398933800623359116
 GameObject:
   m_ObjectHideFlags: 0
@@ -482,6 +512,8 @@ GameObject:
   - component: {fileID: 4117206819088981055}
   - component: {fileID: 3398933802014898924}
   - component: {fileID: 3398933802014898923}
+  - component: {fileID: 1965349319013915874}
+  - component: {fileID: 4932038829878886662}
   m_Layer: 6
   m_Name: CharacterPrefab
   m_TagString: Player
@@ -551,6 +583,9 @@ MonoBehaviour:
   DeathCamera: {fileID: 3398933801741320445}
   healthBar: {fileID: 0}
   maxHealth: 500
+  SpeedBeforeKick: 0
+  pfBloodEffect: {fileID: 1000010191825552, guid: 27e8aabe8f9c0c8408da036bb48a4630, type: 3}
+  bloodEffectPos: {fileID: 2606903272406542680}
 --- !u!114 &4117206819088981052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -580,6 +615,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 1298376828664859815}
   hitAnimLifeTime: 0.4
+  pickAnimLifeTime: 0.2
+  pickFadeOutTime: 0.3
   hitFadeOutTime: 0.15
 --- !u!114 &4117206819088981055
 MonoBehaviour:
@@ -593,6 +630,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e974d2907b6d4fe46b034b4741e207e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventoryUI: {fileID: 0}
+  blockMovement: 0
 --- !u!114 &3398933802014898924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -621,6 +660,36 @@ MonoBehaviour:
   diePoints: []
   deathCamera: {fileID: 3398933801741320445}
   dying: 0
+  triggerEmpty: 1
+--- !u!114 &1965349319013915874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4117206819088981049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f24e011a602c7044a893021a3662ffa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ui: {fileID: 0}
+--- !u!114 &4932038829878886662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4117206819088981049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa8924eb1b9bcdd45b6da627dc31d3d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  t_mesh: {fileID: 0}
+  debugDistance: 0
+  collectiblePopup: {fileID: 0}
+  weaponPlaceholder: {fileID: 0}
 --- !u!1001 &4117206818740339877
 PrefabInstance:
   m_ObjectHideFlags: 0

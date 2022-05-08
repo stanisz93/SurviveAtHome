@@ -9,9 +9,9 @@ public enum OpponentMode {Exploring, Rushing, HitPlayer, Scream, Agonize, Fall, 
 public class OpponentActions : MonoBehaviour
 {
     public OpponentEventController opponentEventController;
-    public GameObject pfBloodEffect;
+    public GameObject pfGotPushedEffect;
+    public Transform pushEffectPosition;
     public GameObject pfObstacleHitEffect;
-    public Transform kickBloodHitSpot;
     public Transform ObstacleHitSpot;
     public LayerMask PushStopperMask;
     public float walkingSpeed = 0.3f;
@@ -103,8 +103,9 @@ public class OpponentActions : MonoBehaviour
         opponentEventController.StartTask();
         SetOpponentMode(OpponentMode.beingKicked);
 
-        GameObject bloodEffect = Instantiate(pfBloodEffect, kickBloodHitSpot.position, kickBloodHitSpot.rotation);
-        bloodEffect.GetComponent<ParticleSystem>().Play();
+        GameObject hotHitEffect = Instantiate(pfGotPushedEffect, pushEffectPosition.position, Quaternion.identity);
+        var particleSystem = hotHitEffect.GetComponent<ParticleSystem>();
+        particleSystem.Play();
         Vector3 targetDir = transform.position - player.position;
         Vector3 targetDirNorm = new Vector3(targetDir.x, transform.position.y, targetDir.z).normalized;
         float playerVelocity = player.GetComponentInParent<Character>().SpeedBeforeKick;
@@ -146,11 +147,11 @@ public class OpponentActions : MonoBehaviour
         taskManager.TaskSetToFinish();    
     }
 
-    public IEnumerator AttackSequenceTask(Transform player, int damage)
+    public IEnumerator AttackSequenceTask(Transform player)
     {
         yield return NoticePlayer(player);
         yield return RunTowardPlayer(player);
-        yield return HitPlayer(player, damage);
+        yield return HitPlayer(player);
         yield return new WaitForSeconds(damageInterval);
         taskManager.TaskSetToFinish();
 
@@ -182,7 +183,7 @@ public class OpponentActions : MonoBehaviour
         }
     }
 
-    IEnumerator HitPlayer(Transform player, int damage)
+    IEnumerator HitPlayer(Transform player)
     {
         var plr = player.gameObject.GetComponent<Character>();
         if (plr.justDied())
@@ -198,8 +199,7 @@ public class OpponentActions : MonoBehaviour
             nextAttack = true;
             if(ReachPlayerRange(player.position))
             {
-                SetOpponentMode(OpponentMode.HitPlayer);
-                plr.ReduceHealth(damage); 
+                SetOpponentMode(OpponentMode.HitPlayer); 
             }
         }
         else

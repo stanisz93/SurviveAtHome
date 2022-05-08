@@ -39,7 +39,9 @@ private void OnTriggerEnter(Collider other) {
             targetDirection = new Vector3(targetDirection.x,  player.position.y, targetDirection.z);
             player.rotation = Quaternion.LookRotation(targetDirection);
             OnHit?.Invoke();
-            other.gameObject.GetComponent<Opponent>().GotPushed(player, pushForce, pushTime);
+            var opponent = other.gameObject.GetComponent<Opponent>();
+            opponent.SetKickPos(transform.position);
+            opponent.GotPushed(player, pushForce, pushTime);
             stressReceiver.InduceStress(cameraShake);
         }
     }

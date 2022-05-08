@@ -48,6 +48,11 @@ public class Opponent : MonoBehaviour
             taskManager.ForceToRun(opponentActions.GotPushed(transform, pushForce, pushTime), 1);
     }
 
+    public void SetKickPos(Vector3 position)
+    {
+        opponentActions.pushEffectPosition.position = position;
+    }
+
     // Update is called once per frame
 
     void Update() {
@@ -60,7 +65,7 @@ public class Opponent : MonoBehaviour
         }
         else if (vfov.FoundedObject() && currPriority > 2)
             {
-                taskManager.ForceToRun(opponentActions.AttackSequenceTask(vfov.GetPlayerTarget(), damage), 2);
+                taskManager.ForceToRun(opponentActions.AttackSequenceTask(vfov.GetPlayerTarget()), 2);
             }
         else if (vfov.Suspicious() && currPriority > 3)
             {

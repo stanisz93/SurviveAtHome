@@ -487,13 +487,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   opponentEventController: {fileID: 7411990823392566255}
-  pfBloodEffect: {fileID: 1000010191825552, guid: 27e8aabe8f9c0c8408da036bb48a4630, type: 3}
+  pfGotPushedEffect: {fileID: 1000010355441670, guid: f9b493d5c08821f41a9707e39ad257ee, type: 3}
+  pushEffectPosition: {fileID: 8955094962720524470}
   pfObstacleHitEffect: {fileID: 1000012142692022, guid: 9b362c320c0727844a67d8d9668ef137, type: 3}
-  kickBloodHitSpot: {fileID: 8955094962720524470}
   ObstacleHitSpot: {fileID: 368671744195488466}
   PushStopperMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   walkingSpeed: 0.5
   runningSpeed: 3
   checkingSpeed: 1.5
@@ -797,13 +797,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5304788520730579188}
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: 0.00999999, y: 1.16, z: -0.6499996}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.00999999, y: 1.16, z: -0.017}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4232579744328846602}
   m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5504643162795028584
 GameObject:
   m_ObjectHideFlags: 0
@@ -927,3 +927,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockedTask: 0
+  opponent: {fileID: 4232579744328846711}

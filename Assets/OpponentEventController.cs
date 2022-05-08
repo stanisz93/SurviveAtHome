@@ -8,10 +8,14 @@ public class OpponentEventController : MonoBehaviour
     
     [SerializeField]
     private bool blockedTask;
+    
+    public Opponent opponent;
+    private Character character;
 
     void Start()
     {
         blockedTask = false;
+        character = GameObject.FindWithTag("Player").GetComponent<Character>();
     }
 
     // Update is called once per frame
@@ -22,6 +26,11 @@ public class OpponentEventController : MonoBehaviour
     public void Stoptask()
     {
         blockedTask = false;
+    }
+
+    public void InvokePlayerGotHit()
+    {
+        character.ReduceHealth(opponent.damage);
     }
 
 
