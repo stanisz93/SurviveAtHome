@@ -3506,7 +3506,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-244454
+  m_Name: pb_Mesh-362722
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -4318,6 +4318,7 @@ GameObject:
   - component: {fileID: 1887985707}
   - component: {fileID: 1887985706}
   - component: {fileID: 1887985705}
+  - component: {fileID: 1887985709}
   m_Layer: 7
   m_Name: Box
   m_TagString: Untagged
@@ -4417,6 +4418,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1887985703}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1887985709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1887985703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f403a656a742e647965e1dace9e1411, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1906124983
 GameObject:
   m_ObjectHideFlags: 0
@@ -5655,11 +5668,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4232579743941799285, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4232579743941799285, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4232579744328846601, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
       propertyPath: HitSpot
@@ -5771,7 +5784,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4232579744328846605, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4232579744328846708, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
       propertyPath: looker
