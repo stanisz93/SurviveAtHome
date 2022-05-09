@@ -8,7 +8,7 @@ public class Character : MonoBehaviour
 {
     private CharacterMovement characterMovement;
     public Camera mainCamera;
-
+    public LayerMask terrainMask;
     public Camera DeathCamera;
     public HealthBar healthBar;
     public int maxHealth = 500;
@@ -25,9 +25,8 @@ public class Character : MonoBehaviour
 
     private Inventory Inventory;
 
-    private Vector3 currrentMouseDirection {get => MouseUtils.MousePositon(mainCamera, characterMovement.t_mesh);}
+    private Vector3 currrentMouseDirection {get => MouseUtils.MousePositon(mainCamera, characterMovement.t_mesh, terrainMask);}
 
-    private Vector3 globalVelocity;
 
     // Start is called before the first frame update
 
@@ -111,10 +110,10 @@ public class Character : MonoBehaviour
     public int GetHealth(){return health;}
     
 
-
     public void AddMovementInput(float forward, float right, bool rotatePlayer=true)
     {
-        if(rotatePlayer)
+        var mouseMovement = new Vector3(Input.GetAxis("Mouse X"), 0f, Input.GetAxis("Mouse Y"));
+        if(rotatePlayer && Input.GetMouseButton(1))
             characterMovement.t_mesh.rotation = Quaternion.LookRotation(currrentMouseDirection);
         // var localVelocity = GetVectorRelativeToCamera(forward, right);
         
@@ -129,12 +128,22 @@ public class Character : MonoBehaviour
     public float GetVelocityForward()
     {
         // Debug.Log(characterMovement.Velocity.magnitude);
-        return Vector3.Dot(characterMovement.Velocity.normalized, characterMovement.t_mesh.forward);
-
+        var dotVal = Vector3.Dot(characterMovement.Velocity.normalized, characterMovement.t_mesh.forward);
+        
+        return dotVal;
+        if (Mathf.Abs(dotVal) > 0.5f)
+            return dotVal;
+        else
+            return 0f;
     }
     public float GetVelocityRight()
     {
-        return Vector3.Dot(characterMovement.Velocity.normalized, characterMovement.t_mesh.right);
+        var dotVal = Vector3.Dot(characterMovement.Velocity.normalized, characterMovement.t_mesh.right);
+        return dotVal;
+        if (Mathf.Abs(dotVal) > 0.5f)
+            return dotVal;
+        else
+            return 0f;
     }
     public FightMode GetFightMode(){return characterMovement.GetFightMode();}
 

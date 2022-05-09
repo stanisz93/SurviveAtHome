@@ -48,10 +48,22 @@ public class CharacterMovement : MonoBehaviour
         {  
 
                 rigidbody.velocity = new Vector3(velocity.normalized.x * smoothSpeed, rigidbody.velocity.y, velocity.normalized.z * smoothSpeed);
-        
-                smoothSpeed = Mathf.Lerp(smoothSpeed, maxSpeed, Time.deltaTime);
-                Quaternion wantedRotation = Quaternion.LookRotation(velocity);
-                t_mesh.rotation = Quaternion.Lerp(t_mesh.rotation, wantedRotation, Time.deltaTime * rotateSpeed);
+                if(Vector3.Dot(t_mesh.transform.forward, velocity.normalized) > 0.7f)
+                {
+                    smoothSpeed = Mathf.Lerp(smoothSpeed, maxSpeed, Time.deltaTime);
+                }
+                else
+                    smoothSpeed = Mathf.Lerp(smoothSpeed, walkingSpeed, Time.deltaTime);
+                var orthogonalMove = Mathf.Abs(Vector3.Dot(t_mesh.transform.right, velocity.normalized)) ;
+                if(orthogonalMove > 0.7f)
+                    smoothSpeed = Mathf.Lerp(smoothSpeed, 0.1f, Time.deltaTime);
+                else if(orthogonalMove > 0.4f)
+                    smoothSpeed = Mathf.Lerp(smoothSpeed, walkingSpeed, Time.deltaTime);
+                if (!Input.GetMouseButton(1))
+                {
+                    Quaternion wantedRotation = Quaternion.LookRotation(velocity);
+                    t_mesh.rotation = Quaternion.Lerp(t_mesh.rotation, wantedRotation, Time.deltaTime * rotateSpeed);
+                }
             // t_mesh.rotation = wantedRotation;
         }
         else
