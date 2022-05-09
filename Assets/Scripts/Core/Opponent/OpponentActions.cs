@@ -97,6 +97,7 @@ public class OpponentActions : MonoBehaviour
         GameObject obstacleEffect = Instantiate(pfObstacleHitEffect, ObstacleHitSpot.position, ObstacleHitSpot.rotation);
         obstacleEffect.GetComponent<ParticleSystem>().Play();
         animator.SetTrigger("HitObstacleWhilePushed");
+        taskManager.UnlockEndOfTask();
     }
     public IEnumerator GotPushed(Transform player, float pushForce, float pushTime)
     {
@@ -131,8 +132,9 @@ public class OpponentActions : MonoBehaviour
         pushS.Append(transform.DOMove(destPos, pushTime));
         if(hitTheObstacle)
             {
+            taskManager.LockEndOfTask();
              pushS.AppendCallback(() => HitObstacleWhilePush());
-             pushS.Append(transform.DOMove(transform.position + 0.7f * pushVect, 0.1f));
+             pushS.Join(transform.DOMove(transform.position + 0.7f * pushVect, 0.1f));
             }
         transform.rotation = Quaternion.LookRotation(-player.forward);
 
@@ -144,6 +146,7 @@ public class OpponentActions : MonoBehaviour
         {
             yield return null;
         }
+        yield return taskManager.WaitForReleaseLock();
         taskManager.TaskSetToFinish();    
     }
 

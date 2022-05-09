@@ -8,6 +8,7 @@ public class TaskManager : MonoBehaviour {
 
     private IEnumerator currentTask = null;
     private bool isEmpty = true;
+    private bool externalBlock = false; //usefull when some sub functionality hasnt finished
     
     private static int lowestPriority = 5;
     private int currentPriority = lowestPriority;
@@ -26,12 +27,28 @@ public class TaskManager : MonoBehaviour {
         return isEmpty;
     }
 
+    public void LockEndOfTask()
+    {
+        externalBlock = true;
+    }
+    public void UnlockEndOfTask()
+    {
+        externalBlock = false;
+    }
+
+    public IEnumerator WaitForReleaseLock()
+    {
+        while(externalBlock)
+        {
+            yield return null;
+        }
+    }
 
 
     public void TaskSetToFinish()
     {
-        isEmpty = true;
-        currentPriority = lowestPriority;
+            isEmpty = true;
+            currentPriority = lowestPriority;
     }
     public void StopCurrentTask()
     {
