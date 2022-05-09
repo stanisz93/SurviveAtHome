@@ -152,7 +152,8 @@ public class OpponentActions : MonoBehaviour
         yield return NoticePlayer(player);
         yield return RunTowardPlayer(player);
         yield return HitPlayer(player);
-        yield return new WaitForSeconds(damageInterval);
+        if(nextAttack)
+            yield return new WaitForSeconds(damageInterval);
         taskManager.TaskSetToFinish();
 
     }

@@ -59,7 +59,7 @@ public class Opponent : MonoBehaviour
 
         var currPriority = taskManager.GetCurrentPriority();
         bool busy = taskManager.TaskIsEmpty();
-        if(Input.GetMouseButtonDown(0))
+        if(Input.GetMouseButtonDown(2))
         {
             taskManager.ForceToRun(opponentActions.WalkFollowMousePosition(), 3);
         }
