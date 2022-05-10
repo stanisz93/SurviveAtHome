@@ -61,6 +61,7 @@ public class CharacterMovement : MonoBehaviour
                     smoothSpeed = Mathf.Lerp(smoothSpeed, walkingSpeed, Time.deltaTime);
                 if (!Input.GetMouseButton(1))
                 {
+                    // Probably worth to use Slerp?
                     Quaternion wantedRotation = Quaternion.LookRotation(velocity);
                     t_mesh.rotation = Quaternion.Lerp(t_mesh.rotation, wantedRotation, Time.deltaTime * rotateSpeed);
                 }

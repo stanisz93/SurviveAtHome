@@ -114,6 +114,7 @@ public class Character : MonoBehaviour
     {
         var mouseMovement = new Vector3(Input.GetAxis("Mouse X"), 0f, Input.GetAxis("Mouse Y"));
         if(rotatePlayer && Input.GetMouseButton(1))
+        //maybe worth to use here Slerp instead of sudden rotation
             characterMovement.t_mesh.rotation = Quaternion.LookRotation(currrentMouseDirection);
         // var localVelocity = GetVectorRelativeToCamera(forward, right);
         
