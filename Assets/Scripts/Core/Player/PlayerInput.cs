@@ -21,7 +21,7 @@ public class PlayerInput : MonoBehaviour
 
     private ControllerMode controllerMode;
 
-    private float useClickTimeWindow = 0.1f; //after this value crafting is used
+    private float useClickTimeWindow = 0.2f; //after this value crafting is used
     private float startClick;
     private bool mouseIsClicked = false;
     private bool craftProcess = false;
