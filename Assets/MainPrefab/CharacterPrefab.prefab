@@ -507,6 +507,7 @@ GameObject:
   - component: {fileID: 4117206819088981025}
   - component: {fileID: 4117206819088981026}
   - component: {fileID: 4117206819088981027}
+  - component: {fileID: 1535127555151154498}
   - component: {fileID: 4117206819088981052}
   - component: {fileID: 4117206819088981053}
   - component: {fileID: 4117206819088981055}
@@ -547,7 +548,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.37
+  m_Radius: 0.4
   m_Height: 1.95
   m_Direction: 1
   m_Center: {x: 0, y: 0.94, z: 0}
@@ -580,12 +581,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 0}
+  terrainMask:
+    serializedVersion: 2
+    m_Bits: 0
   DeathCamera: {fileID: 3398933801741320445}
   healthBar: {fileID: 0}
-  maxHealth: 500
   SpeedBeforeKick: 0
   pfBloodEffect: {fileID: 1000010191825552, guid: 27e8aabe8f9c0c8408da036bb48a4630, type: 3}
   bloodEffectPos: {fileID: 2606903272406542680}
+--- !u!114 &1535127555151154498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4117206819088981049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 398233db876835e48b40948f793d18a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 500
 --- !u!114 &4117206819088981052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -600,7 +616,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   t_mesh: {fileID: 8975323420904284637}
   maxSpeed: 0
-  walkingSpeed: 1.5
+  walkingForwardSpeed: 1.5
+  walkingBackwardSpeed: 0.5
+  walkingSideSpeed: 1
 --- !u!114 &4117206819088981053
 MonoBehaviour:
   m_ObjectHideFlags: 0

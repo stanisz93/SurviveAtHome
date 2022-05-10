@@ -74,10 +74,12 @@ public class PlayerTriggers : MonoBehaviour
 
     public void Die()
     {
-            dying = true;
-            playerAnimationController.animator.SetTrigger("Die");
-            characterMovement.ResetVelocity();
-            StartCoroutine(DieRoutine());
+            if(!dying == true)
+            {
+                playerAnimationController.animator.SetTrigger("Die");
+                characterMovement.ResetVelocity();
+                StartCoroutine(DieRoutine());
+            }
     }
 
 
@@ -87,6 +89,8 @@ public class PlayerTriggers : MonoBehaviour
             character.mainCamera.enabled = false;
             deathCamera.enabled = true;
             deathCamera.GetComponent<DeathCamera>().chooseCameraPosition();
+            Health health = GetComponent<Health>();
+            health.enabled = false;
             yield return new WaitForSeconds(2);
 
             
@@ -94,6 +98,7 @@ public class PlayerTriggers : MonoBehaviour
             character.ResetPlayer();
             character.mainCamera.enabled = true;
             deathCamera.enabled = false;
+            health.enabled = false;
             dying = false;
     }
 

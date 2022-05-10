@@ -45,9 +45,9 @@ public class HealthBar : MonoBehaviour
         gradient.Evaluate(1f);
     }
     // Start is called before the first frame update
-    public void SetHealth(int health)
+    public void ReduceValue(int damage)
     {
-        slider.value = health;
+        slider.value = slider.value - damage;
         stressReceiver.InduceStress(1f);
         if (slider.normalizedValue < alarmHealth && alreadyRun == null)
         {

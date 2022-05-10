@@ -119,7 +119,6 @@ public class PlayerInput : MonoBehaviour
             highlightedTile = (ItemTile)anyTile;
         if(Input.GetMouseButtonDown(0) && highlightedTile != null && !craftProcess)
         {
-            // highlightedTile.TryToCraft();
             startClick = Time.time;
             mouseIsClicked = true;
             StartCoroutine(CraftProcess(highlightedTile));

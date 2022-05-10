@@ -78,17 +78,12 @@ public class OpponentActions : MonoBehaviour
 
     public IEnumerator Fall()
     {
-        opponentEventController.StartTask();
         SetOpponentMode(OpponentMode.Fall);
         animator.SetTrigger("Fall");
         transform.DOMove(m_Rigidbody.transform.position + m_Rigidbody.transform.forward * 2f, .5f);
         vfov.ResetSense(7f);
         yield return new WaitForSeconds(3f);
         animator.SetTrigger("StandAfterFall");
-        while(opponentEventController.TaskIsBlocked())
-        {
-            yield return null;
-        }
         taskManager.TaskSetToFinish();    
     }
 
@@ -101,7 +96,6 @@ public class OpponentActions : MonoBehaviour
     }
     public IEnumerator GotPushed(Transform player, float pushForce, float pushTime)
     {
-        opponentEventController.StartTask();
         SetOpponentMode(OpponentMode.beingKicked);
 
         GameObject hotHitEffect = Instantiate(pfGotPushedEffect, pushEffectPosition.position, Quaternion.identity);
@@ -142,10 +136,6 @@ public class OpponentActions : MonoBehaviour
         animator.SetFloat("PlayerSpeedKick", playerVelocity);
         animator.SetTrigger("beingKicked");
         // vfov.ResetSense(2f);
-        while(opponentEventController.TaskIsBlocked())
-        {
-            yield return null;
-        }
         yield return taskManager.WaitForReleaseLock();
         taskManager.TaskSetToFinish();    
     }
@@ -189,8 +179,8 @@ public class OpponentActions : MonoBehaviour
 
     IEnumerator HitPlayer(Transform player)
     {
-        var plr = player.gameObject.GetComponent<Character>();
-        if (plr.justDied())
+        var health = player.gameObject.GetComponent<Health>();
+        if (!health.enabled)
         {
             vfov.ResetSense();
             SetOpponentMode(OpponentMode.Exploring);

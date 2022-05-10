@@ -7,7 +7,8 @@ public class Opponent : MonoBehaviour
 {
 
     public int damage = 60;
-
+    public Transform hittingArm;
+    public Transform hittingPoint;
     private OpponentActions opponentActions;
     private NavMeshAgent agent;
     // private Task performTask;
@@ -28,6 +29,7 @@ public class Opponent : MonoBehaviour
         opponentUtils = GetComponent<OpponentUtils>();
         taskManager = GetComponent<TaskManager>();
         vfov = GetComponentInChildren<VisionFieldOfView>();
+        hittingPoint.SetParent(hittingArm, true);
 
     }
 

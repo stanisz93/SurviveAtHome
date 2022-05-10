@@ -13,7 +13,13 @@ public class CharacterMovement : MonoBehaviour
 
     public Transform t_mesh;
     public float maxSpeed = 0f;
-    public float walkingSpeed = 1.5f;
+
+    [SerializeField]
+    private float walkingForwardSpeed = 1.5f;
+    [SerializeField]
+    private float walkingBackwardSpeed = 0.5f;
+    [SerializeField]
+    private float walkingSideSpeed = 1f;
 
     private float rotateSpeed = 10f;
     private float smoothSpeed;
@@ -53,12 +59,12 @@ public class CharacterMovement : MonoBehaviour
                     smoothSpeed = Mathf.Lerp(smoothSpeed, maxSpeed, Time.deltaTime);
                 }
                 else
-                    smoothSpeed = Mathf.Lerp(smoothSpeed, walkingSpeed, Time.deltaTime);
+                    smoothSpeed = Mathf.Lerp(smoothSpeed, walkingForwardSpeed, Time.deltaTime);
                 var orthogonalMove = Mathf.Abs(Vector3.Dot(t_mesh.transform.right, velocity.normalized)) ;
                 if(orthogonalMove > 0.7f)
                     smoothSpeed = Mathf.Lerp(smoothSpeed, 0.1f, Time.deltaTime);
                 else if(orthogonalMove > 0.4f)
-                    smoothSpeed = Mathf.Lerp(smoothSpeed, walkingSpeed, Time.deltaTime);
+                    smoothSpeed = Mathf.Lerp(smoothSpeed, walkingForwardSpeed, Time.deltaTime);
                 if (!Input.GetMouseButton(1))
                 {
                     // Probably worth to use Slerp?
@@ -86,7 +92,7 @@ public class CharacterMovement : MonoBehaviour
         {
             case MovementMode.Walking:
             {
-                maxSpeed = walkingSpeed;
+                maxSpeed = walkingForwardSpeed;
                 break;
             }
             case MovementMode.Running:

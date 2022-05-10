@@ -474,6 +474,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 60
+  hittingArm: {fileID: 3078058135899610789}
+  hittingPoint: {fileID: 4430638418939075517}
 --- !u!114 &4232579744328846601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -565,7 +567,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.37
+  m_Radius: 0.4
   m_Height: 1.87
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
@@ -834,6 +836,50 @@ Transform:
   m_Father: {fileID: 5639000524478674772}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7163928270389422583
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4430638418939075517}
+  - component: {fileID: 6434140010822770063}
+  m_Layer: 0
+  m_Name: ZombieAttackPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4430638418939075517
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7163928270389422583}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.065999985, y: 1.573, z: 0.61800003}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5639000524478674772}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &6434140010822770063
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7163928270389422583}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.64, y: 0.79, z: 0.49}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &4232579745249082432
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -899,6 +945,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 06cb2b131fe009c47a523671a8fa9ed8, type: 3}
+--- !u!4 &3078058135899610789 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1155825635249726181, guid: 06cb2b131fe009c47a523671a8fa9ed8, type: 3}
+  m_PrefabInstance: {fileID: 4232579745249082432}
+  m_PrefabAsset: {fileID: 0}
 --- !u!95 &809370125271328900 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 3568628872616989892, guid: 06cb2b131fe009c47a523671a8fa9ed8, type: 3}
@@ -926,5 +977,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44be702eaf8cc244fa5419967f94dda2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitCollider: {fileID: 6434140010822770063}
   blockedTask: 0
-  opponent: {fileID: 4232579744328846711}

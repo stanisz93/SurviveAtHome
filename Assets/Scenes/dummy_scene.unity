@@ -857,7 +857,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -4.8}
   m_SizeDelta: {x: 57.637, y: 57.6372}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &361505526
@@ -1777,7 +1777,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.866
+  m_Value: 0.877
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2349,6 +2349,28 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3398933800788135689, guid: 2f2acb786d48b2a48b1ddf17d16cd292, type: 3}
   m_PrefabInstance: {fileID: 3398933801269008175}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1071449007 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7163928270389422583, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
+  m_PrefabInstance: {fileID: 4232579745526390838}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1071449009 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 6434140010822770063, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
+  m_PrefabInstance: {fileID: 4232579745526390838}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1071449010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1071449007}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9820a72e50e4ced4798a47f2e6995a06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1092412620
 GameObject:
   m_ObjectHideFlags: 0
@@ -3623,7 +3645,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 1
-  m_FillAmount: 0.866
+  m_FillAmount: 0.877
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -3807,7 +3829,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh701592
+  m_Name: pb_Mesh-1404
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -5585,7 +5607,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 10.5}
+  m_AnchoredPosition: {x: 0, y: 5.9}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &1561197254195148565 stripped
@@ -5866,6 +5888,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 4117206819088981025, guid: 2f2acb786d48b2a48b1ddf17d16cd292, type: 3}
+      propertyPath: m_Radius
+      value: 0.28
+      objectReference: {fileID: 0}
+    - target: {fileID: 4117206819088981025, guid: 2f2acb786d48b2a48b1ddf17d16cd292, type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
@@ -6106,6 +6132,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4232579744328846707, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
+      propertyPath: m_Radius
+      value: 0.23
+      objectReference: {fileID: 0}
     - target: {fileID: 4232579744328846708, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
       propertyPath: looker
       value: 
@@ -6122,10 +6152,18 @@ PrefabInstance:
       propertyPath: cam
       value: 
       objectReference: {fileID: 1439694878}
+    - target: {fileID: 4430638418939075517, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 7411990823392566255, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
       propertyPath: character
       value: 
       objectReference: {fileID: 1587573299056495390}
+    - target: {fileID: 7411990823392566255, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
+      propertyPath: hitCollider
+      value: 
+      objectReference: {fileID: 1071449009}
     - target: {fileID: 8955094962720524470, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
       propertyPath: m_RootOrder
       value: 4

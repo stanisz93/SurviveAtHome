@@ -11,13 +11,13 @@ public class Character : MonoBehaviour
     public LayerMask terrainMask;
     public Camera DeathCamera;
     public HealthBar healthBar;
-    public int maxHealth = 500;
     public TriggerAction triggeredAction;
     public float SpeedBeforeKick;
 
     public GameObject pfBloodEffect;
     public Transform bloodEffectPos;
-    private int health;
+
+    private Health health;
 
     private PlayerTriggers playerTriggers;
 
@@ -35,18 +35,22 @@ public class Character : MonoBehaviour
     void Awake() {
         DeathCamera.enabled = false;
         mainCamera.enabled = true;
+        health = GetComponent<Health>();
         characterMovement = GetComponent<CharacterMovement>();
         playerTriggers = GetComponent<PlayerTriggers>();
-        Inventory = GetComponent<Inventory>(); 
-        ResetPlayer();
+        Inventory = GetComponent<Inventory>();
+        ResetPlayer(); 
+        health.OnDamageTake += healthBar.ReduceValue;
+        health.OnDamageTake += TakeDamageEffect;
+        health.OnDie += playerTriggers.Die;
         }
 
 
     public void ResetPlayer()
     {
         transform.position = new Vector3(0.81f, 0.79f, -14.5f);
-        health = maxHealth;
-        healthBar.SetMaxHealth(maxHealth);
+        healthBar.SetMaxHealth(health.maxHealth);
+ 
     }
 
     public bool justDied()
@@ -89,25 +93,12 @@ public class Character : MonoBehaviour
     }
 
 
-
-    public void ReduceHealth(int damage)
+    public void TakeDamageEffect(int damage)
     {
-        health -= damage;
-        healthBar.SetHealth(health);
-        if (health < 0 && !playerTriggers.dying)
-        {
-            triggeredAction = playerTriggers.Die;
-        }
-        else
-        {
-            SetFightmode(FightMode.ReceiveDamage);
-            var bloodEffect = Instantiate(pfBloodEffect, bloodEffectPos.position, bloodEffectPos.rotation);
-            bloodEffect.GetComponent<ParticleSystem>().Play();
-        
-        }
-
+        SetFightmode(FightMode.ReceiveDamage);
+        var bloodEffect = Instantiate(pfBloodEffect, bloodEffectPos.position, bloodEffectPos.rotation);
+        bloodEffect.GetComponent<ParticleSystem>().Play();
     }
-    public int GetHealth(){return health;}
     
 
     public void AddMovementInput(float forward, float right, bool rotatePlayer=true)
