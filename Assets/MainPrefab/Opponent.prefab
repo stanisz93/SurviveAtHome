@@ -501,6 +501,7 @@ MonoBehaviour:
   checkingSpeed: 1.5
   attackMinDist: 1
   damageInterval: 0.4
+  damageCounter: 0
   ExploringInterval: 1
   rotationSpeed: 10
   changeRushingDecision: 0.1
@@ -846,6 +847,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4430638418939075517}
   - component: {fileID: 6434140010822770063}
+  - component: {fileID: 3028849582344904022}
   m_Layer: 0
   m_Name: ZombieAttackPoint
   m_TagString: Untagged
@@ -880,6 +882,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.64, y: 0.79, z: 0.49}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3028849582344904022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7163928270389422583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9820a72e50e4ced4798a47f2e6995a06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4232579745249082432
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -977,5 +991,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44be702eaf8cc244fa5419967f94dda2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitCollider: {fileID: 6434140010822770063}
-  blockedTask: 0
+  opponentHit: {fileID: 0}

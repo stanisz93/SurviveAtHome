@@ -24,16 +24,10 @@ public class VisionFieldOfView : MonoBehaviour
     public List<Transform> visibleTargets = new List<Transform>();
 
     public Alert alertUI;
-
     
     private VisionState state = VisionState.None;
     // private bool suspicious = false;
     private bool isSenseActive = true;
-    
-    private Opponent opponent;
-    private OpponentActions opponentActions;
-    private TaskManager taskManager;
-
 
     private Indicator calmIndicator;
     private Indicator alertIndicator;

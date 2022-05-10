@@ -6,31 +6,32 @@ public class OpponentEventController : MonoBehaviour
 {
     // Start is called before the first frame update
     
-    public Collider hitCollider;
-    [SerializeField]
-    private bool blockedTask;
-    
+
+    public OpponentHit opponentHit;
     private Character character;
     private Opponent opponent;
+    private TaskManager taskManager;
+
 
     void Start()
     {
         opponent = gameObject.GetComponentInParent<Opponent>();
         character = GameObject.FindWithTag("Player").GetComponent<Character>();
-        blockedTask = false;
-        hitCollider.enabled = false;
+
     }
 
     // Update is called once per frame
 
     public void EnableHitMoment()
     {
-        hitCollider.enabled = true;
+        opponentHit.enabled = true;
+
     }
     public void DisableHitMoment()
     {
-        hitCollider.enabled = false;
+        opponentHit.enabled = false;
     }
+
 
 
 }

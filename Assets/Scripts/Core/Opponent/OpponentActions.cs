@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using DG.Tweening;
 
 
-public enum OpponentMode {Exploring, Rushing, HitPlayer, Scream, Agonize, Fall, beingKicked, Attacking, Checking, LookAround, Smelling};
+public enum OpponentMode {Exploring, Rushing, Scream, Agonize, Fall, Attacking, Checking, LookAround, Smelling};
 public class OpponentActions : MonoBehaviour
 {
     public OpponentEventController opponentEventController;
@@ -17,9 +17,9 @@ public class OpponentActions : MonoBehaviour
     public float walkingSpeed = 0.3f;
     public float runningSpeed = 3.0f;
     public float checkingSpeed = 1.5f;
-    private float speed = 1.5f;
     public float attackMinDist = 1f;
     public float damageInterval = 0.4f;
+    public float damageCounter = 0f;
     public float ExploringInterval = 1f;
     public float rotationSpeed = 10f;
     public float changeRushingDecision = .05f;
@@ -53,9 +53,10 @@ public class OpponentActions : MonoBehaviour
     void Start() 
     {
         agent = GetComponent<NavMeshAgent>();
+        agent.stoppingDistance = attackMinDist;
         opponentUtils = GetComponent<OpponentUtils>();
         vfov = GetComponentInChildren<VisionFieldOfView>();
-        taskManager = GetComponent<TaskManager>();
+        taskManager = GetComponentInChildren<TaskManager>();
         opponent = GetComponent<Opponent>();
         m_Rigidbody = GetComponent<Rigidbody>();
     }
@@ -67,6 +68,8 @@ public class OpponentActions : MonoBehaviour
     {
         return Vector3.Distance(transform.position, position) <= (attackMinDist + deltaDist);
     }
+
+
 
     public bool isAlerted() {return alerted;}
 
@@ -92,12 +95,12 @@ public class OpponentActions : MonoBehaviour
         GameObject obstacleEffect = Instantiate(pfObstacleHitEffect, ObstacleHitSpot.position, ObstacleHitSpot.rotation);
         obstacleEffect.GetComponent<ParticleSystem>().Play();
         animator.SetTrigger("HitObstacleWhilePushed");
-        taskManager.UnlockEndOfTask();
     }
     public IEnumerator GotPushed(Transform player, float pushForce, float pushTime)
     {
-        SetOpponentMode(OpponentMode.beingKicked);
-
+        agent.speed = 0f;
+        taskManager.LockEndOfTask();
+        
         GameObject hotHitEffect = Instantiate(pfGotPushedEffect, pushEffectPosition.position, Quaternion.identity);
         var particleSystem = hotHitEffect.GetComponent<ParticleSystem>();
         particleSystem.Play();
@@ -121,15 +124,15 @@ public class OpponentActions : MonoBehaviour
                 hitTheObstacle = true;
             }
         Vector3 destPos = transform.position + 0.8f * pushVect;
-        
         Sequence pushS = DOTween.Sequence();
         pushS.Append(transform.DOMove(destPos, pushTime));
         if(hitTheObstacle)
             {
-            taskManager.LockEndOfTask();
+           
              pushS.AppendCallback(() => HitObstacleWhilePush());
              pushS.Join(transform.DOMove(transform.position + 0.7f * pushVect, 0.1f));
             }
+
         transform.rotation = Quaternion.LookRotation(-player.forward);
 
 
@@ -153,24 +156,23 @@ public class OpponentActions : MonoBehaviour
     
     public IEnumerator RunTowardPlayer(Transform player)
     {
-        if (!ReachPlayerRange(player.position))
-            SetOpponentMode(OpponentMode.Rushing);
-        else
-        {
-            SetOpponentMode(OpponentMode.Exploring);
-        } // here reaction of seeng player is runned
+        SetOpponentMode(OpponentMode.Rushing);
+        agent.speed = runningSpeed;
+
+ // here reaction of seeng player is runned
         while(!ReachPlayerRange(player.position) && vfov.FoundedObject())
         {
             SetLastPlayerPosition(player);
             agent.destination = player.position;
             yield return new WaitForSeconds(changeRushingDecision);
         }
+        agent.speed = 0f;
 
     }
 
     public IEnumerator NoticePlayer(Transform player)
     {
-        if(GetOpponentMode() != OpponentMode.Scream && !nextAttack)
+        if(!nextAttack)
         {   
             SetOpponentMode(OpponentMode.Scream);
             yield return RotateTowardPosUntil(player, 2f);
@@ -183,7 +185,6 @@ public class OpponentActions : MonoBehaviour
         if (!health.enabled)
         {
             vfov.ResetSense();
-            SetOpponentMode(OpponentMode.Exploring);
             nextAttack = false;
             yield break;
         }
@@ -193,7 +194,13 @@ public class OpponentActions : MonoBehaviour
             nextAttack = true;
             if(ReachPlayerRange(player.position))
             {
-                SetOpponentMode(OpponentMode.HitPlayer); 
+                agent.speed = 0f;
+                if (damageCounter >= damageInterval)
+                {
+
+                    damageCounter = 0f;
+                    animator.SetTrigger("HitPlayer");
+                }
             }
         }
         else
@@ -235,6 +242,7 @@ public class OpponentActions : MonoBehaviour
 
     public IEnumerator Exploring()
     {
+        agent.speed = walkingSpeed;
         if(Random.value >= 0.6)
             yield return Idle();
         else
@@ -294,28 +302,16 @@ public class OpponentActions : MonoBehaviour
 }
 
 
-        public void SetOpponentMode(OpponentMode mode)
+    public void SetOpponentMode(OpponentMode mode)
     {   
         opponentMode = mode;
+        float speed;
         switch(mode)
         {
             
-            case OpponentMode.Exploring:
-            {
-                speed =  walkingSpeed;
-                stoppingDistance = 0.0f;
-                break;
-            }
-            case OpponentMode.Rushing:
-            {
-                speed = runningSpeed;
-                stoppingDistance = attackMinDist;
-                break;
-            }
             case OpponentMode.Checking:
             {
                 speed = checkingSpeed;
-                stoppingDistance = 0.0f;
                 break;
             }
             default:
@@ -326,7 +322,6 @@ public class OpponentActions : MonoBehaviour
 
         }
         agent.speed = speed;
-        agent.stoppingDistance = stoppingDistance;
     }
     public OpponentMode GetOpponentMode()
     {
@@ -336,6 +331,7 @@ public class OpponentActions : MonoBehaviour
 
 void Update()
  {
+     damageCounter += Time.deltaTime;
      //DEBUG DESTINATION PUSH POINT
         // Vector3 targetDirection = transform.position - playerTemp.position;
         // targetDirection = new Vector3(targetDirection.x, transform.position.y, targetDirection.z).normalized;

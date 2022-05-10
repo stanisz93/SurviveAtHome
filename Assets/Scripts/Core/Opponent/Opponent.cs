@@ -27,7 +27,7 @@ public class Opponent : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         opponentActions = GetComponent<OpponentActions>();
         opponentUtils = GetComponent<OpponentUtils>();
-        taskManager = GetComponent<TaskManager>();
+        taskManager = GetComponentInChildren<TaskManager>();
         vfov = GetComponentInChildren<VisionFieldOfView>();
         hittingPoint.SetParent(hittingArm, true);
 
