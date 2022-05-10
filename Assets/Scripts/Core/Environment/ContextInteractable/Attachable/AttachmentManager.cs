@@ -51,7 +51,7 @@ public class AttachmentManager: MonoBehaviour
     {
         RaycastHit hit;
         Vector3 mouseToPlayerDir = MouseUtils.MousePositon(mainCamera, player, TerrainMask);
-        if (Physics.Raycast(player.position, mouseToPlayerDir, out hit, 20f, TrapDisturbMask))
+        if (Physics.Raycast(player.position, mouseToPlayerDir, out hit, 5f, TrapDisturbMask))
         {
             currentAttachable = hit.collider.gameObject.GetComponent<IAttachable>();
             if(currentAttachable != null)

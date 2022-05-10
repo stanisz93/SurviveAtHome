@@ -51,7 +51,7 @@ public class PlayerTriggers : MonoBehaviour
         character.SpeedBeforeKick = character.GetVelocity();
         playerAnimationController.animator.SetTrigger("Kick");
         StartCoroutine(BlockMovement(triggerEmpty));
-        StartCoroutine(ReleaseTrigger(1f));
+        StartCoroutine(ReleaseTrigger(0.8f));
     }
 
     public void StickAttack()
