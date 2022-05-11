@@ -30,7 +30,6 @@ public class CharacterMovement : MonoBehaviour
 
     private Rigidbody rigidbody;
     private Vector3 velocity;
-    private int maxHitAnimSteps = 60;
 
     
     void Start()
