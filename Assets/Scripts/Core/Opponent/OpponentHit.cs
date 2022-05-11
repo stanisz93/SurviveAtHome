@@ -8,12 +8,17 @@ public class OpponentHit : MonoBehaviour
     // Start is called before the first frame update
     private bool isDamageTaken = false;
     private Collider hitCollider;
+    private bool isInitialEnable = true; // this flag first enable when create object
     private void Awake() {
         hitCollider = GetComponent<Collider>();
         hitCollider.enabled = false;
     }
     private void OnEnable() {
-        hitCollider.enabled = true;
+        if(isInitialEnable)
+            isInitialEnable = false;
+        else
+            hitCollider.enabled = true;
+            
         isDamageTaken = false;
     }
 

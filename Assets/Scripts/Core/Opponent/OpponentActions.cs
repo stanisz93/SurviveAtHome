@@ -197,7 +197,7 @@ public class OpponentActions : MonoBehaviour
                 agent.speed = 0f;
                 if (damageCounter >= damageInterval)
                 {
-
+                    Debug.Log("HIT");
                     damageCounter = 0f;
                     animator.SetTrigger("HitPlayer");
                 }
