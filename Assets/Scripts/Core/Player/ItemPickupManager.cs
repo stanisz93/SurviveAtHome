@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,12 +7,9 @@ using System.Linq;
 public class ItemPickupManager: BestCandidateManager
 {
 
-    public CollectiblePopup collectiblePopup;
-    public WeaponPlaceholder weaponPlaceholder;
-    private void Start() {
-    }
-    public bool PickItem()
+    public Action PickItem()
     {
+        Action onCollectProcess = null;
         Transform best = GetBestOption();
         if(best != null)
         {
@@ -20,7 +18,6 @@ public class ItemPickupManager: BestCandidateManager
             if (collectible == null && defendable == null)
             {
                 Debug.LogError("This is not collectible!");
-                return false;
             }
                 
             else
@@ -28,20 +25,18 @@ public class ItemPickupManager: BestCandidateManager
                 RemovePotentialObject(best);
                 if(collectible != null)
                 {
-                    collectiblePopup.PopUp(collectible);
-                    collectible.Collect();
+                    onCollectProcess = collectible.Collect;
                 }
                 else if(defendable != null)
                 {
-                    weaponPlaceholder.SetDefendable(defendable);
+                    onCollectProcess = defendable.Collect;
+                    // weaponPlaceholder.SetDefendable(defendable);
 
                     //Here I should change player move mode to hold spear
                 }
-                return true;
             }
         }
-        else
-            return false;
+        return onCollectProcess;
 
     }
 

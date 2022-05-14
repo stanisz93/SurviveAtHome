@@ -5,7 +5,7 @@ using UnityEngine;
 
 public enum MovementMode {Walking, Running, Crouching, Staying};
 public enum FightMode {Default, ReceiveDamage};
-public enum HoldMode {WoddenStick, Default};
+public enum HoldMode {WoddenStick, Knife, Default};
 
 [RequireComponent(typeof(Rigidbody))]
 public class CharacterMovement : MonoBehaviour

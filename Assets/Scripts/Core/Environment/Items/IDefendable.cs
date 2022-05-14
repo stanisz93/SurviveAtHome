@@ -7,18 +7,19 @@ using UnityEngine.UI;
 public interface IDefendable
 {
 
-    void AttachToPlayer();
+    void Collect();
 
     Sprite GetImage(); //this method will demand to have image
 
 
     void ReduceEndurance();
 
-    void AddActionOnHit(Action a);
 
     int GetMaxEndurance();
 
     int GetCurrentEndurance();
+
+    void Drop();
 
 
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 [RequireComponent(typeof(Character))]
 public class PlayerAnimationController : MonoBehaviour
@@ -78,10 +79,11 @@ public class PlayerAnimationController : MonoBehaviour
         isHitAnimLaunch = false;
     }
 
-    public IEnumerator PickupItem()
+    public IEnumerator PickupItem(Action collectProcess)
     {
         layerInvoker.Reset(2);
         yield return layerInvoker.RunUntil("Pickup.PickingUp", 2, pickAnimLifeTime);
+        collectProcess?.Invoke();
         yield return layerInvoker.SmoothlyFadeOutLayer(pickFadeOutTime, 2);
     }
 

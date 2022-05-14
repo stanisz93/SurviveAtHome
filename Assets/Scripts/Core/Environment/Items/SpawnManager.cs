@@ -7,7 +7,7 @@ public class SpawnManager : MonoBehaviour
 {
 
     public List<Transform> itemLocations;
-
+    public CollectiblePopup collectiblePopup;
     public List<GameObject> pfItems;
     public Inventory inventory;
     // Start is called before the first frame update
@@ -41,6 +41,7 @@ public class SpawnManager : MonoBehaviour
         if (collectItem == null)
          Debug.LogError("Spoon prefab should have attached SpoonItem script to it!");
          collectItem.OnPickup += inventory.HandleResourcePickup;
+         collectItem.OnPickup += collectiblePopup.PopUp;
     }
 
     // Update is called once per frame

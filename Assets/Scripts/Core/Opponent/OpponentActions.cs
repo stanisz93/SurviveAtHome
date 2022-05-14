@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using DG.Tweening;
-
-
 public enum OpponentMode {Exploring, Rushing, Scream, Fall, Attacking, Checking, LookAround, Smelling};
+
+[RequireComponent(typeof(Effects))]
 public class OpponentActions : MonoBehaviour
 {
     public OpponentEventController opponentEventController;
@@ -39,6 +39,7 @@ public class OpponentActions : MonoBehaviour
     private bool nextAttack = false; //this bool mean if this is next attempt after first attack
     private Vector3 playerSeen;
     private Opponent opponent;
+    private Effects OpponentEffects;
     private Rigidbody m_Rigidbody;
     private float randomIdleCounter;
 
@@ -59,6 +60,7 @@ public class OpponentActions : MonoBehaviour
         taskManager = GetComponentInChildren<TaskManager>();
         opponent = GetComponent<Opponent>();
         m_Rigidbody = GetComponent<Rigidbody>();
+        OpponentEffects = GetComponent<Effects>();
     }
 
 
@@ -96,14 +98,21 @@ public class OpponentActions : MonoBehaviour
         obstacleEffect.GetComponent<ParticleSystem>().Play();
         animator.SetTrigger("HitObstacleWhilePushed");
     }
+
+    public IEnumerator GotStabbed(Transform player)
+    {
+        agent.speed = 0f;
+        OpponentEffects.RunParticleEffect(pfGotPushedEffect, pushEffectPosition.position);
+        animator.SetTrigger("beingStabbed");
+        transform.rotation = Quaternion.LookRotation(-player.forward);
+        taskManager.TaskSetToFinish();
+        yield return null;
+    }
     public IEnumerator GotPushed(Transform player, float pushForce, float pushTime)
     {
         agent.speed = 0f;
         taskManager.LockEndOfTask();
-        
-        GameObject hotHitEffect = Instantiate(pfGotPushedEffect, pushEffectPosition.position, Quaternion.identity);
-        var particleSystem = hotHitEffect.GetComponent<ParticleSystem>();
-        particleSystem.Play();
+        OpponentEffects.RunParticleEffect(pfGotPushedEffect, pushEffectPosition.position);
         Vector3 targetDir = transform.position - player.position;
         Vector3 targetDirNorm = new Vector3(targetDir.x, transform.position.y, targetDir.z).normalized;
         float playerVelocity = player.GetComponentInParent<Character>().SpeedBeforeKick;

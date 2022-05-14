@@ -5,41 +5,43 @@ using UnityEngine;
 public class PlayerAnimatorEventController : MonoBehaviour
 {
 
-    public PushTrigger defaultPushTrigger;
-    private PushTrigger pushTrigger;
+    public AttackTrigger defaultPushTrigger;
+    public AttackTrigger currentAttackTrigger;
     // Start is called before the first frame update
     
     void Start()
     {
-        pushTrigger = defaultPushTrigger;
+        currentAttackTrigger = defaultPushTrigger;
     }
 
         
     public void TurnOnPushCollider()
     {
-        pushTrigger.collider.enabled = true;
+        currentAttackTrigger.GetComponent<Collider>().enabled = true;
     }
 
     public void TurnOffPushCollider()
     {
-        pushTrigger.collider.enabled = false;
+        currentAttackTrigger.GetComponent<Collider>().enabled = false;
     }
     public void ResetDefaultHoldPosition()
     {
-        StickItem stick = GetComponentInChildren<StickItem>();
+        DefendItem stick = GetComponentInChildren<DefendItem>();
         if(stick != null)
         {
             stick.ChangeWeaponPositionToHold();
         }
     }
-    public void SetPushCollider(PushTrigger trigger)
+
+
+    public void SetAttackTriggerCollider(AttackTrigger trigger)
     {
-            pushTrigger = trigger;
+            currentAttackTrigger = trigger;
     }
 
     public void SetToDefaultPushTrigger()
     {
-        pushTrigger = defaultPushTrigger;
+        currentAttackTrigger = defaultPushTrigger;
     }
 
 

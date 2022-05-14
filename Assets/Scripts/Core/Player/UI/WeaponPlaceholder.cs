@@ -19,14 +19,14 @@ public class WeaponPlaceholder : MonoBehaviour
     }
 
     // Update is called once per frame
-    public void SetWeaponImage()
+    void SetWeaponImage()
     {
         weaponImage.sprite = defendable.GetImage();
         weaponImage.color = new Color32(255, 255, 255, 255);
         DoTweenUtils.PoopUpImage(weaponImage, 0.8f);
     }
 
-    public void RemoveWeapon()
+    void RemoveWeapon()
     {
         this.defendable = null;
         weaponImage.sprite = null;
@@ -36,18 +36,20 @@ public class WeaponPlaceholder : MonoBehaviour
 
     public void SetDefendable(IDefendable defendable)
     {
+        if(this.defendable != null)
+           this.defendable.Drop();
         this.defendable = defendable;
-        this.defendable.AttachToPlayer();
-        this.defendable.AddActionOnHit(UpdateEndurance);
         SetWeaponImage();
         SetMaxEndurance();
+        UpdateEndurance();
     }
 
-    public void SetMaxEndurance()
+
+    void SetMaxEndurance()
     {
 
-        slider.maxValue = defendable.GetMaxEndurance();
-        slider.value = defendable.GetMaxEndurance();
+        slider.maxValue = this.defendable.GetMaxEndurance();
+        slider.value =  this.defendable.GetMaxEndurance();
         endurancePointer.enabled = true;
         endurancePointer.color = gradient.Evaluate(0f);
 

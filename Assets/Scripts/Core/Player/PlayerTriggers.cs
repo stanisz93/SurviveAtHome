@@ -56,10 +56,20 @@ public class PlayerTriggers : MonoBehaviour
 
     public void StickAttack()
     {
-        StickItem stickItem = GetComponentInChildren<StickItem>();
-        stickItem.ChangeWeaponPositionToAttack();
+        DefendItem defendItem = GetComponentInChildren<DefendItem>();
+        defendItem.ChangeWeaponPositionToAttack();
         character.SpeedBeforeKick = character.GetVelocity();
         playerAnimationController.animator.SetTrigger("PushStick");
+        StartCoroutine(BlockMovement(triggerEmpty));
+        StartCoroutine(ReleaseTrigger(0.7f));
+    }
+
+    public void KnifeAttack()
+    {
+        DefendItem defendItem = GetComponentInChildren<DefendItem>();
+        defendItem.ChangeWeaponPositionToAttack();
+        character.SpeedBeforeKick = character.GetVelocity();
+        playerAnimationController.animator.SetTrigger("Stab");
         StartCoroutine(BlockMovement(triggerEmpty));
         StartCoroutine(ReleaseTrigger(0.7f));
     }

@@ -13,7 +13,7 @@ public class Character : MonoBehaviour
     public HealthBar healthBar;
     public TriggerAction triggeredAction;
     public float SpeedBeforeKick;
-
+    public Transform leftHand;
     public GameObject pfBloodEffect;
     public Transform bloodEffectPos;
 

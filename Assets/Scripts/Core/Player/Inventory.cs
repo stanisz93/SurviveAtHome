@@ -14,11 +14,11 @@ public class Inventory : MonoBehaviour
 
 {
     // Start is called before the first frame update
-    public InventoryUI ui;
+
     private List<IItemProcessor> itemProcessors;
     public Dictionary<string, int> resources;
     public Dictionary<string, int> crafts;
-
+    private InventoryUI inventoryUI;
     
 
 
@@ -31,6 +31,7 @@ public class Inventory : MonoBehaviour
         itemProcessors = new List<IItemProcessor>();
         itemProcessors.Add(new ResourceItemProcessor(this));
         itemProcessors.Add(new CraftItemProcessor(this));
+        inventoryUI = GetComponentInChildren<InventoryUI>();
 
     }
 
@@ -63,13 +64,13 @@ public class Inventory : MonoBehaviour
     public void AddResource(ResourceType resType, int amount)
     {
         resources[resType.ToString()] += amount;
-        ui.UpdateResourcesUI(resType, resources[resType.ToString()]);
+        inventoryUI.UpdateResourcesUI(resType, resources[resType.ToString()]);
     }
 
     public void SubstractResource(ResourceType resType, int amount)
     {
         resources[resType.ToString()] -= amount;
-        ui.UpdateResourcesUI(resType, resources[resType.ToString()]);
+        inventoryUI.UpdateResourcesUI(resType, resources[resType.ToString()]);
     }
 
     public void AddCraftItem(CraftType trapType, int amount)

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public enum ControllerMode {Normal, Inventory, SettingTrap};
 
@@ -9,7 +10,6 @@ public enum ControllerMode {Normal, Inventory, SettingTrap};
 public class PlayerInput : MonoBehaviour
 {
 
-    public InventoryUI inventoryUI;
     private Character character;
     private CharacterMovement chrMvmnt;
     private CapsuleCollider collider;
@@ -29,7 +29,7 @@ public class PlayerInput : MonoBehaviour
 
     public bool blockMovement = false;
     private PlayerAnimationController playerAnimationController;
-
+    private InventoryUI inventoryUI;
     private Transform characterMesh;
     private Camera mainCamera;
     
@@ -47,6 +47,7 @@ public class PlayerInput : MonoBehaviour
         itemPickupManager = GetComponent<ItemPickupManager>();
         attachmentManager = GetComponent<AttachmentManager>();
         attachmentManager.enabled = false;
+        inventoryUI =  GetComponentInChildren<InventoryUI>();
         characterMesh = GameObject.FindWithTag("PlayerMesh").transform;
         mainCamera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
             
@@ -174,6 +175,10 @@ public class PlayerInput : MonoBehaviour
                 {
                     character.StartTriggerAction(playerTriggers.StickAttack);
                 }
+                else if(chrMvmnt.GetHoldMode() == HoldMode.Knife)
+                {
+                    character.StartTriggerAction(playerTriggers.KnifeAttack);
+                }
                 else
                     character.StartTriggerAction(playerTriggers.Kick);
             }
@@ -188,9 +193,10 @@ public class PlayerInput : MonoBehaviour
             }
             else if(Input.GetKeyDown(KeyCode.F))
             {
-                bool success = itemPickupManager.PickItem();
-                if(success)
-                    StartCoroutine(playerAnimationController.PickupItem());
+
+                Action collectProcess = itemPickupManager.PickItem();
+                if(collectProcess != null)
+                    StartCoroutine(playerAnimationController.PickupItem(collectProcess));
             }
             else if(Input.GetKey(KeyCode.Tab))
             {

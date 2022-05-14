@@ -1,5 +1,49 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2619804119663338778
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4225936525075731534}
+  - component: {fileID: 3221054336418466359}
+  m_Layer: 0
+  m_Name: physicsCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4225936525075731534
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2619804119663338778}
+  m_LocalRotation: {x: -0.039030194, y: -0, z: -0, w: 0.9992381}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7544511872197127681}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: -4.474, y: 0, z: 0}
+--- !u!65 &3221054336418466359
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2619804119663338778}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.13, y: 2.11, z: 0.19}
+  m_Center: {x: 0, y: 1.15, z: 0}
 --- !u!1 &6569836849111794054
 GameObject:
   m_ObjectHideFlags: 0
@@ -57,12 +101,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72c8315bbcbc17c45a8b9be574c43520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  kickOpponentReactionDelay: 0.08
-  pushDelay: 0.1
   cameraShake: 1.5
   pushForce: 2
-  triggerExposeTime: 0.4
   pushTime: 0.2
+  collider: {fileID: 0}
 --- !u!1 &7544511872196768289
 GameObject:
   m_ObjectHideFlags: 0
@@ -77,6 +119,7 @@ GameObject:
   - component: {fileID: 4618893059352813844}
   - component: {fileID: 3089168389053002191}
   - component: {fileID: 6211295615998828727}
+  - component: {fileID: 9146579048718051633}
   m_Layer: 0
   m_Name: SpearDefendable
   m_TagString: Untagged
@@ -96,6 +139,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7003124130036513299}
+  - {fileID: 4225936525075731534}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -160,12 +204,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3842e87f650cba44b830c8e2baeab5a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hand: {fileID: 0}
   pfDestroyObject: {fileID: 5482885224607544950, guid: ab310c003cabd9a479964719b83ae0fd, type: 3}
-  pushTrigger: {fileID: 7989006067861340293}
+  eventController: {fileID: 0}
+  PushEffectTrigger: {fileID: 7989006067861340293}
+  holdMode: 0
+  physicsCollider: {fileID: 3221054336418466359}
   pickPosition: {x: -0.0094, y: 0.01294, z: -0.00665}
-  icon: {fileID: 86086120898963748, guid: d3433ab4f92c55a40a4c222f53f16ebe, type: 3}
   pickRotation: {x: 141.415, y: 66.294, z: 6.455002}
+  attackPosition: {x: 0, y: 0, z: 0}
+  attackRotation: {x: 0, y: 0, z: 0}
+  icon: {fileID: 86086120898963748, guid: d3433ab4f92c55a40a4c222f53f16ebe, type: 3}
   maxEndurance: 200
   enduranceStep: 100
 --- !u!65 &3089168389053002191
@@ -1435,3 +1483,19 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!54 &9146579048718051633
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7544511872196768289}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

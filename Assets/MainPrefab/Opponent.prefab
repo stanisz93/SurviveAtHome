@@ -391,10 +391,10 @@ GameObject:
   - component: {fileID: 4232579744328846709}
   - component: {fileID: 4232579744328846708}
   - component: {fileID: 4232579744328846711}
+  - component: {fileID: 36938523623707915}
   - component: {fileID: 4232579744328846601}
   - component: {fileID: 4232579744328846600}
   - component: {fileID: 4232579744328846603}
-  - component: {fileID: 4232579744328846710}
   - component: {fileID: 4232579744328846707}
   m_Layer: 10
   m_Name: Opponent
@@ -476,6 +476,18 @@ MonoBehaviour:
   damage: 60
   hittingArm: {fileID: 3078058135899610789}
   hittingPoint: {fileID: 4430638418939075517}
+--- !u!114 &36938523623707915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4232579744328846605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58c1cd4dcc86b4142a07fb0b28ff4d44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4232579744328846601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -496,13 +508,12 @@ MonoBehaviour:
   PushStopperMask:
     serializedVersion: 2
     m_Bits: 128
+  randomIdleCoeff: 1
   walkingSpeed: 0.5
   runningSpeed: 3
   checkingSpeed: 1.5
   attackMinDist: 1
   damageInterval: 0.4
-  damageCounter: 0
-  ExploringInterval: 1
   rotationSpeed: 10
   changeRushingDecision: 0.1
   playerSeenHelper: {fileID: 4232579743529770811}
@@ -546,18 +557,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &4232579744328846710
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4232579744328846605}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6afa261ad065c1a41975289dfa67e69a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!136 &4232579744328846707
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -992,3 +991,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   opponentHit: {fileID: 0}
+--- !u!114 &829425779384456680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8654397589755266375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6afa261ad065c1a41975289dfa67e69a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
