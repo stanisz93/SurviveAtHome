@@ -24,6 +24,14 @@ public class PlayerAnimatorEventController : MonoBehaviour
     {
         pushTrigger.collider.enabled = false;
     }
+    public void ResetDefaultHoldPosition()
+    {
+        StickItem stick = GetComponentInChildren<StickItem>();
+        if(stick != null)
+        {
+            stick.ChangeWeaponPositionToHold();
+        }
+    }
     public void SetPushCollider(PushTrigger trigger)
     {
             pushTrigger = trigger;

@@ -122,7 +122,7 @@ public class Character : MonoBehaviour
         // Debug.Log(characterMovement.Velocity.magnitude);
         var dotVal = Vector3.Dot(characterMovement.Velocity.normalized, characterMovement.t_mesh.forward);
         
-        return dotVal;
+        // return dotVal;
         if (Mathf.Abs(dotVal) > 0.5f)
             return dotVal;
         else
@@ -131,7 +131,7 @@ public class Character : MonoBehaviour
     public float GetVelocityRight()
     {
         var dotVal = Vector3.Dot(characterMovement.Velocity.normalized, characterMovement.t_mesh.right);
-        return dotVal;
+        // return dotVal;
         if (Mathf.Abs(dotVal) > 0.5f)
             return dotVal;
         else

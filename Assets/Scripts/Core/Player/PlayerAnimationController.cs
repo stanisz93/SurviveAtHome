@@ -15,6 +15,7 @@ public class PlayerAnimationController : MonoBehaviour
     public float hitFadeOutTime = 0.15f;
 
 
+
     private Character character;
     private CharacterMovement chrMovement;
     private LayerInvoker layerInvoker;

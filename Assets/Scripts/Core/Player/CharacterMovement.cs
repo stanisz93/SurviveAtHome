@@ -68,7 +68,7 @@ public class CharacterMovement : MonoBehaviour
                 {
                     // Probably worth to use Slerp?
                     Quaternion wantedRotation = Quaternion.LookRotation(velocity);
-                    t_mesh.rotation = Quaternion.Lerp(t_mesh.rotation, wantedRotation, Time.deltaTime * rotateSpeed);
+                    t_mesh.rotation = Quaternion.Slerp(t_mesh.rotation, wantedRotation, Time.deltaTime * rotateSpeed);
                 }
             // t_mesh.rotation = wantedRotation;
         }

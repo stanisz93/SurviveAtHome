@@ -9,10 +9,7 @@ public class OpponentUtils : MonoBehaviour
 
     public ExplorationSquare explorationSquare;
 
-    public void WalkTowardCoordinates(Vector3 destination, NavMeshAgent agent)
-    {
-        agent.destination = destination;
-    }
+
 
     public Vector3 GetMousePosition()
     {   Vector3 result = new Vector3(0, 0, 0);

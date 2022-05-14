@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using DG.Tweening;
 
 
-public enum OpponentMode {Exploring, Rushing, Scream, Agonize, Fall, Attacking, Checking, LookAround, Smelling};
+public enum OpponentMode {Exploring, Rushing, Scream, Fall, Attacking, Checking, LookAround, Smelling};
 public class OpponentActions : MonoBehaviour
 {
     public OpponentEventController opponentEventController;
@@ -14,13 +14,12 @@ public class OpponentActions : MonoBehaviour
     public GameObject pfObstacleHitEffect;
     public Transform ObstacleHitSpot;
     public LayerMask PushStopperMask;
+    public float randomIdleCoeff = 1f;
     public float walkingSpeed = 0.3f;
     public float runningSpeed = 3.0f;
     public float checkingSpeed = 1.5f;
     public float attackMinDist = 1f;
     public float damageInterval = 0.4f;
-    public float damageCounter = 0f;
-    public float ExploringInterval = 1f;
     public float rotationSpeed = 10f;
     public float changeRushingDecision = .05f;
 
@@ -41,6 +40,7 @@ public class OpponentActions : MonoBehaviour
     private Vector3 playerSeen;
     private Opponent opponent;
     private Rigidbody m_Rigidbody;
+    private float randomIdleCounter;
 
     public Transform playerTemp;
     
@@ -195,12 +195,7 @@ public class OpponentActions : MonoBehaviour
             if(ReachPlayerRange(player.position))
             {
                 agent.speed = 0f;
-                if (damageCounter >= damageInterval)
-                {
-                    Debug.Log("HIT");
-                    damageCounter = 0f;
-                    animator.SetTrigger("HitPlayer");
-                }
+                animator.SetTrigger("HitPlayer");
             }
         }
         else
@@ -239,24 +234,42 @@ public class OpponentActions : MonoBehaviour
         }
     }
 
-
+    public IEnumerator RunRandomIdleSmooth()
+    {
+        randomIdleCounter = 0f;
+        while(randomIdleCounter < 1f)
+            {
+                randomIdleCounter += Time.deltaTime * randomIdleCoeff;
+                animator.SetFloat("RandomIdleSmoother", randomIdleCounter);
+                yield return null;
+            }
+    }
     public IEnumerator Exploring()
     {
-        agent.speed = walkingSpeed;
+        randomIdleCounter = 0f;
+        Coroutine coroutine = StartCoroutine(RunRandomIdleSmooth());
         if(Random.value >= 0.6)
-            yield return Idle();
+        {
+            animator.SetFloat("RandomIdle", 1f);
+            yield return AgonizeIdle();
+        }
         else
         {
+            agent.speed = walkingSpeed;
+            animator.SetFloat("RandomIdle", 0f);
             Vector3 randomDest = opponentUtils.FindRandomDestination();  
             yield return WalkTowardCoordinates(randomDest);
         }
+        StopCoroutine(coroutine);
+
         
     }
 
-    public IEnumerator Idle()
-    {
-        SetOpponentMode(OpponentMode.Agonize);
-        yield return new WaitForSeconds(4f);
+    public IEnumerator AgonizeIdle()
+    {   
+        agent.speed = 0f;
+        taskManager.LockEndOfTask();
+        yield return taskManager.WaitForReleaseLock();
         taskManager.TaskSetToFinish();
     }
     
@@ -268,10 +281,14 @@ public class OpponentActions : MonoBehaviour
 
     public IEnumerator CheckSuspiciousPlace()
     {
+        agent.stoppingDistance = 0f;
+        taskManager.LockEndOfTask();
         SetOpponentMode(OpponentMode.Checking);
+        agent.speed = checkingSpeed;
         yield return WalkTowardCoordinates(playerSeen, 0.5f, false, false, false);
         SetOpponentMode(OpponentMode.LookAround);
-        yield return new WaitForSeconds(4f);
+        yield return taskManager.WaitForReleaseLock();
+        agent.stoppingDistance = attackMinDist;
         taskManager.TaskSetToFinish();
     }
 
@@ -283,14 +300,8 @@ public class OpponentActions : MonoBehaviour
         
         if(justExploring)
             SetOpponentMode(OpponentMode.Exploring);
-        if(coolOff)
             
-            {
-                yield return new WaitForSeconds(ExploringInterval);
-                agent.destination = transform.position;
-            }
-            
-        opponentUtils.WalkTowardCoordinates(coordinates, agent);
+        agent.destination = coordinates;
         if(GameSystem.Instance.opponentDebug) Debug.Log($"Agent destination: {agent.destination}");
 
         while(agent.remainingDistance > distErr)
@@ -305,23 +316,6 @@ public class OpponentActions : MonoBehaviour
     public void SetOpponentMode(OpponentMode mode)
     {   
         opponentMode = mode;
-        float speed;
-        switch(mode)
-        {
-            
-            case OpponentMode.Checking:
-            {
-                speed = checkingSpeed;
-                break;
-            }
-            default:
-            {
-                speed = 0f;
-                break;
-            }
-
-        }
-        agent.speed = speed;
     }
     public OpponentMode GetOpponentMode()
     {
@@ -331,7 +325,7 @@ public class OpponentActions : MonoBehaviour
 
 void Update()
  {
-     damageCounter += Time.deltaTime;
+
      //DEBUG DESTINATION PUSH POINT
         // Vector3 targetDirection = transform.position - playerTemp.position;
         // targetDirection = new Vector3(targetDirection.x, transform.position.y, targetDirection.z).normalized;

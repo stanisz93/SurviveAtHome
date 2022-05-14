@@ -11,9 +11,6 @@ public interface IDefendable
 
     Sprite GetImage(); //this method will demand to have image
 
-    Vector3 GetPickPosition();
-    
-    Vector3 GetPickRotation();
 
     void ReduceEndurance();
 

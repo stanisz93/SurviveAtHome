@@ -19,7 +19,7 @@ public class ExplorationSquare : MonoBehaviour
         float shiftZ = gameObject.transform.localScale.z * bounds.size.z * 0.5f;
         // Debug.Log($"MinX {minX}, {minZ}");
         Vector3 newVec = new Vector3(Random.Range(x - shiftX, x + shiftX),
-                                    gameObject.transform.position.y,
+                                    0f,
                                     Random.Range(z - shiftZ, z + shiftZ));
     return newVec;
     }

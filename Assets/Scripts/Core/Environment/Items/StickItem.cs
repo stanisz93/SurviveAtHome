@@ -3,19 +3,25 @@ using System.Collections;
 using UnityEngine;
 using System;
 using UnityEngine.UI;
+using DG.Tweening;
 
 [RequireComponent(typeof(Collider))]
 public class StickItem : MonoBehaviour, IDefendable {
     
     public GameObject hand;
     public GameObject pfDestroyObject;
+    public Transform posWhileAttack;
     public PlayerAnimatorEventController eventController;
     public PushTrigger pushTrigger;
 
     public Vector3 pickPosition;
+    public Vector3 pickRotation;
+
+    public Vector3 attackPosition;
+    public Vector3 attackRotation;
     public Image icon; 
 
-    public Vector3 pickRotation;
+
     private CharacterMovement characterMovement;
     private Collider interactCollider;
 
@@ -35,8 +41,7 @@ public class StickItem : MonoBehaviour, IDefendable {
     {
         GameObject plr = GameObject.FindWithTag("PlayerMesh");
         transform.parent = hand.transform;
-        transform.localPosition = GetPickPosition();
-        transform.localEulerAngles = GetPickRotation();
+        ChangeWeaponPositionToHold();
         characterMovement.SetHoldMode(HoldMode.WoddenStick);
         eventController.SetPushCollider(pushTrigger);
         pushTrigger.OnHit += ReduceEndurance;
@@ -63,6 +68,20 @@ public class StickItem : MonoBehaviour, IDefendable {
     public int GetCurrentEndurance()
     {
         return endurance;
+    }
+
+    public void ChangeWeaponPositionToAttack()
+    {
+        transform.localPosition = attackPosition;
+        transform.localEulerAngles = attackRotation;
+    }
+    public void ChangeWeaponPositionToHold()
+    {
+        // transform.DOLocalMove(pickPosition, duration);
+        // transform.DORotate(pickRotation, .2f, RotateMode.LocalAxisAdd);
+        //  transform.DOLocalRotate(pickRotation, duration);
+        transform.localPosition = pickPosition;
+        transform.localEulerAngles = pickRotation;
     }
     public void OnTriggerEnter(Collider other) 
    {  
@@ -95,19 +114,10 @@ public class StickItem : MonoBehaviour, IDefendable {
     }
 
 
-    public Vector3 GetPickPosition()
-    {
-        return pickPosition;
-    }
-
     public Sprite GetImage()
     {
         return icon.sprite;
     }
 
-    public Vector3 GetPickRotation()
-    {
-        return pickRotation;
-    }
 
 }

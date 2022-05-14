@@ -28,12 +28,6 @@ public class OpponentAnimationController : MonoBehaviour
 
         switch(opponentMode)
         {
-            case OpponentMode.Agonize:
-            {
-                animator.SetBool("Agonize", true);
-                animator.SetBool("Suspicious", false);
-                break;
-            }
             case OpponentMode.Fall:
             {
                 animator.SetBool("Rushing", false);
@@ -43,13 +37,12 @@ public class OpponentAnimationController : MonoBehaviour
             case OpponentMode.Scream:
             {
                 animator.SetBool("Scream", true);
-                animator.SetBool("Agonize", false);
                 animator.SetBool("Suspicious", false);
+                animator.SetBool("LookAround", false);
                 break;
             }
             case OpponentMode.Exploring:
             {
-                animator.SetBool("Agonize", false);
                 animator.SetFloat("OpponentVelocity", agent.velocity.magnitude);
                 animator.SetBool("Rushing", false);
                 animator.SetBool("Suspicious", false);
