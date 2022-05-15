@@ -3932,6 +3932,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5773140957513151208, guid: fd2316186021f1c45a5b529f71c4f503, type: 3}
+      propertyPath: maxEndurance
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5773140957513151208, guid: fd2316186021f1c45a5b529f71c4f503, type: 3}
       propertyPath: pickPosition.x
       value: -0.00034
       objectReference: {fileID: 0}
@@ -3994,6 +3998,14 @@ PrefabInstance:
     - target: {fileID: 6439607076154394055, guid: fd2316186021f1c45a5b529f71c4f503, type: 3}
       propertyPath: m_Center.x
       value: -0.09
+      objectReference: {fileID: 0}
+    - target: {fileID: 6517578638938719017, guid: fd2316186021f1c45a5b529f71c4f503, type: 3}
+      propertyPath: pushTime
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 6517578638938719017, guid: fd2316186021f1c45a5b529f71c4f503, type: 3}
+      propertyPath: pushForce
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd2316186021f1c45a5b529f71c4f503, type: 3}

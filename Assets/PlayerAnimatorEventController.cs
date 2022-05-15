@@ -18,11 +18,12 @@ public class PlayerAnimatorEventController : MonoBehaviour
     public void TurnOnPushCollider()
     {
         currentAttackTrigger.GetComponent<Collider>().enabled = true;
+        currentAttackTrigger.ResetHitOpponentsThisTurn();
     }
 
     public void TurnOffPushCollider()
     {
-        currentAttackTrigger.GetComponent<Collider>().enabled = false;
+         currentAttackTrigger.GetComponent<Collider>().enabled = false;
     }
     public void ResetDefaultHoldPosition()
     {

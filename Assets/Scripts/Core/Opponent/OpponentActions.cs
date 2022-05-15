@@ -99,14 +99,21 @@ public class OpponentActions : MonoBehaviour
         animator.SetTrigger("HitObstacleWhilePushed");
     }
 
-    public IEnumerator GotStabbed(Transform player)
+    public IEnumerator GotStabbed(Transform player, float pushForce, float pushTime)
     {
         agent.speed = 0f;
         OpponentEffects.RunParticleEffect(pfGotPushedEffect, pushEffectPosition.position);
+        animator.SetBool("MirrorAnimation", Random.value > 0.5f); 
         animator.SetTrigger("beingStabbed");
         transform.rotation = Quaternion.LookRotation(-player.forward);
-        taskManager.TaskSetToFinish();
+        Vector3 targetDir = transform.position - player.position;
+        Vector3 targetDirNorm = new Vector3(targetDir.x, transform.position.y, targetDir.z).normalized;
+        Vector3 pushVect = new Vector3(pushForce * targetDirNorm.x, 0f, pushForce * targetDirNorm.z);
+        Vector3 destPos = transform.position + pushVect;        
+        Sequence pushS = DOTween.Sequence();
+        pushS.Append(transform.DOMove(destPos, pushTime));
         yield return null;
+        taskManager.TaskSetToFinish();
     }
     public IEnumerator GotPushed(Transform player, float pushForce, float pushTime)
     {

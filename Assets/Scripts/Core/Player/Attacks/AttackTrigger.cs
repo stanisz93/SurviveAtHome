@@ -15,6 +15,8 @@ private Collider hitTriggerCollider;
 protected StressReceiver stressReceiver;
 protected Transform player;
 
+private HashSet<Opponent> meetDuringTurn; //add flag true if 
+
 
 
 
@@ -22,11 +24,17 @@ private void Awake() {
     stressReceiver = GameObject.FindWithTag("MainCamera").GetComponent<StressReceiver>();
     player = GameObject.FindWithTag("PlayerMesh").transform;
     hitTriggerCollider = GetComponent<Collider>();
+    meetDuringTurn = new HashSet<Opponent>();
     
 }
 
 private void Start() {
     GetComponent<Collider>().enabled = false;
+}
+
+public void ResetHitOpponentsThisTurn()
+{
+    meetDuringTurn.Clear();
 }
 
 private void OpponentReaction(Opponent opponent)
@@ -38,7 +46,7 @@ private void OpponentReaction(Opponent opponent)
         {
             case(HoldMode.Knife):
             {
-                opponent.GotStabbed(player);
+                opponent.GotStabbed(player, pushForce, pushTime);
                 break;
             }
             default:
@@ -54,8 +62,9 @@ private void OpponentReaction(Opponent opponent)
 private void OnTriggerEnter(Collider other) {
         
         Opponent opponent = other.gameObject.GetComponent<Opponent>();
-        if(opponent != null)
+        if(opponent != null && ! meetDuringTurn.Contains(opponent))
         {
+            meetDuringTurn.Add(opponent);
             Debug.Log("Enter kick area!");
             Vector3 targetDirection = other.gameObject.transform.position - player.position;
             targetDirection = new Vector3(targetDirection.x,  player.position.y, targetDirection.z);

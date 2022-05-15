@@ -50,10 +50,10 @@ public class Opponent : MonoBehaviour
             taskManager.ForceToRun(opponentActions.GotPushed(transform, pushForce, pushTime), 1);
     }
 
-    public void GotStabbed(Transform player)
+    public void GotStabbed(Transform player, float pushForce, float pushTime)
     {
         if(taskManager.GetCurrentPriority() > 1) 
-            taskManager.ForceToRun(opponentActions.GotStabbed(player), 1);
+            taskManager.ForceToRun(opponentActions.GotStabbed(player, pushForce, pushTime), 1);
     }
 
     public void SetKickPos(Vector3 position)
