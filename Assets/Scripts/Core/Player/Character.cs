@@ -60,9 +60,9 @@ public class Character : MonoBehaviour
 
     public void StartTriggerAction(TriggerAction triggerAction)
     {
-        if(playerTriggers.triggerEmpty)
+        if(playerTriggers.isTriggerEmpty)
         {
-            playerTriggers.triggerEmpty = false;
+            playerTriggers.isTriggerEmpty = false;
             triggeredAction = triggerAction;
         }
     }

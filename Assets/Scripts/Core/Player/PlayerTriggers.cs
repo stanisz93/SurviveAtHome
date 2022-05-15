@@ -17,7 +17,7 @@ public class PlayerTriggers : MonoBehaviour
     private Slidable slidable;
     public bool dying = false;
 
-    public bool triggerEmpty = true;
+    public bool isTriggerEmpty = true;
     public Slidable Slidable { get => slidable; set => slidable = value; }
 
 
@@ -44,13 +44,13 @@ public class PlayerTriggers : MonoBehaviour
     IEnumerator ReleaseTrigger(float time)
     {
         yield return new WaitForSeconds(time);
-        triggerEmpty = true;
+        isTriggerEmpty = true;
     }
     public void Kick()
     {
         character.SpeedBeforeKick = character.GetVelocity();
         playerAnimationController.animator.SetTrigger("Kick");
-        StartCoroutine(BlockMovement(triggerEmpty));
+        StartCoroutine(BlockMovement(isTriggerEmpty));
         StartCoroutine(ReleaseTrigger(0.8f));
     }
 
@@ -60,8 +60,8 @@ public class PlayerTriggers : MonoBehaviour
         defendItem.ChangeWeaponPositionToAttack();
         character.SpeedBeforeKick = character.GetVelocity();
         playerAnimationController.animator.SetTrigger("PushStick");
-        StartCoroutine(BlockMovement(triggerEmpty));
-        StartCoroutine(ReleaseTrigger(0.7f));
+        StartCoroutine(BlockMovementAfter(0.4f));
+        StartCoroutine(ReleaseTrigger(0.5f));
     }
 
     public void KnifeAttack()
@@ -78,7 +78,14 @@ public class PlayerTriggers : MonoBehaviour
         public IEnumerator BlockMovement(bool condition)
     {
         playerInput.blockMovement = true;
-        yield return new WaitUntil(() => triggerEmpty);
+        yield return new WaitUntil(() => isTriggerEmpty);
+        playerInput.blockMovement = false;
+
+    }
+    public IEnumerator BlockMovementAfter(float duration)
+    {
+        playerInput.blockMovement = true;
+        yield return new WaitForSeconds(duration);
         playerInput.blockMovement = false;
 
     }

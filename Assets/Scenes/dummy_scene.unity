@@ -2700,7 +2700,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1472
+  m_Name: pb_Mesh-19262
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -4092,7 +4092,7 @@ PrefabInstance:
       objectReference: {fileID: 86086120898963748, guid: d3433ab4f92c55a40a4c222f53f16ebe, type: 3}
     - target: {fileID: 4618893059352813844, guid: cf2037ab6adf5b54b93167f9fec25996, type: 3}
       propertyPath: maxEndurance
-      value: 110
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 4618893059352813844, guid: cf2037ab6adf5b54b93167f9fec25996, type: 3}
       propertyPath: pickPosition.x
