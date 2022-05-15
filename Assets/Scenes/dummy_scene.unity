@@ -4001,7 +4001,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6517578638938719017, guid: fd2316186021f1c45a5b529f71c4f503, type: 3}
       propertyPath: pushTime
-      value: 0.05
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 6517578638938719017, guid: fd2316186021f1c45a5b529f71c4f503, type: 3}
       propertyPath: pushForce
