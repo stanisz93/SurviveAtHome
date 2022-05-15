@@ -70,8 +70,7 @@ public class PlayerTriggers : MonoBehaviour
         defendItem.ChangeWeaponPositionToAttack();
         character.SpeedBeforeKick = character.GetVelocity();
         playerAnimationController.animator.SetTrigger("Stab");
-        StartCoroutine(BlockMovement(triggerEmpty));
-        StartCoroutine(ReleaseTrigger(0.7f));
+        StartCoroutine(ReleaseTrigger(0.4f));
     }
 
 
