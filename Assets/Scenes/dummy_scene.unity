@@ -4592,6 +4592,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 36938523623707915, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
+      propertyPath: pfPushEffect
+      value: 
+      objectReference: {fileID: 1000010355441670, guid: f9b493d5c08821f41a9707e39ad257ee, type: 3}
+    - target: {fileID: 36938523623707915, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
+      propertyPath: pfBloodEffect
+      value: 
+      objectReference: {fileID: 1000010191825552, guid: fc79739a87957b44aab59070eeada4e2, type: 3}
     - target: {fileID: 368671744195488466, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -4711,6 +4719,10 @@ PrefabInstance:
     - target: {fileID: 4232579744328846603, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
       propertyPath: m_Acceleration
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4232579744328846603, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
+      propertyPath: m_AngularSpeed
+      value: 260
       objectReference: {fileID: 0}
     - target: {fileID: 4232579744328846605, guid: fb619148ab1b8044ea1887d8f6106657, type: 3}
       propertyPath: m_Name

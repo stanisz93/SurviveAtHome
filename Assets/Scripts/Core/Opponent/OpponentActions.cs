@@ -9,7 +9,6 @@ public enum OpponentMode {Exploring, Rushing, Scream, Fall, Attacking, Checking,
 public class OpponentActions : MonoBehaviour
 {
     public OpponentEventController opponentEventController;
-    public GameObject pfGotPushedEffect;
     public Transform pushEffectPosition;
     public GameObject pfObstacleHitEffect;
     public Transform ObstacleHitSpot;
@@ -21,7 +20,7 @@ public class OpponentActions : MonoBehaviour
     public float attackMinDist = 1f;
     public float damageInterval = 0.4f;
     public float rotationSpeed = 10f;
-    public float changeRushingDecision = .05f;
+    public float TrackPlayerPositionInterval = .05f;
 
 
     public Transform playerSeenHelper; 
@@ -66,7 +65,7 @@ public class OpponentActions : MonoBehaviour
 
     // Update is called once per frame
 
-    private bool ReachPlayerRange(Vector3 position, float deltaDist = 0.0f)
+    private bool ReachPlayerRange(Vector3 position, float deltaDist = 0.05f)
     {
         return Vector3.Distance(transform.position, position) <= (attackMinDist + deltaDist);
     }
@@ -75,10 +74,14 @@ public class OpponentActions : MonoBehaviour
 
     public bool isAlerted() {return alerted;}
 
-    void SetLastPlayerPosition(Transform player)
+    IEnumerator SetLastPlayerPosition(Transform player)
     { 
-        playerSeen = player.position;
-        playerSeenHelper.position = playerSeen;
+        while(true)
+        {
+            playerSeen = player.position;
+            playerSeenHelper.position = playerSeen;
+            yield return new WaitForSeconds(TrackPlayerPositionInterval);
+        }
     }
 
     public IEnumerator Fall()
@@ -102,7 +105,7 @@ public class OpponentActions : MonoBehaviour
     public IEnumerator GotStabbed(Transform player, float pushForce, float pushTime)
     {
         agent.speed = 0f;
-        OpponentEffects.RunParticleEffect(pfGotPushedEffect, pushEffectPosition.position);
+        OpponentEffects.RunParticleEffect(ParticleEffect.Blood, pushEffectPosition.position);
         animator.SetBool("MirrorAnimation", Random.value > 0.5f); 
         animator.SetTrigger("beingStabbed");
         transform.rotation = Quaternion.LookRotation(-player.forward);
@@ -119,7 +122,7 @@ public class OpponentActions : MonoBehaviour
     {
         agent.speed = 0f;
         taskManager.LockEndOfTask();
-        OpponentEffects.RunParticleEffect(pfGotPushedEffect, pushEffectPosition.position);
+        OpponentEffects.RunParticleEffect(ParticleEffect.Push, pushEffectPosition.position);
         Vector3 targetDir = transform.position - player.position;
         Vector3 targetDirNorm = new Vector3(targetDir.x, transform.position.y, targetDir.z).normalized;
         float playerVelocity = player.GetComponentInParent<Character>().SpeedBeforeKick;
@@ -176,13 +179,13 @@ public class OpponentActions : MonoBehaviour
         agent.speed = runningSpeed;
 
  // here reaction of seeng player is runned
+        Coroutine trackPlayerRoutine = StartCoroutine(SetLastPlayerPosition(player));
         while(!ReachPlayerRange(player.position) && vfov.FoundedObject())
         {
-            SetLastPlayerPosition(player);
             agent.destination = player.position;
-            yield return new WaitForSeconds(changeRushingDecision);
+            yield return null;
         }
-        agent.speed = 0f;
+        StopCoroutine(trackPlayerRoutine);
 
     }
 

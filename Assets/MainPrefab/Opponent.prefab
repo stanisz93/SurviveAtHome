@@ -488,6 +488,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58c1cd4dcc86b4142a07fb0b28ff4d44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pfBloodEffect: {fileID: 1000010191825552, guid: fc79739a87957b44aab59070eeada4e2, type: 3}
+  pfPushEffect: {fileID: 1000010355441670, guid: f9b493d5c08821f41a9707e39ad257ee, type: 3}
 --- !u!114 &4232579744328846601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -515,7 +517,7 @@ MonoBehaviour:
   attackMinDist: 1
   damageInterval: 0.4
   rotationSpeed: 10
-  changeRushingDecision: 0.1
+  TrackPlayerPositionInterval: 0.05
   playerSeenHelper: {fileID: 4232579743529770811}
   animator: {fileID: 809370125271328900}
   playerTemp: {fileID: 0}
@@ -978,6 +980,18 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4803014352389650695, guid: 06cb2b131fe009c47a523671a8fa9ed8, type: 3}
   m_PrefabInstance: {fileID: 4232579745249082432}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &829425779384456680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8654397589755266375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6afa261ad065c1a41975289dfa67e69a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &7411990823392566255
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -991,15 +1005,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   opponentHit: {fileID: 0}
---- !u!114 &829425779384456680
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8654397589755266375}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6afa261ad065c1a41975289dfa67e69a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
