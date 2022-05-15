@@ -2692,7 +2692,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TraumaExponent: 3
-  MaximumAngularShake: {x: 0.2, y: 0.3, z: 0.7}
+  MaximumAngularShake: {x: 0.5, y: 0.3, z: 0.7}
   MaximumTranslationShake: {x: 0.75, y: 0.75, z: 0.75}
 --- !u!43 &1449929449
 Mesh:
