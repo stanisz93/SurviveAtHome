@@ -17,9 +17,9 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField]
     private float walkingForwardSpeed = 1.5f;
     [SerializeField]
-    private float walkingBackwardSpeed = 0.5f;
+    private float RunBackwardSpeed = 2f;
     [SerializeField]
-    private float walkingSideSpeed = 1f;
+    private float walkingSideSpeed = 1.5f;
 
     private float rotateSpeed = 10f;
     private float smoothSpeed;
@@ -31,10 +31,13 @@ public class CharacterMovement : MonoBehaviour
     private Rigidbody rigidbody;
     private Vector3 velocity;
 
+    private Character character;
+
     
     void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
+        character = GetComponent<Character>();
     }
     
     public Vector3 Velocity {get => rigidbody.velocity; set => velocity = value;}
@@ -53,20 +56,11 @@ public class CharacterMovement : MonoBehaviour
         {  
 
                 rigidbody.velocity = new Vector3(velocity.normalized.x * smoothSpeed, rigidbody.velocity.y, velocity.normalized.z * smoothSpeed);
-                if(Vector3.Dot(t_mesh.transform.forward, velocity.normalized) > 0.7f)
+
+                smoothSpeed = Mathf.Lerp(smoothSpeed, maxSpeed, Time.deltaTime);
+                
+                if (character.opponentFocus == null) // there should be provided some animation to walk around enemy
                 {
-                    smoothSpeed = Mathf.Lerp(smoothSpeed, maxSpeed, Time.deltaTime);
-                }
-                else
-                    smoothSpeed = Mathf.Lerp(smoothSpeed, walkingForwardSpeed, Time.deltaTime);
-                var orthogonalMove = Mathf.Abs(Vector3.Dot(t_mesh.transform.right, velocity.normalized)) ;
-                if(orthogonalMove > 0.7f)
-                    smoothSpeed = Mathf.Lerp(smoothSpeed, 0.1f, Time.deltaTime);
-                else if(orthogonalMove > 0.4f)
-                    smoothSpeed = Mathf.Lerp(smoothSpeed, walkingForwardSpeed, Time.deltaTime);
-                if (!Input.GetMouseButton(1))
-                {
-                    // Probably worth to use Slerp?
                     Quaternion wantedRotation = Quaternion.LookRotation(velocity);
                     t_mesh.rotation = Quaternion.Slerp(t_mesh.rotation, wantedRotation, Time.deltaTime * rotateSpeed);
                 }

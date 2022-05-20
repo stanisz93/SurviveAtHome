@@ -41,9 +41,7 @@ public class PlayerAnimationController : MonoBehaviour
     void LateUpdate()
     {
         if(animator==null) {Debug.LogWarning("No valid animator!"); return;}
-        animator.SetFloat("VelocityForward", character.GetVelocityForward(), 0.1f, Time.deltaTime);
-        animator.SetFloat("VelocityRight", character.GetVelocityRight(), 0.1f, Time.deltaTime);
-        animator.SetFloat("Velocity", character.GetVelocity());
+        animator.SetFloat("Velocity", character.GetVelocity(), 0.1f, Time.deltaTime);
 
         MovementMode currentMovement = character.GetMovement();
 

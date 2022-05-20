@@ -40,10 +40,12 @@ public class DefendItem : MonoBehaviour, IDefendable {
     [SerializeField]
     private int enduranceStep = 20;
     private bool isCollected = false;
-
+    private HitBonus bonus;
+    
     private void Awake() {
         endurance = maxEndurance;
         var plr = GameObject.FindWithTag("Player");
+        bonus = plr.GetComponent<HitBonus>();
         if(plr != null)
             {
                 hand = plr.GetComponent<Character>().leftHand;

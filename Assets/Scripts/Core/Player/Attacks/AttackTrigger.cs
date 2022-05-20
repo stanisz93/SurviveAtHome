@@ -16,15 +16,17 @@ protected StressReceiver stressReceiver;
 protected Transform player;
 
 private HashSet<Opponent> meetDuringTurn; //add flag true if 
-
+private HitBonus bonus;
 
 
 
 private void Awake() {
     stressReceiver = GameObject.FindWithTag("MainCamera").GetComponent<StressReceiver>();
     player = GameObject.FindWithTag("PlayerMesh").transform;
+    bonus = GameObject.FindWithTag("Player").GetComponent<HitBonus>();
     hitTriggerCollider = GetComponent<Collider>();
     meetDuringTurn = new HashSet<Opponent>();
+    OnHit += bonus.IncreaseCounts;
     
 }
 
@@ -49,13 +51,23 @@ private void OpponentReaction(Opponent opponent)
                 opponent.GotStabbed(player, pushForce, pushTime);
                 break;
             }
-            default:
+            case(HoldMode.WoddenStick):
             {
                 opponent.GotPushed(player, pushForce, pushTime);
                 opponent.SetKickPos(transform.position);
                 break;
             }
+            default:
+            {
+                var superKick = false;
+                if(bonus.GetBonusMode() == BonusMode.SuperKick)
+                    superKick = true;    
+                opponent.GotPushed(player, pushForce, pushTime, superKick);
+                opponent.SetKickPos(transform.position);
+                break;
+            }
         }
+        
 }
 
 

@@ -1,4 +1,5 @@
     using UnityEngine;
+    using System.Collections;
     using UnityEngine.UI;
     using DG.Tweening;
     class DoTweenUtils
@@ -8,6 +9,15 @@
         {
             img.transform.DOScale(new Vector3(scaleXY, scaleXY, scaleZ), 0.1f).SetLoops(2, LoopType.Yoyo);
         }
+
+        static public void PoopUpImageFade(Image img, float scaleXY=1.5f, float scaleZ=1f, float fadeTime=0.1f)
+        {   
+            Sequence sequence = DOTween.Sequence();
+            sequence.Append(img.transform.DOScale(new Vector3(scaleXY, scaleXY, scaleZ), 0.1f).SetLoops(2, LoopType.Yoyo));
+            sequence.Append(img.DOFade(0f, fadeTime));
+        }
+
+
 
         static public void PoopUpTextTween(Text text, Color color)
         {

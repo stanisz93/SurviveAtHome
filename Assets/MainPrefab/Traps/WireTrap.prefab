@@ -95,7 +95,6 @@ GameObject:
   - component: {fileID: 5014942984921619431}
   - component: {fileID: 5014942984921619430}
   - component: {fileID: 5014942984921619429}
-  - component: {fileID: 9186671450371488317}
   m_Layer: 0
   m_Name: WireTrap
   m_TagString: Untagged
@@ -227,18 +226,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 65b81b0abb6a0d042b828a8f7b278777, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &9186671450371488317
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5014942984921619225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dff27cfa51bc75e4892eedba3ce8bd1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &5014942985429571864

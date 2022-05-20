@@ -118,7 +118,7 @@ public class OpponentActions : MonoBehaviour
         yield return null;
         taskManager.TaskSetToFinish();
     }
-    public IEnumerator GotPushed(Transform player, float pushForce, float pushTime)
+    public IEnumerator GotPushed(Transform player, float pushForce, float pushTime, bool bonusTrigger)
     {
         agent.speed = 0f;
         taskManager.LockEndOfTask();
@@ -154,9 +154,10 @@ public class OpponentActions : MonoBehaviour
 
         transform.rotation = Quaternion.LookRotation(-player.forward);
 
-
-        animator.SetFloat("PlayerSpeedKick", playerVelocity);
-        animator.SetTrigger("beingKicked");
+        if(playerVelocity > 5f || bonusTrigger)
+            animator.SetTrigger("beingStronglyHit");
+        else
+            animator.SetTrigger("beingKicked");
         // vfov.ResetSense(2f);
         yield return taskManager.WaitForReleaseLock();
         taskManager.TaskSetToFinish();    

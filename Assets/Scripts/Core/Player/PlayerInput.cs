@@ -32,6 +32,8 @@ public class PlayerInput : MonoBehaviour
     private InventoryUI inventoryUI;
     private Transform characterMesh;
     private Camera mainCamera;
+
+    private HitBonus hitBonus;
     
 
 
@@ -50,6 +52,7 @@ public class PlayerInput : MonoBehaviour
         inventoryUI =  GetComponentInChildren<InventoryUI>();
         characterMesh = GameObject.FindWithTag("PlayerMesh").transform;
         mainCamera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
+        hitBonus = GetComponent<HitBonus>();
             
     }
 
@@ -83,9 +86,9 @@ public class PlayerInput : MonoBehaviour
         if (!playerTriggers.dying)
         {
             if(blockMovement)
-                character.AddMovementInput(0f, 0f, false);
+                character.AddMovementInput(0f, 0f);
             else
-                character.AddMovementInput(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"), true);
+                character.AddMovementInput(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
             
             if (Input.GetKey(KeyCode.LeftShift))
             {

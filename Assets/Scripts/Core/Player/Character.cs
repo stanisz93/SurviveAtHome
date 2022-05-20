@@ -6,9 +6,11 @@ using UnityEngine.AI;
 [RequireComponent(typeof(Inventory))]
 public class Character : MonoBehaviour
 {
+    public Transform DebugBall;
     private CharacterMovement characterMovement;
     public Camera mainCamera;
     public LayerMask terrainMask;
+    public LayerMask opponentSnapMask;
     public Camera DeathCamera;
     public HealthBar healthBar;
     public TriggerAction triggeredAction;
@@ -16,7 +18,7 @@ public class Character : MonoBehaviour
     public Transform leftHand;
     public GameObject pfBloodEffect;
     public Transform bloodEffectPos;
-
+    public Transform opponentFocus = null;
     private Health health;
 
     private PlayerTriggers playerTriggers;
@@ -27,6 +29,7 @@ public class Character : MonoBehaviour
 
     private Vector3 currrentMouseDirection {get => MouseUtils.MousePositon(mainCamera, characterMovement.t_mesh, terrainMask);}
 
+    private HitBonus bonus;
 
     // Start is called before the first frame update
 
@@ -40,6 +43,7 @@ public class Character : MonoBehaviour
         playerTriggers = GetComponent<PlayerTriggers>();
         Inventory = GetComponent<Inventory>();
         ResetPlayer(); 
+        bonus = GetComponent<HitBonus>();
         health.OnDamageTake += healthBar.ReduceValue;
         health.OnDamageTake += TakeDamageEffect;
         health.OnDie += playerTriggers.Die;
@@ -96,47 +100,63 @@ public class Character : MonoBehaviour
     public void TakeDamageEffect(int damage)
     {
         SetFightmode(FightMode.ReceiveDamage);
+        if(bonus.hitCounts > 0)
+            bonus.ResetCounts();
         var bloodEffect = Instantiate(pfBloodEffect, bloodEffectPos.position, bloodEffectPos.rotation);
         bloodEffect.GetComponent<ParticleSystem>().Play();
     }
     
 
-    public void AddMovementInput(float forward, float right, bool rotatePlayer=true)
+    public void AddMovementInput(float forward, float right)
     {
         var mouseMovement = new Vector3(Input.GetAxis("Mouse X"), 0f, Input.GetAxis("Mouse Y"));
-        if(rotatePlayer && Input.GetMouseButton(1))
+        if(Input.GetMouseButton(1))
         //maybe worth to use here Slerp instead of sudden rotation
-            characterMovement.t_mesh.rotation = Quaternion.LookRotation(currrentMouseDirection);
+            SnapTowardOpponent();
         // var localVelocity = GetVectorRelativeToCamera(forward, right);
-        
+        if(opponentFocus != null)
+            RotateTowardSnappedOpponent();
         Vector3 movementRelativeToCamera = GetVectorRelativeToCamera(forward, right);
+
         characterMovement.Velocity = movementRelativeToCamera;
+    }
+
+    void RotateTowardSnappedOpponent()
+    {
+        var relDir = transform.position - opponentFocus.position;
+        relDir = - new Vector3(relDir.x, 0f, relDir.z);
+
+        Quaternion wantedRotation = Quaternion.LookRotation(relDir, Vector3.up);
+        characterMovement.t_mesh.rotation = Quaternion.Slerp(characterMovement.t_mesh.rotation, wantedRotation, Time.deltaTime * 20);
+        // characterMovement.t_mesh.LookAt(goal);
+        DebugBall.position = new Vector3(opponentFocus.transform.position.x, DebugBall.position.y, opponentFocus.transform.position.z);
+    
+    }
+
+    void SnapTowardOpponent()
+    {
+            RaycastHit hit;
+            var headPosition = transform.position;
+            headPosition = new Vector3(headPosition.x, 0.5f, headPosition.z);
+            if (Physics.Raycast(headPosition, currrentMouseDirection, out hit, 5f, opponentSnapMask))
+            {
+                DebugBall.gameObject.SetActive(true);
+                opponentFocus = hit.transform;
+                DebugBall.position = new Vector3(opponentFocus.transform.position.x, DebugBall.position.y, opponentFocus.transform.position.z);
+                DebugBall.parent = opponentFocus;
+            }
+            else
+            {
+                DebugBall.gameObject.SetActive(false);
+                opponentFocus = null;
+            }
     }
     public float GetVelocity()
     {
         // Debug.Log(characterMovement.Velocity.magnitude);
         return characterMovement.Velocity.magnitude;
     }
-    public float GetVelocityForward()
-    {
-        // Debug.Log(characterMovement.Velocity.magnitude);
-        var dotVal = Vector3.Dot(characterMovement.Velocity.normalized, characterMovement.t_mesh.forward);
-        
-        // return dotVal;
-        if (Mathf.Abs(dotVal) > 0.5f)
-            return dotVal;
-        else
-            return 0f;
-    }
-    public float GetVelocityRight()
-    {
-        var dotVal = Vector3.Dot(characterMovement.Velocity.normalized, characterMovement.t_mesh.right);
-        // return dotVal;
-        if (Mathf.Abs(dotVal) > 0.5f)
-            return dotVal;
-        else
-            return 0f;
-    }
+
     public FightMode GetFightMode(){return characterMovement.GetFightMode();}
 
     public MovementMode GetMovement(){return characterMovement.GetMovementMode();}
