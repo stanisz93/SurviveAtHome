@@ -164,10 +164,10 @@ public class PlayerInput : MonoBehaviour
     void ManageNormalControl()
     {
             // character.SetDefaultMovement();
-            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.C))
+            if (Input.GetKey(KeyCode.V))
             {
-                if(playerTriggers.Slidable != null)
-                    character.StartTriggerAction(playerTriggers.Slide);
+                if(playerTriggers.obstacleInteraction != null)
+                    character.StartTriggerAction(playerTriggers.InteractObstacle);
             }
             else if (Input.GetMouseButtonDown(0))
             {
