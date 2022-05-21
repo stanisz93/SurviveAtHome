@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 4232579743530906054}
   - component: {fileID: 4232579743530906052}
   - component: {fileID: 4232579743530906055}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: OpponentAlert
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -239,7 +239,7 @@ GameObject:
   - component: {fileID: 4232579743819807625}
   - component: {fileID: 4232579743819807735}
   - component: {fileID: 4232579743819807734}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -314,7 +314,7 @@ GameObject:
   - component: {fileID: 4232579743941799285}
   - component: {fileID: 4232579743941799283}
   - component: {fileID: 4232579743941799282}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -396,7 +396,7 @@ GameObject:
   - component: {fileID: 4232579744328846600}
   - component: {fileID: 4232579744328846603}
   - component: {fileID: 4232579744328846707}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Opponent
   m_TagString: Opponent
   m_Icon: {fileID: 0}
@@ -503,7 +503,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   opponentEventController: {fileID: 7411990823392566255}
-  pfGotPushedEffect: {fileID: 1000010355441670, guid: f9b493d5c08821f41a9707e39ad257ee, type: 3}
   pushEffectPosition: {fileID: 8955094962720524470}
   pfObstacleHitEffect: {fileID: 1000012142692022, guid: 9b362c320c0727844a67d8d9668ef137, type: 3}
   ObstacleHitSpot: {fileID: 368671744195488466}
@@ -586,7 +585,7 @@ GameObject:
   - component: {fileID: 4232579744582681052}
   - component: {fileID: 4232579744582681055}
   - component: {fileID: 4232579744582681054}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: OpponentCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -787,7 +786,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8955094962720524470}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: HitSpot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -895,6 +894,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9820a72e50e4ced4798a47f2e6995a06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &7229872877956948541
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5202669611828521786}
+  - component: {fileID: 4145030203974868229}
+  m_Layer: 10
+  m_Name: SnapCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5202669611828521786
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7229872877956948541}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.79999995, z: 0}
+  m_LocalScale: {x: 1.8628187, y: 1.8398209, z: 1.8398209}
+  m_Children: []
+  m_Father: {fileID: 5639000524478674772}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4145030203974868229
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7229872877956948541}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 0.78, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &4232579745249082432
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -960,6 +1003,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 06cb2b131fe009c47a523671a8fa9ed8, type: 3}
+--- !u!1 &8654397589755266375 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4803014352389650695, guid: 06cb2b131fe009c47a523671a8fa9ed8, type: 3}
+  m_PrefabInstance: {fileID: 4232579745249082432}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3078058135899610789 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1155825635249726181, guid: 06cb2b131fe009c47a523671a8fa9ed8, type: 3}
@@ -973,11 +1021,6 @@ Animator:
 --- !u!4 &5639000524478674772 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8429865231615740692, guid: 06cb2b131fe009c47a523671a8fa9ed8, type: 3}
-  m_PrefabInstance: {fileID: 4232579745249082432}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &8654397589755266375 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4803014352389650695, guid: 06cb2b131fe009c47a523671a8fa9ed8, type: 3}
   m_PrefabInstance: {fileID: 4232579745249082432}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &829425779384456680

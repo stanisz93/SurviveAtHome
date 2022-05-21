@@ -23,6 +23,7 @@ public class PlayerTriggers : MonoBehaviour
     public Slidable Slidable { get => slidable; set => slidable = value; }
     public ObstacleInteraction obstacleInteraction;
 
+    private HitBonus hitBonus;
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +32,7 @@ public class PlayerTriggers : MonoBehaviour
         character = GetComponent<Character>();
         playerAnimationController = GetComponent<PlayerAnimationController>(); 
         characterMovement = GetComponent<CharacterMovement>();
+        hitBonus = GetComponent<HitBonus>();
     }
 
 
@@ -73,8 +75,10 @@ public class PlayerTriggers : MonoBehaviour
     }
     public void Kick()
     {
+        
         character.SpeedBeforeKick = character.GetVelocity();
-        playerAnimationController.animator.SetTrigger("Kick");
+        string kickType = hitBonus.GetBonusMode() == BonusMode.SuperKick ? "SuperKick" : "Kick";
+        playerAnimationController.animator.SetTrigger(kickType);
         StartCoroutine(BlockMovement(isTriggerEmpty));
         StartCoroutine(ReleaseTrigger(0.8f));
     }
