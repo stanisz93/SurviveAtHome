@@ -83,6 +83,7 @@ public class PlayerTriggers : MonoBehaviour
         StartCoroutine(ReleaseTrigger(0.8f));
     }
 
+
     public void StickAttack()
     {
         DefendItem defendItem = GetComponentInChildren<DefendItem>();

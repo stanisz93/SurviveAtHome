@@ -7,11 +7,17 @@ public class PlayerAnimatorEventController : MonoBehaviour
 
     public AttackTrigger defaultPushTrigger;
     public AttackTrigger currentAttackTrigger;
+    public float delayWhenVaultKick = 0.1f;
+    private bool kickedwhileVault = false;
     // Start is called before the first frame update
-    
+    private PlayerInput playerInput; 
+    private Animator animator;
+
     void Start()
     {
+        playerInput = GetComponentInParent<PlayerInput>();
         currentAttackTrigger = defaultPushTrigger;
+        animator = GetComponent<Animator>();
     }
 
         
@@ -34,6 +40,24 @@ public class PlayerAnimatorEventController : MonoBehaviour
         }
     }
 
+    public IEnumerator SetToKickWhileVault()
+    {
+        yield return new WaitForSeconds(delayWhenVaultKick);
+        kickedwhileVault = true;
+        animator.SetTrigger("KickWhileVault");
+    }
+
+    public void TurnOnVaultBonus()
+    {
+        playerInput.isVaultContext = true;
+    }
+
+    public void TurnOffVaultBonus()
+    {
+        TurnOffPushCollider();
+        playerInput.isVaultContext = false;
+    }
+
 
     public void SetAttackTriggerCollider(AttackTrigger trigger)
     {
@@ -43,6 +67,13 @@ public class PlayerAnimatorEventController : MonoBehaviour
     public void SetToDefaultPushTrigger()
     {
         currentAttackTrigger = defaultPushTrigger;
+    }
+
+    public void KickOpponentWhileVault()
+    {
+        if(kickedwhileVault)
+            TurnOnPushCollider();
+        kickedwhileVault = false;
     }
 
 

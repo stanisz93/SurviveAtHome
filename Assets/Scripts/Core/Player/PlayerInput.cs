@@ -34,7 +34,8 @@ public class PlayerInput : MonoBehaviour
     private Camera mainCamera;
 
     private HitBonus hitBonus;
-    
+    public bool isVaultContext;
+    private PlayerAnimatorEventController playerAnimatorEventController;
 
 
     // Start is called before the first frame update
@@ -53,6 +54,7 @@ public class PlayerInput : MonoBehaviour
         characterMesh = GameObject.FindWithTag("PlayerMesh").transform;
         mainCamera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
         hitBonus = GetComponent<HitBonus>();
+        playerAnimatorEventController = GetComponentInChildren<PlayerAnimatorEventController>();
             
     }
 
@@ -174,16 +176,24 @@ public class PlayerInput : MonoBehaviour
             }
             else if (Input.GetMouseButtonDown(0))
             {
-                if(chrMvmnt.GetHoldMode() == HoldMode.WoddenStick)
+                if(isVaultContext)
                 {
-                    character.StartTriggerAction(playerTriggers.StickAttack);
-                }
-                else if(chrMvmnt.GetHoldMode() == HoldMode.Knife)
-                {
-                    character.StartTriggerAction(playerTriggers.KnifeAttack);
+                    StartCoroutine(playerAnimatorEventController.SetToKickWhileVault());
                 }
                 else
-                    character.StartTriggerAction(playerTriggers.Kick);
+                {
+                    if(chrMvmnt.GetHoldMode() == HoldMode.WoddenStick)
+                    {
+                        character.StartTriggerAction(playerTriggers.StickAttack);
+                    }
+                    else if(chrMvmnt.GetHoldMode() == HoldMode.Knife)
+                    {
+                        character.StartTriggerAction(playerTriggers.KnifeAttack);
+                    }
+                    else
+                        character.StartTriggerAction(playerTriggers.Kick);
+                }
+
             }
 
             else if(Input.GetKey(KeyCode.C))
