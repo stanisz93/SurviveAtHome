@@ -31,6 +31,8 @@ public class Character : MonoBehaviour
 
     private HitBonus bonus;
 
+    
+
     // Start is called before the first frame update
 
     // Update is called once per frame

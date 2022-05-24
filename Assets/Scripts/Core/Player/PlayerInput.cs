@@ -34,8 +34,9 @@ public class PlayerInput : MonoBehaviour
     private Camera mainCamera;
 
     private HitBonus hitBonus;
-    public bool isVaultContext;
     private PlayerAnimatorEventController playerAnimatorEventController;
+    private ObstacleInteractionManager obstacleInteractionManager;
+    private InteractionBonus interactionBonus;
 
     // Start is called before the first frame update
     void Start()
@@ -45,6 +46,8 @@ public class PlayerInput : MonoBehaviour
         collider = GetComponent<CapsuleCollider>();
         chrMvmnt = GetComponent<CharacterMovement>();
         playerTriggers = GetComponent<PlayerTriggers>();
+        obstacleInteractionManager = GetComponent<ObstacleInteractionManager>();
+        interactionBonus = GetComponentInChildren<InteractionBonus>();
         playerAnimationController = GetComponent<PlayerAnimationController>(); 
         itemPickupManager = GetComponent<ItemPickupManager>();
         attachmentManager = GetComponent<AttachmentManager>();
@@ -171,14 +174,14 @@ public class PlayerInput : MonoBehaviour
             // character.SetDefaultMovement();
             if (Input.GetKey(KeyCode.V))
             {
-                if(playerTriggers.obstacleInteraction != null)
-                    character.StartTriggerAction(playerTriggers.InteractObstacle);
+                if(obstacleInteractionManager.obstacleInteraction != null)
+                    character.StartTriggerAction(obstacleInteractionManager.InteractObstacle);
             }
             else if (Input.GetMouseButtonDown(0))
             {
-                if(isVaultContext)
+                if(interactionBonus.isVaultContext)
                 {
-                    StartCoroutine(playerAnimatorEventController.SetToKickWhileVault());
+                    StartCoroutine(interactionBonus.SetToKickWhileVault());
                 }
                 else
                 {

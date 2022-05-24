@@ -24,17 +24,17 @@ public class ObstacleInteraction : MonoBehaviour
     private Transform endP;
     // Start is called before the first frame update
     void OnTriggerEnter(Collider other) {
-        PlayerTriggers c = other.GetComponent<PlayerTriggers>();
-        if (c != null)
+        ObstacleInteractionManager obs = other.GetComponent<ObstacleInteractionManager>();
+        if (obs != null)
         {
-            c.AssignObstacleInteraction(this, true);
+            obs.AssignObstacleInteraction(this, true);
         }
     }
     void OnTriggerExit(Collider other) {
-        PlayerTriggers c = other.GetComponent<PlayerTriggers>();
-        if (c != null)
+        ObstacleInteractionManager obs = other.GetComponent<ObstacleInteractionManager>();
+        if (obs != null)
         {
-           c.AssignObstacleInteraction(this, false);
+           obs.AssignObstacleInteraction(this, false);
         }
     }
 

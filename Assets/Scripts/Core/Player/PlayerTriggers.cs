@@ -21,9 +21,10 @@ public class PlayerTriggers : MonoBehaviour
 
     public bool isTriggerEmpty = true;
     public Slidable Slidable { get => slidable; set => slidable = value; }
-    public ObstacleInteraction obstacleInteraction;
+
 
     private HitBonus hitBonus;
+
 
     // Start is called before the first frame update
     void Start()
@@ -36,42 +37,15 @@ public class PlayerTriggers : MonoBehaviour
     }
 
 
-    public void AssignObstacleInteraction(ObstacleInteraction obstacle, bool attach)
-    {
-            if(attach)
-                obstacleInteraction = obstacle;
-            else
-                obstacleInteraction = null;
-    }
-
-    public void InteractObstacle()
-    {
-        obstacleInteraction.EstimateSide(characterMovement.t_mesh);
-        Transform t_startPoint = obstacleInteraction.GetStartPoint();
-        Transform t_endPoint = obstacleInteraction.GetEndPoint();
-        float dot = Vector3.Dot(characterMovement.Velocity.normalized, t_startPoint.forward);
-        if(dot > obstacleInteraction.interactThreshold)
-        {
-            characterMovement.t_mesh.rotation = Quaternion.LookRotation(t_startPoint.forward);
-            if (obstacleInteraction.animType == ObstacleAnimType.slide)
-                 playerAnimationController.animator.SetTrigger("Slide");
-            else if(obstacleInteraction.animType == ObstacleAnimType.vault)
-                playerAnimationController.animator.SetTrigger("Vault");
-            else
-                Debug.Log("UnexpecetBehaviour!");
-            Sequence sq = DOTween.Sequence();
-            sq.Append(transform.DOMove(t_startPoint.position, obstacleInteraction.MoveToPointTime));
-            sq.Append(transform.DOMove(t_endPoint.position, obstacleInteraction.MoveToEndPointTime));
-            StartCoroutine(ReleaseTrigger(obstacleInteraction.ReleaseTime));
-        }
-        else
-            isTriggerEmpty = true;
-    }
-
     IEnumerator ReleaseTrigger(float time)
     {
         yield return new WaitForSeconds(time);
         isTriggerEmpty = true;
+    }
+
+    public void RunReleaseTriggerRoutine(float time)
+    {
+        StartCoroutine(ReleaseTrigger(time));
     }
     public void Kick()
     {
