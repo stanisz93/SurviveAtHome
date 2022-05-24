@@ -19,6 +19,13 @@ public class OpponentAnimationController : MonoBehaviour
         
     }
 
+    void ResetState() // turn off all states
+    {
+        animator.SetBool("Rushing", false);
+        animator.SetBool("Suspicious", false);
+        animator.SetBool("Scream", false);
+        animator.SetBool("LookAround", false);
+    }
         
     void LateUpdate()
     {
@@ -34,6 +41,9 @@ public class OpponentAnimationController : MonoBehaviour
                 animator.SetBool("Suspicious", false);
                 break;
             }
+            case OpponentMode.Faint:
+                ResetState();
+                break;
             case OpponentMode.Scream:
             {
                 animator.SetBool("Scream", true);

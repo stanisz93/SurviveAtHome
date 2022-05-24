@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using DG.Tweening;
-public enum OpponentMode {Exploring, Rushing, Scream, Fall, Attacking, Checking, LookAround, Smelling};
+public enum OpponentMode {Exploring, Faint, Rushing, Scream, Fall, Attacking, Checking, LookAround, Smelling};
 
 [RequireComponent(typeof(Effects))]
 public class OpponentActions : MonoBehaviour
@@ -147,15 +147,18 @@ public class OpponentActions : MonoBehaviour
         pushS.Append(transform.DOMove(destPos, pushTime));
         if(hitTheObstacle)
             {
-           
-             pushS.AppendCallback(() => HitObstacleWhilePush());
-             pushS.Join(transform.DOMove(transform.position + 0.7f * pushVect, 0.1f));
+                SetOpponentMode(OpponentMode.Faint);
+                pushS.AppendCallback(() => HitObstacleWhilePush());
+                pushS.Join(transform.DOMove(transform.position + 0.7f * pushVect, 0.1f));
             }
 
         transform.rotation = Quaternion.LookRotation(-player.forward);
 
         if(playerVelocity > 5f || bonusTrigger)
-            animator.SetTrigger("beingStronglyHit");
+            {
+                SetOpponentMode(OpponentMode.Faint);
+                animator.SetTrigger("beingStronglyHit");
+            }
         else
             animator.SetTrigger("beingKicked");
         // vfov.ResetSense(2f);

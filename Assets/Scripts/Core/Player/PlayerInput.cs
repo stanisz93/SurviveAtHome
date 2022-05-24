@@ -37,7 +37,6 @@ public class PlayerInput : MonoBehaviour
     public bool isVaultContext;
     private PlayerAnimatorEventController playerAnimatorEventController;
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -55,6 +54,7 @@ public class PlayerInput : MonoBehaviour
         mainCamera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
         hitBonus = GetComponent<HitBonus>();
         playerAnimatorEventController = GetComponentInChildren<PlayerAnimatorEventController>();
+
             
     }
 
