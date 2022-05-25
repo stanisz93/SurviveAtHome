@@ -74,16 +74,21 @@ private void OpponentReaction(Opponent opponent)
 private void OnTriggerEnter(Collider other) {
         
         Opponent opponent = other.gameObject.GetComponent<Opponent>();
+
         if(opponent != null && ! meetDuringTurn.Contains(opponent))
         {
-            meetDuringTurn.Add(opponent);
-            Debug.Log("Enter kick area!");
-            Vector3 targetDirection = other.gameObject.transform.position - player.position;
-            targetDirection = new Vector3(targetDirection.x,  player.position.y, targetDirection.z);
-            player.rotation = Quaternion.LookRotation(targetDirection);
-            OpponentReaction(opponent);
-            OnHit?.Invoke();
-            stressReceiver.InduceStress(cameraShake);
+            OpponentMode mode = other.gameObject.GetComponent<OpponentActions>().GetOpponentMode();
+            if(mode != OpponentMode.Faint)
+            {    
+                meetDuringTurn.Add(opponent);
+                Debug.Log("Enter kick area!");
+                Vector3 targetDirection = other.gameObject.transform.position - player.position;
+                targetDirection = new Vector3(targetDirection.x,  player.position.y, targetDirection.z);
+                player.rotation = Quaternion.LookRotation(targetDirection);
+                OpponentReaction(opponent);
+                OnHit?.Invoke();
+                stressReceiver.InduceStress(cameraShake);
+            }
         }
     }
 

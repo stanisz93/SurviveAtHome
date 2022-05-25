@@ -8,11 +8,19 @@ public enum OpponentMode {Exploring, Faint, Rushing, Scream, Fall, Attacking, Ch
 [RequireComponent(typeof(Effects))]
 public class OpponentActions : MonoBehaviour
 {
+
     public OpponentEventController opponentEventController;
     public Transform pushEffectPosition;
     public GameObject pfObstacleHitEffect;
     public Transform ObstacleHitSpot;
     public LayerMask PushStopperMask;
+
+// OBstacle hit parameters (REbound should be > maxDistance)
+    public float obstacleHitRebound = 1f;
+    public float obstacleHitReboundTime = 1.5f;
+    public float maximumDistWhileHitObstacle = 0.3f; // time for this is passed as pushTime
+
+
     public float randomIdleCoeff = 1f;
     public float walkingSpeed = 0.3f;
     public float runningSpeed = 3.0f;
@@ -123,17 +131,13 @@ public class OpponentActions : MonoBehaviour
         agent.speed = 0f;
         taskManager.LockEndOfTask();
         OpponentEffects.RunParticleEffect(ParticleEffect.Push, pushEffectPosition.position);
+        if(player.GetComponentInParent<Character>().SpeedBeforeKick > 5f)
+        {
+            bonusTrigger = true;
+        }
+
         Vector3 targetDir = transform.position - player.position;
         Vector3 targetDirNorm = new Vector3(targetDir.x, transform.position.y, targetDir.z).normalized;
-        float playerVelocity = player.GetComponentInParent<Character>().SpeedBeforeKick;
-        if(playerVelocity > 5f)
-        {
-            if(pushForce < 2f)
-            {
-                pushForce *= 2;
-                pushTime *= 2;
-            }
-        }
         Vector3 pushVect = new Vector3(pushForce * targetDirNorm.x, 0f, pushForce * targetDirNorm.z);
         RaycastHit hit;
         bool hitTheObstacle = false;
@@ -142,19 +146,19 @@ public class OpponentActions : MonoBehaviour
                 pushVect = hit.point - transform.position;
                 hitTheObstacle = true;
             }
-        Vector3 destPos = transform.position + 0.8f * pushVect;
+        Vector3 destPos = transform.position + pushVect - maximumDistWhileHitObstacle *pushVect.normalized;
         Sequence pushS = DOTween.Sequence();
         pushS.Append(transform.DOMove(destPos, pushTime));
         if(hitTheObstacle)
             {
                 SetOpponentMode(OpponentMode.Faint);
                 pushS.AppendCallback(() => HitObstacleWhilePush());
-                pushS.Join(transform.DOMove(transform.position + 0.7f * pushVect, 0.1f));
+                pushS.Join(transform.DOMove(transform.position  + pushVect - obstacleHitRebound *pushVect.normalized, obstacleHitReboundTime));
             }
 
         transform.rotation = Quaternion.LookRotation(-player.forward);
 
-        if(playerVelocity > 5f || bonusTrigger)
+        if(bonusTrigger)
             {
                 SetOpponentMode(OpponentMode.Faint);
                 animator.SetTrigger("beingStronglyHit");
