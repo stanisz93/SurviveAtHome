@@ -83,18 +83,13 @@ public class OpponentMagnet : MonoBehaviour
             obstacleInteractionManager.InterruptMovementSequence();
             Vector3 movementDir = NearestOpponent.position - PlayerMesh.position;
             movementDir = new Vector3(movementDir.x, 0f, movementDir.z);
-            // Vector3 limitedMove = new Vector3(Mathf.Min(0f, distance.x), distance.y, Mathf.Min(0f, distance.z));
-            // if(limitedMove.magnitude > 1f)
-                // PlayerMesh.rotation = Quaternion.LookRotation(new Vector3(NearestOpponent.position.x,  PlayerMesh.position.y, NearestOpponent.position.z));            
             Sequence seq = DOTween.Sequence();
             Vector3 initPlayerRot = player.transform.eulerAngles ;
             Vector3 rot = Quaternion.LookRotation(movementDir.normalized).eulerAngles;
             // maybe here is the problem
-            seq.Join(player.transform.DOMove(player.transform.position + movementDir - 0.5f * movementDir.normalized, .3f));
-            // Vector3 newDirection = Vector3.RotateTowards(PlayerMesh.forward, movementDir.normalized, 90f, 0f);
-            // PlayerMesh.rotation = Quaternion.LookRotation(newDirection);
+            seq.Join(player.transform.DOMove(player.transform.position + movementDir - 0.5f * movementDir.normalized, .4f));
                 
-            seq.Join(PlayerMesh.transform.DORotate(rot, .3f));
+            seq.Join(PlayerMesh.transform.DORotate(rot, .4f));
         }
     }
 

@@ -20,13 +20,11 @@ public class HitBonus : MonoBehaviour
 
     private Vector3 initScale;
     private Tween pulseTween;
-
-
-
     
 
     private BonusMode bonusMode = BonusMode.Normal;
     private bool superHitMode = false;
+    private InteractionBonus interactionBonus;
 
     void Start()
     {
@@ -36,12 +34,14 @@ public class HitBonus : MonoBehaviour
         bonusPulseImg.enabled = false; 
         bonusBorderImg.enabled = false;
         counterTxt.enabled = false;
+        interactionBonus = GetComponentInChildren<InteractionBonus>();
     }
 
     void SetBonusMode()
     {
         if(hitCounts % hitsToBonus  == 0 && hitCounts != 0 && !superHitMode)
         {
+            interactionBonus.TurnOnBonusInteraction();
             bonusMode = BonusMode.SuperKick;
             bonusPulseImg.enabled = true;
             var tempColor = bonusPulseImg.color;

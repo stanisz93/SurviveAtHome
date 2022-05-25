@@ -10,7 +10,7 @@ public class InteractionBonus : MonoBehaviour {
     private PlayerInput playerInput; 
     private PlayerAnimatorEventController playerAnimatorEventController;
     public bool isVaultContext = false;
-    private bool allowToKick = true;
+    private bool allowToKick = false;
 
     private void Start() {
         playerInput = GetComponentInParent<PlayerInput>();
@@ -19,16 +19,21 @@ public class InteractionBonus : MonoBehaviour {
         animator = GetComponent<Animator>();
     }
 
+    public void TurnOnBonusInteraction()
+    {
+        allowToKick = true;
+    }
+
     public IEnumerator SetToKickWhileVault()
     {
         if (allowToKick)
         {
-            allowToKick = false;
             yield return new WaitForSeconds(delayWhenVaultKick);
             animator.SetTrigger("KickWhileVault");
             
             if(opponentMagnet.NearestOpponent != null)
             {
+                allowToKick = false;
                 Time.timeScale = 1f;
                 opponentMagnet.MoveTowardNearestOpponent();
             }
@@ -38,7 +43,7 @@ public class InteractionBonus : MonoBehaviour {
     public void TurnOnVaultBonus()
     {
         isVaultContext = true;
-        if(opponentMagnet.NearestOpponent != null)
+        if(opponentMagnet.NearestOpponent != null && allowToKick)
         {
             Time.timeScale = 0.1f;
         }
@@ -49,7 +54,6 @@ public class InteractionBonus : MonoBehaviour {
         playerAnimatorEventController.TurnOffPushCollider();
         isVaultContext = false;
         Time.timeScale = 1f;
-        allowToKick = true;
     }
     
 }
