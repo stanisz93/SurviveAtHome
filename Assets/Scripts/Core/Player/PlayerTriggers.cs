@@ -9,7 +9,7 @@ public class PlayerTriggers : MonoBehaviour
 
     public List<Transform> diePoints;
     public Camera deathCamera;
-
+    public LayerMask ObstaclesMask;
 
     private PlayerAnimationController playerAnimationController;
     private CharacterMovement characterMovement;
@@ -53,7 +53,7 @@ public class PlayerTriggers : MonoBehaviour
         character.SpeedBeforeKick = character.GetVelocity();
         string kickType = hitBonus.GetBonusMode() == BonusMode.SuperKick ? "SuperKick" : "Kick";
         playerAnimationController.animator.SetTrigger(kickType);
-        StartCoroutine(BlockMovement(isTriggerEmpty));
+        StartCoroutine(BlockMovement());
         StartCoroutine(ReleaseTrigger(0.8f));
     }
 
@@ -64,7 +64,7 @@ public class PlayerTriggers : MonoBehaviour
         defendItem.ChangeWeaponPositionToAttack();
         character.SpeedBeforeKick = character.GetVelocity();
         playerAnimationController.animator.SetTrigger("PushStick");
-        StartCoroutine(BlockMovementAfter(0.4f));
+        StartCoroutine(BlockMovementSeconds(0.4f));
         StartCoroutine(ReleaseTrigger(0.5f));
     }
 
@@ -77,16 +77,30 @@ public class PlayerTriggers : MonoBehaviour
         StartCoroutine(ReleaseTrigger(0.4f));
     }
 
+    public void BumpOnZombie(Vector3 collisionNormal)
+    {
+        Transform player = GameObject.FindWithTag("PlayerMesh").transform;
+        Vector3 direction = Vector3.Cross(player.up, collisionNormal);
+        playerAnimationController.animator.SetTrigger("BumpOnZombie");
+        player.rotation = Quaternion.LookRotation(direction);
+        Vector3 plannedDir = 1.3f * direction;
+        bool hitObstacle = TweenObjectManipulateUtils.LimitMoveWhenObstacleWithinTrajectory(ref plannedDir, player.position, direction, 1.1f * plannedDir.magnitude, ObstaclesMask);
+        transform.DOMove(transform.position + plannedDir, 0.4f);
+        StartCoroutine(BlockMovementSeconds(0.4f));
+
+        
+    }
 
 
-        public IEnumerator BlockMovement(bool condition)
+
+        public IEnumerator BlockMovement()
     {
         playerInput.blockMovement = true;
         yield return new WaitUntil(() => isTriggerEmpty);
         playerInput.blockMovement = false;
 
     }
-    public IEnumerator BlockMovementAfter(float duration)
+    public IEnumerator BlockMovementSeconds(float duration)
     {
         playerInput.blockMovement = true;
         yield return new WaitForSeconds(duration);

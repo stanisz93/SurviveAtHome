@@ -50,6 +50,12 @@ public class Opponent : MonoBehaviour
             taskManager.ForceToRun(opponentActions.GotPushed(transform, pushForce, pushTime, bonusTrigger), 1);
     }
 
+    public void GotTackled(Vector3 collisionNormal)
+    {
+        if(taskManager.GetCurrentPriority() > 1) 
+            taskManager.ForceToRun(opponentActions.GotTackledWhileRun(collisionNormal), 1);
+    }
+
     public void GotStabbed(Transform player, float pushForce, float pushTime)
     {
         if(taskManager.GetCurrentPriority() > 1) 

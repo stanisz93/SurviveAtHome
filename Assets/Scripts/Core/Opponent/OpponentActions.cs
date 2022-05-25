@@ -110,6 +110,16 @@ public class OpponentActions : MonoBehaviour
         animator.SetTrigger("HitObstacleWhilePushed");
     }
 
+    public IEnumerator GotTackledWhileRun(Vector3 collisionNormal)
+    {
+        Vector3 expectedForward = Vector3.Cross(m_Rigidbody.transform.up, collisionNormal);
+        opponent.transform.rotation = Quaternion.LookRotation(expectedForward);
+        opponent.transform.DOMove(transform.position - expectedForward * 0.4f, .2f);
+        animator.SetTrigger("beingPushedWhenPlayerRun");
+        yield return new WaitForSeconds(0.5f);
+        taskManager.TaskSetToFinish();
+    }
+
     public IEnumerator GotStabbed(Transform player, float pushForce, float pushTime)
     {
         agent.speed = 0f;
@@ -139,13 +149,15 @@ public class OpponentActions : MonoBehaviour
         Vector3 targetDir = transform.position - player.position;
         Vector3 targetDirNorm = new Vector3(targetDir.x, transform.position.y, targetDir.z).normalized;
         Vector3 pushVect = new Vector3(pushForce * targetDirNorm.x, 0f, pushForce * targetDirNorm.z);
-        RaycastHit hit;
-        bool hitTheObstacle = false;
-        if (Physics.Raycast(transform.position, targetDirNorm, out hit, 1.1f * pushForce, PushStopperMask))
-            {
-                pushVect = hit.point - transform.position;
-                hitTheObstacle = true;
-            }
+        // RaycastHit hit;
+        // bool hitTheObstacle = false;
+        // if (Physics.Raycast(transform.position, targetDirNorm, out hit, 1.1f * pushForce, PushStopperMask))
+        //     {
+        //         pushVect = hit.point - transform.position;
+        //         hitTheObstacle = true;
+        //     }
+        
+        bool hitTheObstacle = TweenObjectManipulateUtils.LimitMoveWhenObstacleWithinTrajectory(ref pushVect, transform.position, targetDirNorm, 1.1f * pushForce, PushStopperMask);
         Vector3 destPos = transform.position + pushVect - maximumDistWhileHitObstacle *pushVect.normalized;
         Sequence pushS = DOTween.Sequence();
         pushS.Append(transform.DOMove(destPos, pushTime));
