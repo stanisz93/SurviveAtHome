@@ -38,7 +38,10 @@ public class ObstacleInteractionManager : MonoBehaviour {
             if (obstacleInteraction.animType == ObstacleAnimType.slide)
                  playerAnimationController.animator.SetTrigger("Slide");
             else if(obstacleInteraction.animType == ObstacleAnimType.vault)
-                playerAnimationController.animator.SetTrigger("Vault");
+                {
+                    playerAnimationController.animator.SetTrigger("Vault");
+                    playerAnimationController.animator.SetBool("MirrorAnimation", Random.value > 0.5f); 
+                }
             else
                 Debug.Log("UnexpecetBehaviour!");
             MoveSequence.Kill();
