@@ -88,8 +88,12 @@ public class OpponentMagnet : MonoBehaviour
                 // PlayerMesh.rotation = Quaternion.LookRotation(new Vector3(NearestOpponent.position.x,  PlayerMesh.position.y, NearestOpponent.position.z));            
             Sequence seq = DOTween.Sequence();
             Vector3 initPlayerRot = player.transform.eulerAngles ;
-            Vector3 rot = Quaternion.LookRotation(NearestOpponent.position).eulerAngles;
+            Vector3 rot = Quaternion.LookRotation(movementDir.normalized).eulerAngles;
+            // maybe here is the problem
             seq.Join(player.transform.DOMove(player.transform.position + movementDir - 0.5f * movementDir.normalized, .3f));
+            // Vector3 newDirection = Vector3.RotateTowards(PlayerMesh.forward, movementDir.normalized, 90f, 0f);
+            // PlayerMesh.rotation = Quaternion.LookRotation(newDirection);
+                
             seq.Join(PlayerMesh.transform.DORotate(rot, .3f));
         }
     }
