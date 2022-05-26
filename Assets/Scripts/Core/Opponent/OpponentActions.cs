@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using DG.Tweening;
-public enum OpponentMode {Exploring, Faint, Rushing, Scream, Fall, Attacking, Checking, LookAround, Smelling};
+public enum OpponentMode {Idle, Exploring, Faint, Rushing, Scream, Fall, Attacking, Checking, LookAround, Smelling};
 
 [RequireComponent(typeof(Effects))]
 public class OpponentActions : MonoBehaviour
@@ -141,7 +141,7 @@ public class OpponentActions : MonoBehaviour
         agent.speed = 0f;
         taskManager.LockEndOfTask();
         OpponentEffects.RunParticleEffect(ParticleEffect.Push, pushEffectPosition.position);
-        if(player.GetComponentInParent<Character>().SpeedBeforeKick > 5f)
+        if(player.GetComponentInParent<Character>().SpeedBeforeKick > 1f)
         {
             bonusTrigger = true;
         }
@@ -285,6 +285,7 @@ public class OpponentActions : MonoBehaviour
     }
     public IEnumerator Exploring()
     {
+        SetOpponentMode(OpponentMode.Exploring);
         randomIdleCounter = 0f;
         Coroutine coroutine = StartCoroutine(RunRandomIdleSmooth());
         if(Random.value >= 0.6)
@@ -364,7 +365,6 @@ public class OpponentActions : MonoBehaviour
 
 void Update()
  {
-
      //DEBUG DESTINATION PUSH POINT
         // Vector3 targetDirection = transform.position - playerTemp.position;
         // targetDirection = new Vector3(targetDirection.x, transform.position.y, targetDirection.z).normalized;

@@ -37,6 +37,7 @@ public class PlayerInput : MonoBehaviour
     private PlayerAnimatorEventController playerAnimatorEventController;
     private ObstacleInteractionManager obstacleInteractionManager;
     private InteractionBonus interactionBonus;
+    private SpecialAttacks specialAttacks;
 
     // Start is called before the first frame update
     void Start()
@@ -57,6 +58,7 @@ public class PlayerInput : MonoBehaviour
         mainCamera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
         hitBonus = GetComponent<HitBonus>();
         playerAnimatorEventController = GetComponentInChildren<PlayerAnimatorEventController>();
+        specialAttacks = GetComponentInChildren<SpecialAttacks>();
 
             
     }
@@ -182,6 +184,10 @@ public class PlayerInput : MonoBehaviour
                 if(interactionBonus.isVaultContext)
                 {
                     StartCoroutine(interactionBonus.SetToKickWhileVault());
+                }
+                else if(specialAttacks.isCandidateToDie)
+                {
+                    character.StartTriggerAction(specialAttacks.KillWhenFaint);
                 }
                 else
                 {

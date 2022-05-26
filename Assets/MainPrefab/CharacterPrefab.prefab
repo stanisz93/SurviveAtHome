@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2552366290719512118}
   - component: {fileID: 2411067274966626624}
   - component: {fileID: 8718605228324170060}
+  - component: {fileID: 4205839058826903301}
   m_Layer: 0
   m_Name: OpponentMagnet
   m_TagString: Untagged
@@ -61,6 +62,18 @@ MonoBehaviour:
   ClosestOpponentLookingPeriodCycle: 0.1
   PlayerMesh: {fileID: 8975323420904284637}
   MagnetDebug: {fileID: 4034265706634982067}
+--- !u!114 &4205839058826903301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1043722869638798339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3fac44a1c49c594d846b484104ccfc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2052908458380196323
 GameObject:
   m_ObjectHideFlags: 0
@@ -1121,6 +1134,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 83d11eae8576524499f47ed78e00bdcb, type: 3}
+--- !u!224 &5605935922217516411 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6489016254361301212, guid: 83d11eae8576524499f47ed78e00bdcb, type: 3}
+  m_PrefabInstance: {fileID: 1711883401101872551}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &3215092891990866382 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4278306470684996713, guid: 83d11eae8576524499f47ed78e00bdcb, type: 3}
@@ -1176,11 +1194,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &5605935922217516411 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 6489016254361301212, guid: 83d11eae8576524499f47ed78e00bdcb, type: 3}
-  m_PrefabInstance: {fileID: 1711883401101872551}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4117206818740339877
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -11,11 +11,15 @@ public class PlayerAnimatorEventController : MonoBehaviour
     // Start is called before the first frame update
     
     private Animator animator;
+    private PlayerInput playerInput;
+    private PlayerTriggers playerTriggers;
   
     void Start()
     {
         currentAttackTrigger = defaultPushTrigger;
         animator = GetComponent<Animator>();
+        playerInput = GetComponentInParent<PlayerInput>();
+        playerTriggers = GetComponentInParent<PlayerTriggers>();
     }
 
         
@@ -39,7 +43,6 @@ public class PlayerAnimatorEventController : MonoBehaviour
     }
 
 
-
     public void SetAttackTriggerCollider(AttackTrigger trigger)
     {
             currentAttackTrigger = trigger;
@@ -48,6 +51,12 @@ public class PlayerAnimatorEventController : MonoBehaviour
     public void SetToDefaultPushTrigger()
     {
         currentAttackTrigger = defaultPushTrigger;
+    }
+
+    public void ReleasePlayerControl()
+    {
+        playerTriggers.ReleaseTrigger();
+         playerInput.blockMovement = false;
     }
 
 

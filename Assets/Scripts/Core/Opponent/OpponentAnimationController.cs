@@ -26,6 +26,7 @@ public class OpponentAnimationController : MonoBehaviour
         animator.SetBool("Scream", false);
         animator.SetBool("LookAround", false);
     }
+    
         
     void LateUpdate()
     {

@@ -37,15 +37,23 @@ public class PlayerTriggers : MonoBehaviour
     }
 
 
-    IEnumerator ReleaseTrigger(float time)
+    public IEnumerator ReleaseTriggerAfterSeconds(float time)
     {
         yield return new WaitForSeconds(time);
         isTriggerEmpty = true;
     }
 
+    public void ReleaseTrigger()
+    {
+        isTriggerEmpty = true;
+    }
+
+
+
+
     public void RunReleaseTriggerRoutine(float time)
     {
-        StartCoroutine(ReleaseTrigger(time));
+        StartCoroutine(ReleaseTriggerAfterSeconds(time));
     }
     public void Kick()
     {
@@ -54,7 +62,7 @@ public class PlayerTriggers : MonoBehaviour
         string kickType = hitBonus.GetBonusMode() == BonusMode.SuperKick ? "SuperKick" : "Kick";
         playerAnimationController.animator.SetTrigger(kickType);
         StartCoroutine(BlockMovement());
-        StartCoroutine(ReleaseTrigger(0.8f));
+        StartCoroutine(ReleaseTriggerAfterSeconds(0.8f));
     }
 
 
@@ -65,7 +73,7 @@ public class PlayerTriggers : MonoBehaviour
         character.SpeedBeforeKick = character.GetVelocity();
         playerAnimationController.animator.SetTrigger("PushStick");
         StartCoroutine(BlockMovementSeconds(0.4f));
-        StartCoroutine(ReleaseTrigger(0.5f));
+        StartCoroutine(ReleaseTriggerAfterSeconds(0.5f));
     }
 
     public void KnifeAttack()
@@ -74,7 +82,7 @@ public class PlayerTriggers : MonoBehaviour
         defendItem.ChangeWeaponPositionToAttack();
         character.SpeedBeforeKick = character.GetVelocity();
         playerAnimationController.animator.SetTrigger("Stab");
-        StartCoroutine(ReleaseTrigger(0.4f));
+        StartCoroutine(ReleaseTriggerAfterSeconds(0.4f));
     }
 
     public void BumpOnZombie(Vector3 collisionNormal)

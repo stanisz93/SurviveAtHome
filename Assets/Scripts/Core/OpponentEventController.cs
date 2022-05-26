@@ -11,13 +11,14 @@ public class OpponentEventController : MonoBehaviour
     private Character character;
     private Opponent opponent;
     private TaskManager taskManager;
+    private OpponentActions opponentActions;
 
 
     void Start()
     {
         opponent = gameObject.GetComponentInParent<Opponent>();
         character = GameObject.FindWithTag("Player").GetComponent<Character>();
-
+        opponentActions = GetComponentInParent<OpponentActions>();
     }
 
     // Update is called once per frame
@@ -30,6 +31,11 @@ public class OpponentEventController : MonoBehaviour
     public void DisableHitMoment()
     {
         opponentHit.enabled = false;
+    }
+
+    public void WakeUp()
+    {
+        opponentActions.SetOpponentMode(OpponentMode.Exploring);
     }
 
 

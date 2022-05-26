@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using DG.Tweening;
+using System;
+
 public class OpponentMagnet : MonoBehaviour
 {
-    public float ClosestOpponentLookingPeriodCycle = 0.1f;
+    public float ClosestOpponentLookingPeriodCycle = 0.05f;
     public Transform PlayerMesh;
     List <Transform> OpponentsInRadious;
 
@@ -13,15 +15,16 @@ public class OpponentMagnet : MonoBehaviour
     private Transform _nearestOpponent;
 
     private Character player;
+    private SpecialAttacks specialAttacks;
     private ObstacleInteractionManager obstacleInteractionManager;
-   
+    public event Action<Transform> OnKill = delegate { };
 
     public Transform NearestOpponent {get {return _nearestOpponent;}}
 
     private void Start() {
         OpponentsInRadious = new List<Transform>();
         obstacleInteractionManager = GetComponentInParent<ObstacleInteractionManager>();
-  
+        specialAttacks = GetComponentInParent<SpecialAttacks>();
         player = GetComponentInParent<Character>();
         StartCoroutine(LookForBestFit());
     }
@@ -99,6 +102,17 @@ public class OpponentMagnet : MonoBehaviour
             {
                 yield return new WaitForSeconds(ClosestOpponentLookingPeriodCycle);
                 _nearestOpponent = FindNearestOpponent();
+                if (_nearestOpponent != null)
+                {
+                    if(_nearestOpponent.GetComponent<OpponentActions>().GetOpponentMode() == OpponentMode.Faint)
+                    {
+                        specialAttacks.SetTarget(_nearestOpponent);
+                    }
+                    else
+                        specialAttacks.RemoveTarget();
+                }
+                else
+                    specialAttacks.RemoveTarget();
             }
     }
 }
