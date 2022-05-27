@@ -9,6 +9,7 @@ public class Character : MonoBehaviour
     public Transform DebugBall;
     private CharacterMovement characterMovement;
     public Camera mainCamera;
+    public Transform respawn;
     public LayerMask terrainMask;
     public LayerMask opponentSnapMask;
     public Camera DeathCamera;
@@ -54,7 +55,7 @@ public class Character : MonoBehaviour
 
     public void ResetPlayer()
     {
-        transform.position = new Vector3(0.81f, 0.79f, -14.5f);
+        transform.position = respawn.position;
         healthBar.SetMaxHealth(health.maxHealth);
  
     }

@@ -792,7 +792,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df0683a09c7634745beeb9d2187b7866, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Head: {fileID: 4033837809723456109}
+  head: {fileID: 4033837809723456109}
+  floor: {fileID: 0}
+  pfBloodTextures:
+  - {fileID: 100000, guid: 295fd3321dc75894cb55137e16e294bb, type: 3}
+  - {fileID: 100000, guid: 1e1d8c8382961094d85192c9bbe5edee, type: 3}
+  - {fileID: 100000, guid: 5238571564ace0f42a4ff2a99c9d8864, type: 3}
+  - {fileID: 100000, guid: 4a6cf7a3aa0510345b86258394820117, type: 3}
+  - {fileID: 100000, guid: 1d40c6a927b365d47bca39ec11ae4be1, type: 3}
+  pfBloodKillEffect: {fileID: 3959511245092731122, guid: 7a166b36e2ad0744090c2665aa7befed, type: 3}
+  bloodEmmiterHeight: 0.3
+  bloodTextureActivateDelay: 0.1
+  bloodTextureOffsetAlongSpine: -0.5
 --- !u!1 &4232579744582681040
 GameObject:
   m_ObjectHideFlags: 0

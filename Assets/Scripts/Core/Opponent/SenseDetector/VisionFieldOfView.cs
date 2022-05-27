@@ -78,8 +78,7 @@ public enum VisionState {Founded, Suspicious, None};
     {
         return state == VisionState.Suspicious;
     }
-
-    public void ResetSense(float time = 2f)
+    public void TurnOffSense()
     {
         calmIndicator.Reset();
         alertIndicator.Reset();
@@ -87,6 +86,11 @@ public enum VisionState {Founded, Suspicious, None};
         isSenseActive = false;
         alertUI.SetAlertLevel(alertIndicator.GetCurrentValue(), FoundedObject());
         alertBody.enabled = false;
+    }
+
+    public void ResetSense(float time = 2f)
+    {
+        TurnOffSense();
         StartCoroutine(CoolOff(time));
     }
 
