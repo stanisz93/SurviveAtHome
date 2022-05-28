@@ -10,11 +10,14 @@ public class ObstacleInteractionManager : MonoBehaviour {
     private CharacterMovement characterMovement;
     private PlayerAnimationController playerAnimationController;
     private Sequence MoveSequence;
+    private Character character;
+    
 
     private void Start() {
         playerTriggers = GetComponent<PlayerTriggers>();
         characterMovement = GetComponent<CharacterMovement>();
         playerAnimationController = GetComponent<PlayerAnimationController>();
+        character = GetComponent<Character>();
     }
 
 
@@ -26,15 +29,18 @@ public class ObstacleInteractionManager : MonoBehaviour {
                 obstacleInteraction = null;
     }
 
+
     public void InteractObstacle()
     {
         obstacleInteraction.EstimateSide(characterMovement.t_mesh);
         Transform t_startPoint = obstacleInteraction.GetStartPoint();
         Transform t_endPoint = obstacleInteraction.GetEndPoint();
-        float dot = Vector3.Dot(characterMovement.Velocity.normalized, t_startPoint.forward);
-        if(dot > obstacleInteraction.interactThreshold)
+        if(obstacleInteraction.AreConditionsSatisfied(character))
         {
-            characterMovement.t_mesh.rotation = Quaternion.LookRotation(t_startPoint.forward);
+            // wcharacterMovement.t_mesh.rotation = Quaternion.LookRotation(t_startPoint.forward);
+            if(obstacleInteraction.forwardToObstacle)
+                characterMovement.t_mesh.DORotate(Quaternion.LookRotation(t_startPoint.forward).eulerAngles, 0.2f);
+        
             if (obstacleInteraction.animType == ObstacleAnimType.slide)
                  playerAnimationController.animator.SetTrigger("Slide");
             else if(obstacleInteraction.animType == ObstacleAnimType.vault)
@@ -42,12 +48,15 @@ public class ObstacleInteractionManager : MonoBehaviour {
                     playerAnimationController.animator.SetTrigger("Vault");
                     playerAnimationController.animator.SetBool("MirrorAnimation", Random.value > 0.5f); 
                 }
+            else if(obstacleInteraction.animType == ObstacleAnimType.climbOverWall)
+                {
+                    playerAnimationController.animator.SetTrigger("ClimbWall");
+                }
             else
                 Debug.Log("UnexpecetBehaviour!");
-            MoveSequence.Kill();
-            MoveSequence = DOTween.Sequence();
-            MoveSequence.Append(transform.DOMove(t_startPoint.position, obstacleInteraction.MoveToPointTime));
-            MoveSequence.Append(transform.DOMove(t_endPoint.position, obstacleInteraction.MoveToEndPointTime));
+            if(MoveSequence.IsActive())
+                MoveSequence.Kill();
+            MoveSequence = obstacleInteraction.RunSequence(transform);
             playerTriggers.RunReleaseTriggerRoutine(obstacleInteraction.ReleaseTime);
         }
         else

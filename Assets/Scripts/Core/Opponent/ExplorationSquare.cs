@@ -24,4 +24,8 @@ public class ExplorationSquare : MonoBehaviour
     return newVec;
     }
 
+    private void OnDestroy() {
+        Destroy(GetComponent<OpponentUtils>()); 
+    }
+
 }

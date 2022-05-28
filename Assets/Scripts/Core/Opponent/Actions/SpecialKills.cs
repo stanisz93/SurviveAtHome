@@ -44,5 +44,14 @@ public class SpecialKills : MonoBehaviour
         Instantiate(pfBloodKillEffect, pos, Quaternion.LookRotation(-headRightXZDirection));
         Invoke("InstantiateBloodTexture", bloodTextureActivateDelay);
         animator.SetTrigger("KickKill");
+        Invoke("DestroyOpponentObject", 2f);
+    }
+    void DestroyOpponentObject()
+    {
+        var components = GetComponents<MonoBehaviour>();
+        foreach( var t in components )
+        {
+            Destroy(t);
+        }
     }
 }

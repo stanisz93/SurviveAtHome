@@ -5,7 +5,6 @@ using UnityEngine.AI;
 using DG.Tweening;
 public enum OpponentMode {Idle, Exploring, Faint, Rushing, Scream, Fall, Attacking, Checking, LookAround, Smelling};
 
-[RequireComponent(typeof(Effects))]
 public class OpponentActions : MonoBehaviour
 {
 

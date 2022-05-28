@@ -15,13 +15,11 @@ public class PlayerTriggers : MonoBehaviour
     private CharacterMovement characterMovement;
     private Character character;
     private PlayerInput playerInput;
-    private Slidable slidable;
+
     
     public bool dying = false;
 
     public bool isTriggerEmpty = true;
-    public Slidable Slidable { get => slidable; set => slidable = value; }
-
 
     private HitBonus hitBonus;
 
@@ -58,7 +56,7 @@ public class PlayerTriggers : MonoBehaviour
     public void Kick()
     {
         
-        character.SpeedBeforeKick = character.GetVelocity();
+        character.SpeedBeforeKick = character.GetVelocityMagnitude();
         string kickType = hitBonus.GetBonusMode() == BonusMode.SuperKick ? "SuperKick" : "Kick";
         playerAnimationController.animator.SetTrigger(kickType);
         StartCoroutine(BlockMovement());
@@ -70,7 +68,7 @@ public class PlayerTriggers : MonoBehaviour
     {
         DefendItem defendItem = GetComponentInChildren<DefendItem>();
         defendItem.ChangeWeaponPositionToAttack();
-        character.SpeedBeforeKick = character.GetVelocity();
+        character.SpeedBeforeKick = character.GetVelocityMagnitude();
         playerAnimationController.animator.SetTrigger("PushStick");
         StartCoroutine(BlockMovementSeconds(0.4f));
         StartCoroutine(ReleaseTriggerAfterSeconds(0.5f));
@@ -80,7 +78,7 @@ public class PlayerTriggers : MonoBehaviour
     {
         DefendItem defendItem = GetComponentInChildren<DefendItem>();
         defendItem.ChangeWeaponPositionToAttack();
-        character.SpeedBeforeKick = character.GetVelocity();
+        character.SpeedBeforeKick = character.GetVelocityMagnitude();
         playerAnimationController.animator.SetTrigger("Stab");
         StartCoroutine(ReleaseTriggerAfterSeconds(0.4f));
     }

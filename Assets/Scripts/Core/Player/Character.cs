@@ -154,11 +154,16 @@ public class Character : MonoBehaviour
                 opponentFocus = null;
             }
     }
-    public float GetVelocity()
+    public float GetVelocityMagnitude()
     {
         // Debug.Log(characterMovement.Velocity.magnitude);
         return characterMovement.Velocity.magnitude;
     }
+
+    public Vector3 GetVelocityVector()
+    {
+        return characterMovement.Velocity;
+    } 
 
     public FightMode GetFightMode(){return characterMovement.GetFightMode();}
 

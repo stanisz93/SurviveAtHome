@@ -104,15 +104,17 @@ public class OpponentMagnet : MonoBehaviour
                 _nearestOpponent = FindNearestOpponent();
                 if (_nearestOpponent != null)
                 {
-                    if(_nearestOpponent.GetComponent<OpponentActions>().GetOpponentMode() == OpponentMode.Faint)
-                    {
-                        specialAttacks.SetTarget(_nearestOpponent);
+                    var opponent = _nearestOpponent.GetComponent<OpponentActions>();
+                    if(opponent != null)
+                    {   if(_nearestOpponent.GetComponent<OpponentActions>().GetOpponentMode() == OpponentMode.Faint)
+                        {
+                            specialAttacks.SetTarget(_nearestOpponent);
+                            yield return null;
+                            continue;
+                        }
                     }
-                    else
-                        specialAttacks.RemoveTarget();
                 }
-                else
-                    specialAttacks.RemoveTarget();
+                specialAttacks.RemoveTarget();
             }
     }
 }

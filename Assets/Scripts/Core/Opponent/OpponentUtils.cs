@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(ExplorationSquare))]
 public class OpponentUtils : MonoBehaviour
 {
 
@@ -49,6 +48,7 @@ public class OpponentUtils : MonoBehaviour
             {if(GameSystem.Instance.opponentDebug) Debug.Log("Path haven't founded!");}
         return destination;
     }
+
 
 }
 
