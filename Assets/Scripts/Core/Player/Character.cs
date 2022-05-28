@@ -100,6 +100,7 @@ public class Character : MonoBehaviour
     }
 
 
+
     public void TakeDamageEffect(int damage)
     {
         SetFightmode(FightMode.ReceiveDamage);

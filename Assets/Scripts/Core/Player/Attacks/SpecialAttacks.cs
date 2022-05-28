@@ -16,6 +16,7 @@ public class SpecialAttacks : MonoBehaviour
     private SpecialKills target;
     private Transform playerMesh;
     private Transform player;
+    [SerializeField]
     private bool isKillingEvent = false;
     // private OpponentMagnet opponentMagnet;
 
@@ -49,18 +50,19 @@ public class SpecialAttacks : MonoBehaviour
 
     public void KillWhenFaint()
     {
-        isKillingEvent = true;
-        Transform opponentHead = target.GetHeadPos();
-        Sequence seq = DOTween.Sequence();
-        Vector3 dir = TransformUtils.GetXZDirectionWithMargin(transform, opponentHead, playerDistanceFromHead);
-        playerTriggers.GetComponent<Collider>().enabled = false;
-        seq.Join(player.DOMove(player.position + dir, 0.2f));
-        Debug.Log($"Direction: {dir.normalized}");
-        Vector3 rotateDir = TransformUtils.GetXZDirection(transform, opponentHead);
-        seq.Join(transform.DORotate(Quaternion.LookRotation(rotateDir).eulerAngles, 0.2f));
-        seq.AppendCallback(() => playerTriggers.GetComponent<Collider>().enabled = true);
-        StartCoroutine(playerTriggers.BlockMovementSeconds(1f));
-        animator.SetTrigger("SquashHead");
+
+            isKillingEvent = true;
+            Transform opponentHead = target.GetHeadPos();
+            Sequence seq = DOTween.Sequence();
+            Vector3 dir = TransformUtils.GetXZDirectionWithMargin(transform, opponentHead, playerDistanceFromHead);
+            playerTriggers.GetComponent<Collider>().enabled = false;
+            seq.Join(player.DOMove(player.position + dir, 0.2f));
+            Vector3 rotateDir = TransformUtils.GetXZDirection(transform, opponentHead);
+            seq.Join(transform.DORotate(Quaternion.LookRotation(rotateDir).eulerAngles, 0.2f));
+            seq.AppendCallback(() => playerTriggers.GetComponent<Collider>().enabled = true);
+            playerTriggers.BlockMovement();
+            playerTriggers.BlockTrigger();
+            animator.SetTrigger("SquashHead");
         
     }
 

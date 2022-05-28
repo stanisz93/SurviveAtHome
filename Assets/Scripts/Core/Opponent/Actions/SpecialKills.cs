@@ -5,7 +5,6 @@ using UnityEngine;
 public class SpecialKills : MonoBehaviour
 {
     public Transform head;
-    public Transform floor;
     public List<GameObject> pfBloodTextures;
     public GameObject pfBloodKillEffect;
     public float bloodEmmiterHeight = 0.1f;
@@ -13,9 +12,11 @@ public class SpecialKills : MonoBehaviour
     public float bloodTextureOffsetAlongSpine = 0f;
     private Animator animator;
     private VisionFieldOfView vfov;
+    private Transform floor;
     // Start is called before the first frame update
     void Start()
     {
+        floor = GameObject.FindWithTag("Floor").transform;
         vfov = GetComponentInChildren<VisionFieldOfView>();
         animator = GetComponentInChildren<Animator>();
     }
@@ -27,6 +28,7 @@ public class SpecialKills : MonoBehaviour
 
     void InstantiateBloodTexture()
     {
+
         Vector3 pos = new Vector3(head.position.x, floor.position.y + 0.002f, head.position.z);
         Vector3 headFwdXZDirection = new Vector3(head.forward.x, 0, head.forward.z);
         float finalOffset = bloodTextureOffsetAlongSpine + Random.Range(-0.2f, 0.2f);
@@ -44,14 +46,19 @@ public class SpecialKills : MonoBehaviour
         Instantiate(pfBloodKillEffect, pos, Quaternion.LookRotation(-headRightXZDirection));
         Invoke("InstantiateBloodTexture", bloodTextureActivateDelay);
         animator.SetTrigger("KickKill");
-        Invoke("DestroyOpponentObject", 2f);
+        GetComponent<Ragdoll>().ToggleRagdoll();
+        Invoke("DestroyOpponentObject", 0.3f);
+
     }
+
     void DestroyOpponentObject()
     {
+        GetComponent<Ragdoll>().ToogleRigidbodies(false);
         var components = GetComponents<MonoBehaviour>();
         foreach( var t in components )
         {
-            Destroy(t);
+            if (t.GetType().Name != "Ragdoll")
+                Destroy(t);
         }
     }
 }

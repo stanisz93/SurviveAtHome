@@ -56,7 +56,7 @@ public class PlayerAnimatorEventController : MonoBehaviour
     public void ReleasePlayerControl()
     {
         playerTriggers.ReleaseTrigger();
-         playerInput.blockMovement = false;
+        playerInput.blockMovement = false;
     }
 
 

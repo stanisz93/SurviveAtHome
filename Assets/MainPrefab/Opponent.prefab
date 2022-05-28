@@ -601,6 +601,7 @@ GameObject:
   - component: {fileID: 4232579744328846603}
   - component: {fileID: 4232579744328846707}
   - component: {fileID: 6265659521534905704}
+  - component: {fileID: 2504699549713736630}
   m_Layer: 0
   m_Name: Opponent
   m_TagString: Opponent
@@ -804,6 +805,21 @@ MonoBehaviour:
   bloodEmmiterHeight: 0.3
   bloodTextureActivateDelay: 0.1
   bloodTextureOffsetAlongSpine: -0.5
+--- !u!114 &2504699549713736630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4232579744328846605}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f747c63c64733ac40aea6f95bf536ba9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Zombie: {fileID: 0}
+  ragdollHead: {fileID: 0}
+  isRagdoll: 0
 --- !u!1 &4232579744582681040
 GameObject:
   m_ObjectHideFlags: 0

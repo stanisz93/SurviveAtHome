@@ -8,6 +8,7 @@ TagManager:
   - Opponent
   - PlayerMesh
   - Inventory
+  - Floor
   layers:
   - Default
   - TransparentFX

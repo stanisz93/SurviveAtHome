@@ -6,18 +6,24 @@ using UnityEngine;
 public class OpponentHit : MonoBehaviour
 {
     // Start is called before the first frame update
+    
+    public Transform hittingArm;
     private bool isDamageTaken = false;
     private Collider hitCollider;
     private bool isInitialEnable = true; // this flag first enable when create object
-    private void Awake() {
+    private void Start() {
         hitCollider = GetComponent<Collider>();
         hitCollider.enabled = false;
     }
     private void OnEnable() {
         if(isInitialEnable)
             isInitialEnable = false;
+
         else
+        {
+            transform.SetParent(hittingArm, true);
             hitCollider.enabled = true;
+        }
             
         isDamageTaken = false;
     }
@@ -32,8 +38,13 @@ public class OpponentHit : MonoBehaviour
         Health health = other.GetComponent<Health>();
         if(health != null && !isDamageTaken)
         {
-            health.TakeDamage(gameObject.GetComponentInParent<Opponent>().damage);
-            isDamageTaken = true;
+            Opponent opponent = gameObject.GetComponentInParent<Opponent>();
+            if(opponent != null)
+            {
+                health.TakeDamage(gameObject.GetComponentInParent<Opponent>().damage);
+                isDamageTaken = true;
+                transform.parent = null;
+            }
         }
     }
 

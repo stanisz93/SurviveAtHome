@@ -46,7 +46,14 @@ public class PlayerTriggers : MonoBehaviour
         isTriggerEmpty = true;
     }
 
-
+    public void BlockTrigger()
+    {
+        isTriggerEmpty = false;
+    }
+    public void BlockMovement()
+    {
+           playerInput.blockMovement = true;
+    }
 
 
     public void RunReleaseTriggerRoutine(float time)
@@ -59,7 +66,7 @@ public class PlayerTriggers : MonoBehaviour
         character.SpeedBeforeKick = character.GetVelocityMagnitude();
         string kickType = hitBonus.GetBonusMode() == BonusMode.SuperKick ? "SuperKick" : "Kick";
         playerAnimationController.animator.SetTrigger(kickType);
-        StartCoroutine(BlockMovement());
+        StartCoroutine(BlockMovementUntilTriggerIsEmpty());
         StartCoroutine(ReleaseTriggerAfterSeconds(0.8f));
     }
 
@@ -99,13 +106,15 @@ public class PlayerTriggers : MonoBehaviour
 
 
 
-        public IEnumerator BlockMovement()
+        public IEnumerator BlockMovementUntilTriggerIsEmpty()
     {
         playerInput.blockMovement = true;
         yield return new WaitUntil(() => isTriggerEmpty);
         playerInput.blockMovement = false;
 
     }
+
+
     public IEnumerator BlockMovementSeconds(float duration)
     {
         playerInput.blockMovement = true;
