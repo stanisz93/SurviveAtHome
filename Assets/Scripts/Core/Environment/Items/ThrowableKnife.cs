@@ -19,25 +19,45 @@ public class ThrowableKnife : MonoBehaviour
     private DefendItem item;
     private bool hasCollideWhileThrow = false;
 
+    private TrailRenderer trail;
+
+    private bool isKillingThrow = false;
+
+    private StressReceiver stressReceiver;
+
     // Start is called before the first frame update
     
     void Start()
     {
         item = GetComponentInParent<DefendItem>();
+        trail = GetComponentInChildren<TrailRenderer>();
+        trail.enabled = false;
+        stressReceiver = Camera.main.GetComponent<StressReceiver>();
+        
     }
 
     // Update is called once per frame
     
     private void OnCollisionEnter(Collision other) {
         IThrowStickable stickable = other.gameObject.GetComponent<IThrowStickable>();
+        trail.enabled = false;
         if (stickable != null)
             {
                 if(throwSequence.IsActive())
-                throwSequence.Kill();
+                    throwSequence.Kill();
                 hasCollideWhileThrow = true;
                 item.SetKinematic(true);
+                if(other.gameObject.GetComponentInParent<Opponent>())
+                    stressReceiver.InduceStress(2f);
+                
             }
     }
+
+    public void TurnOnTrail()
+    {
+        trail.enabled = true;
+    }
+
 
     float GetPlannedTimeOfThrow(Vector3 targetPos)
     {
@@ -49,12 +69,17 @@ public class ThrowableKnife : MonoBehaviour
         return degressPerUnit * (targetPos - item.transform.position).magnitude;
     }
 
+    void TurnOffKillingThrow()
+    {
+        isKillingThrow = false;
+    }
+
     public void Throw(Vector3 targetThrowPos)
     {
             Vector3 itemPos = item.transform.position;
             Vector3 targetPos = itemPos + (targetThrowPos - itemPos);
             Time.timeScale = ThrowSlowDown;
-
+            TurnOnTrail();
             item.DetachFromPlayer();
             item.transform.localRotation = Quaternion.FromToRotation(Vector3.right, -(targetThrowPos - item.transform.position).normalized);
         

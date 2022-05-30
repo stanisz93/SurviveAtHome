@@ -29,6 +29,7 @@ public class PlayerTriggers : MonoBehaviour
     public float maxThrowDistance = 10f;
     public float currentThrowDistance = 0f;
     public float throwDistanceSpeed = 5f;
+    public float maxHeightOfThrow = 1f;
     private bool isAimingStarted = false;
     
     public Canvas ThrowProjectionCanvas;
@@ -82,9 +83,10 @@ public class PlayerTriggers : MonoBehaviour
     }
 
 
-    public void RelaseThrow()
+    public void ReleaseThrow()
     {
         ResetThrowState();
+        playerInput.blockMovement = false;
         playerAnimationController.animator.SetTrigger("CancelAim");
     }
 
@@ -122,7 +124,7 @@ public class PlayerTriggers : MonoBehaviour
             currentThrowDistance = maxThrowDistance;
         RaycastHit hit;
         Vector3 aimPosition = throwingHand.position;
-        float maxHeightOfThrow = 1f;
+        
         aimPosition = new Vector3(aimPosition.x,maxHeightOfThrow, aimPosition.z);
         Vector3 characterPos = new Vector3(characterMovement.t_mesh.position.x, maxHeightOfThrow, characterMovement.t_mesh.position.z);
         Vector3 charTarget = characterPos + characterMovement.t_mesh.forward * currentThrowDistance;
@@ -203,6 +205,7 @@ public class PlayerTriggers : MonoBehaviour
         playerInput.blockMovement = false;
 
     }
+    
 
 
     public IEnumerator BlockMovementSeconds(float duration)

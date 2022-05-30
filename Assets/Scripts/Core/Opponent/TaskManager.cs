@@ -13,6 +13,8 @@ public class TaskManager : MonoBehaviour {
     private static int lowestPriority = 5;
     private int currentPriority = lowestPriority;
 
+    public bool isOpenForTask = true;
+
     private IEnumerator StartTask(IEnumerator task, int prior)
     {
         currentTask = task;
@@ -82,6 +84,12 @@ public class TaskManager : MonoBehaviour {
         else if(GameSystem.Instance.opponentDebug && desc!="")
             Debug.Log($"Tried to run task: {task} named as {desc} but opponent is busy.");
         succeed = false;
+    }
+
+    public void BlockAnyTaskAssigning()
+    {
+        StopCurrentTask();
+        isOpenForTask = false;
     }
     
 }

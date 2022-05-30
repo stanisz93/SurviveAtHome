@@ -55,6 +55,13 @@ public class WeaponPlaceholder : MonoBehaviour
 
     }
 
+    public void RemoveEndurance()
+    {
+        slider.maxValue = 0f;
+        slider.value = 0f;
+        endurancePointer.enabled = false;
+    }
+
     public void UpdateEndurance()
     {
         var currEndurance = (float)defendable.GetCurrentEndurance();

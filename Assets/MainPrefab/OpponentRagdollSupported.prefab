@@ -645,7 +645,7 @@ GameObject:
   - component: {fileID: 2397819963991360258}
   - component: {fileID: 5552930046791271193}
   - component: {fileID: 4123497014353931719}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: OpponentRagdollSupported
   m_TagString: Opponent
   m_Icon: {fileID: 0}
@@ -842,6 +842,7 @@ MonoBehaviour:
   - {fileID: 100000, guid: 4a6cf7a3aa0510345b86258394820117, type: 3}
   - {fileID: 100000, guid: 1d40c6a927b365d47bca39ec11ae4be1, type: 3}
   pfBloodKillEffect: {fileID: 3959511245092731122, guid: 7a166b36e2ad0744090c2665aa7befed, type: 3}
+  pfThrowKillEffect: {fileID: 6115847214822075018, guid: 665a9905001330142adb9ed828674cd7, type: 3}
   bloodEmmiterHeight: 0.3
   bloodTextureActivateDelay: 0.1
   bloodTextureOffsetAlongSpine: -0.5
@@ -1659,6 +1660,7 @@ GameObject:
   - component: {fileID: 3642071920920584076}
   - component: {fileID: 3642071920920584066}
   - component: {fileID: 3642071920920584077}
+  - component: {fileID: 4201501911479519415}
   m_Layer: 0
   m_Name: Base HumanSpine2
   m_TagString: Untagged
@@ -1708,8 +1710,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.3327933, y: 0.29128897, z: 0.16784191}
-  m_Center: {x: -0.16639662, y: -0.016683504, z: 0.000000067055225}
+  m_Size: {x: 0.33279327, y: 0.26196125, z: 0.16784191}
+  m_Center: {x: -0.16639662, y: -0.002019617, z: 0.000000065645565}
 --- !u!144 &3642071920920584077
 CharacterJoint:
   m_ObjectHideFlags: 0
@@ -1756,6 +1758,19 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &4201501911479519415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3005712697771264555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bb3bd24c065481459585290633ba1e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damagable: 0
 --- !u!1 &3150345823347305302
 GameObject:
   m_ObjectHideFlags: 0
@@ -2698,8 +2713,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.27080226, y: 0.24, z: 0.16784191}
-  m_Center: {x: -0.13540113, y: 0.022393778, z: 0.000000044703484}
+  m_Size: {x: 0.27080226, y: 0.23222971, z: 0.16784191}
+  m_Center: {x: -0.13540113, y: 0.02627891, z: 0.000000044703484}
 --- !u!1 &6313918709167144473
 GameObject:
   m_ObjectHideFlags: 0
@@ -2742,6 +2757,7 @@ GameObject:
   - component: {fileID: 3642071921703254195}
   - component: {fileID: 3642071921703254192}
   - component: {fileID: 3642071921703254194}
+  - component: {fileID: 1552135772792075608}
   m_Layer: 0
   m_Name: Base HumanHead
   m_TagString: Untagged
@@ -2795,8 +2811,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.09
-  m_Center: {x: -0.026962996, y: 0, z: 0}
+  m_Radius: 0.12
+  m_Center: {x: -0.06, y: 0.04, z: 0}
 --- !u!144 &3642071921703254194
 CharacterJoint:
   m_ObjectHideFlags: 0
@@ -2843,6 +2859,19 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &1552135772792075608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6339871491759880105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bb3bd24c065481459585290633ba1e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damagable: 0
 --- !u!1 &6483780217746994792
 GameObject:
   m_ObjectHideFlags: 0
@@ -2855,6 +2884,7 @@ GameObject:
   - component: {fileID: 3642071921552152524}
   - component: {fileID: 3642071921552152514}
   - component: {fileID: 3642071921552152525}
+  - component: {fileID: 336878938133833495}
   m_Layer: 0
   m_Name: Base HumanLLegThigh
   m_TagString: Untagged
@@ -2953,6 +2983,19 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &336878938133833495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6483780217746994792}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bb3bd24c065481459585290633ba1e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damagable: 0
 --- !u!1 &6501408766065841812
 GameObject:
   m_ObjectHideFlags: 0
@@ -3027,6 +3070,7 @@ GameObject:
   - component: {fileID: 3642071921607826908}
   - component: {fileID: 3642071921607826898}
   - component: {fileID: 3642071921607826909}
+  - component: {fileID: 1109042605564109953}
   m_Layer: 0
   m_Name: Base HumanRThigh
   m_TagString: Untagged
@@ -3125,6 +3169,19 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &1109042605564109953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6561167131265673185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bb3bd24c065481459585290633ba1e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damagable: 0
 --- !u!1 &6730303658535435277
 GameObject:
   m_ObjectHideFlags: 0

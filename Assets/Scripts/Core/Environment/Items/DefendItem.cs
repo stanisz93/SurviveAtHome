@@ -57,7 +57,6 @@ public class DefendItem : MonoBehaviour, IDefendable {
                 characterMovement = plr.GetComponent<CharacterMovement>();
             }
         interactCollider = GetComponent<Collider>();
-        trail = GetComponentInChildren<TrailRenderer>();
         m_Rigidbody = GetComponent<Rigidbody>();
         weaponPlaceholder = plr.GetComponent<WeaponPlaceholder>();
         OnPickup += weaponPlaceholder.SetDefendable;
@@ -68,6 +67,7 @@ public class DefendItem : MonoBehaviour, IDefendable {
         isCollected = true;
         OnPickup?.Invoke(this);
         OnDrop += weaponPlaceholder.RemoveWeapon;
+        OnDrop += weaponPlaceholder.RemoveEndurance;
         GameObject plr = GameObject.FindWithTag("Player");
         physicsCollider.enabled = false;
         m_Rigidbody.isKinematic = true;

@@ -182,7 +182,7 @@ public class PlayerInput : MonoBehaviour
         }
         else 
         {
-            playerTriggers.RelaseThrow();
+            playerTriggers.ReleaseThrow();
             controllerMode = ControllerMode.Normal;
 
         }

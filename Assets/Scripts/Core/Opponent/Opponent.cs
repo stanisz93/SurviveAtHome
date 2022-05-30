@@ -59,6 +59,8 @@ public class Opponent : MonoBehaviour
             taskManager.ForceToRun(opponentActions.GotStabbed(player, pushForce, pushTime), 1);
     }
 
+    
+
     public void SetKickPos(Vector3 position)
     {
         opponentActions.pushEffectPosition.position = position;
@@ -70,21 +72,24 @@ public class Opponent : MonoBehaviour
 
         var currPriority = taskManager.GetCurrentPriority();
         bool busy = taskManager.TaskIsEmpty();
-        if(Input.GetMouseButtonDown(2))
+        if(taskManager.isOpenForTask)
         {
-            taskManager.ForceToRun(opponentActions.WalkFollowMousePosition(), 3);
-        }
-        else if (vfov.FoundedObject() && currPriority > 2)
+            if(Input.GetMouseButtonDown(2))
             {
-                taskManager.ForceToRun(opponentActions.AttackSequenceTask(vfov.GetPlayerTarget()), 2);
+                taskManager.ForceToRun(opponentActions.WalkFollowMousePosition(), 3);
             }
-        else if (vfov.Suspicious() && currPriority > 3)
+            else if (vfov.FoundedObject() && currPriority > 2)
+                {
+                    taskManager.ForceToRun(opponentActions.AttackSequenceTask(vfov.GetPlayerTarget()), 2);
+                }
+            else if (vfov.Suspicious() && currPriority > 3)
+                {
+                    taskManager.ForceToRun(opponentActions.CheckSuspiciousPlace(), 3);
+                }
+            else if(currPriority > 4)
             {
-                taskManager.ForceToRun(opponentActions.CheckSuspiciousPlace(), 3);
+                taskManager.ForceToRun(opponentActions.Exploring(), 4);
             }
-        else if(currPriority > 4)
-        {
-            taskManager.ForceToRun(opponentActions.Exploring(), 4);
         }
 
     }

@@ -22,6 +22,7 @@ public class OpponentHit : MonoBehaviour
         else
         {
             transform.SetParent(hittingArm, true);
+            transform.localPosition = Vector3.zero;
             hitCollider.enabled = true;
         }
             
