@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(PlayerAnimationController), typeof(ItemPickupManager), typeof(Character))]
 public class PlayerTriggers : MonoBehaviour
@@ -21,6 +22,23 @@ public class PlayerTriggers : MonoBehaviour
 
     public bool isTriggerEmpty = true;
 
+
+//Throwing params, to be moved 
+
+    public Transform throwingHand;
+    public float maxThrowDistance = 10f;
+    public float currentThrowDistance = 0f;
+    public float throwDistanceSpeed = 5f;
+    private bool isAimingStarted = false;
+    
+    public Canvas ThrowProjectionCanvas;
+
+    public bool isDebugObjOn = false;
+    public Transform debugObj;
+    private Vector3 targetThrowPos;
+
+
+    ///end of Throwing Params
     private HitBonus hitBonus;
 
 
@@ -32,6 +50,8 @@ public class PlayerTriggers : MonoBehaviour
         playerAnimationController = GetComponent<PlayerAnimationController>(); 
         characterMovement = GetComponent<CharacterMovement>();
         hitBonus = GetComponent<HitBonus>();
+        ThrowProjectionCanvas.enabled = false;
+        debugObj.gameObject.SetActive(isDebugObjOn);
     }
 
 
@@ -50,9 +70,9 @@ public class PlayerTriggers : MonoBehaviour
     {
         isTriggerEmpty = false;
     }
-    public void BlockMovement()
+    public void BlockMovement(bool block=true)
     {
-           playerInput.blockMovement = true;
+           playerInput.blockMovement = block;
     }
 
 
@@ -60,6 +80,76 @@ public class PlayerTriggers : MonoBehaviour
     {
         StartCoroutine(ReleaseTriggerAfterSeconds(time));
     }
+
+
+    public void RelaseThrow()
+    {
+        ResetThrowState();
+        playerAnimationController.animator.SetTrigger("CancelAim");
+    }
+
+    public void ResetThrowState()
+    {
+        ThrowProjectionCanvas.enabled = false;
+        currentThrowDistance = 0f;
+        isAimingStarted = false;
+    }
+
+    public void StartAim()
+    {
+            BlockMovement(true);
+            playerAnimationController.animator.ResetTrigger("AimToThrow");
+            playerAnimationController.animator.ResetTrigger("Throw");
+            playerAnimationController.animator.SetTrigger("PrepareToAim");
+    }
+
+    public Vector3 GetThrowTargetPos()
+    {
+        return targetThrowPos;
+    }
+    public void ContinueAimToThrow()
+    {
+        if(!isAimingStarted)
+        {
+            playerAnimationController.animator.SetTrigger("AimToThrow");
+            ThrowProjectionCanvas.enabled = true;
+        }
+        else
+            isAimingStarted = true;
+        if(currentThrowDistance < maxThrowDistance)
+            currentThrowDistance += Time.deltaTime * throwDistanceSpeed;
+        else
+            currentThrowDistance = maxThrowDistance;
+        RaycastHit hit;
+        Vector3 aimPosition = throwingHand.position;
+        float maxHeightOfThrow = 1f;
+        aimPosition = new Vector3(aimPosition.x,maxHeightOfThrow, aimPosition.z);
+        Vector3 characterPos = new Vector3(characterMovement.t_mesh.position.x, maxHeightOfThrow, characterMovement.t_mesh.position.z);
+        Vector3 charTarget = characterPos + characterMovement.t_mesh.forward * currentThrowDistance;
+        charTarget = new Vector3(charTarget.x, maxHeightOfThrow, charTarget.z);
+        Vector3 handToTarget = charTarget - aimPosition;
+        float fixedLength = handToTarget.magnitude; //distance from hand to target
+        if (Physics.Raycast(aimPosition, handToTarget.normalized, out hit, fixedLength, ((1 << LayerMask.NameToLayer("Opponents") | (1 << LayerMask.NameToLayer("Obstacles"))))))
+                targetThrowPos = hit.point;
+                // ThrowProjectionCanvas.transform.rotation = Quaternion.LookRotation(hit.normal);
+        else 
+                targetThrowPos = charTarget;
+
+    
+        if(isDebugObjOn)
+            debugObj.position = targetThrowPos;
+        ThrowProjectionCanvas.transform.position = targetThrowPos;
+        ThrowProjectionCanvas.transform.LookAt(ThrowProjectionCanvas.transform.position + Camera.main.transform.forward);
+        
+    }
+
+    public void ThrowWeapon() // later move it to be handled by each weapon script separatable
+    {
+        playerAnimationController.animator.SetTrigger("Throw");
+        StartCoroutine(BlockMovementUntilTriggerIsEmpty());
+        StartCoroutine(ReleaseTriggerAfterSeconds(0.4f));
+    }
+
     public void Kick()
     {
         

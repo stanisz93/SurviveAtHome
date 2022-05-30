@@ -989,6 +989,7 @@ MonoBehaviour:
   leftHand: {fileID: 8580643111548229127}
   pfBloodEffect: {fileID: 1000010191825552, guid: fc79739a87957b44aab59070eeada4e2, type: 3}
   bloodEffectPos: {fileID: 2606903272406542680}
+  head: {fileID: 1328055391274803316}
   opponentFocus: {fileID: 0}
 --- !u!114 &1535127555151154498
 MonoBehaviour:
@@ -1082,6 +1083,12 @@ MonoBehaviour:
     m_Bits: 128
   dying: 0
   isTriggerEmpty: 1
+  isAimingToThrowStarted: 0
+  maxThrowDistance: 10
+  currentThrowDistance: 0
+  throwDistanceSpeed: 5
+  ThrowProjectionCanvas: {fileID: 0}
+  debugObj: {fileID: 0}
 --- !u!114 &1965349319013915874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3070,6 +3077,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8170270873427241093, guid: a32b89e71fbd51d4d9b3d270682a75ce, type: 3}
   m_PrefabInstance: {fileID: 4117206818740339877}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1328055391274803316 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3120276140425454801, guid: a32b89e71fbd51d4d9b3d270682a75ce, type: 3}
+  m_PrefabInstance: {fileID: 4117206818740339877}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8580643111548229127 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5636202960421229218, guid: a32b89e71fbd51d4d9b3d270682a75ce, type: 3}
@@ -3135,3 +3147,4 @@ MonoBehaviour:
   playerDistanceFromHead: 0.5
   stressReceiver: {fileID: 0}
   target: {fileID: 0}
+  isKillingEvent: 0

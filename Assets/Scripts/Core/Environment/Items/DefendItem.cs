@@ -33,6 +33,9 @@ public class DefendItem : MonoBehaviour, IDefendable {
     private WeaponPlaceholder weaponPlaceholder;
     
     private Action<DefendItem> OnPickup;
+     private Action OnDrop;
+
+
     
 
     public int maxEndurance = 200;
@@ -41,6 +44,8 @@ public class DefendItem : MonoBehaviour, IDefendable {
     private int enduranceStep = 20;
     private bool isCollected = false;
     private HitBonus bonus;
+
+    private TrailRenderer trail;
     
     private void Awake() {
         endurance = maxEndurance;
@@ -52,6 +57,7 @@ public class DefendItem : MonoBehaviour, IDefendable {
                 characterMovement = plr.GetComponent<CharacterMovement>();
             }
         interactCollider = GetComponent<Collider>();
+        trail = GetComponentInChildren<TrailRenderer>();
         m_Rigidbody = GetComponent<Rigidbody>();
         weaponPlaceholder = plr.GetComponent<WeaponPlaceholder>();
         OnPickup += weaponPlaceholder.SetDefendable;
@@ -61,6 +67,7 @@ public class DefendItem : MonoBehaviour, IDefendable {
     {
         isCollected = true;
         OnPickup?.Invoke(this);
+        OnDrop += weaponPlaceholder.RemoveWeapon;
         GameObject plr = GameObject.FindWithTag("Player");
         physicsCollider.enabled = false;
         m_Rigidbody.isKinematic = true;
@@ -86,6 +93,11 @@ public class DefendItem : MonoBehaviour, IDefendable {
         Destroy(pfInstance, 0.15f);
     }
 
+    public void SetKinematic(bool state)
+    {
+        m_Rigidbody.isKinematic = state;
+    }
+
     public int GetMaxEndurance()
     {
         return maxEndurance;
@@ -98,16 +110,31 @@ public class DefendItem : MonoBehaviour, IDefendable {
 
     public void Drop()
     {
-        isCollected = false;
+        DetachFromPlayer();
         physicsCollider.enabled = true;
         m_Rigidbody.isKinematic = false;
+        m_Rigidbody.AddForce(GameObject.FindWithTag("PlayerMesh").transform.forward * 2f, ForceMode.Impulse); 
+    }
+
+    public void DetachFromPlayer()
+    {
+        // this could also be added to OnDrp
+        eventController.SetToDefaultPushTrigger();
+        characterMovement.SetHoldMode(HoldMode.Default);
+        OnDrop?.Invoke();
+        OnDrop = null;
+        isCollected = false;
         interactCollider.enabled = true;
         PushEffectTrigger.OnHit -= ReduceEndurance;
         PushEffectTrigger.OnHit -= weaponPlaceholder.UpdateEndurance;
-        m_Rigidbody.AddForce(GameObject.FindWithTag("PlayerMesh").transform.forward * 2f, ForceMode.Impulse); 
         transform.parent = null;
+    }
 
-
+    public void PhysicFinishOfThrow(Vector3 forceDir)
+    {
+        physicsCollider.enabled = true;
+        m_Rigidbody.isKinematic = false;
+        m_Rigidbody.AddForce(forceDir, ForceMode.Impulse);
     }
 
     public void ChangeWeaponPositionToAttack()

@@ -44,6 +44,11 @@ public class OpponentMagnet : MonoBehaviour
         }
     }
 
+    public void RemoveOpponent(Transform opponent)
+    {
+        OpponentsInRadious.Remove(opponent);
+    }
+
     // Update is called once per frame
 
     // hERE I SHOULD TRY TO TAKE FORWARD OF MESH AND FIND THE OPPONENT THAT PLAYER IS THE MOST DIRECTED TO

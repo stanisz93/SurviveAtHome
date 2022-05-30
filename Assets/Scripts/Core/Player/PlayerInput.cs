@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public enum ControllerMode {Normal, Inventory, SettingTrap};
+public enum ControllerMode {Normal, Inventory, SettingTrap, Throwing};
 
 [RequireComponent(typeof(Character))]
 [RequireComponent(typeof(CharacterMovement))]
 public class PlayerInput : MonoBehaviour
 {
 
+    public LayerMask terrainMask;
     private Character character;
     private CharacterMovement chrMvmnt;
     private CapsuleCollider collider;
@@ -119,6 +120,10 @@ public class PlayerInput : MonoBehaviour
             {
                 ManageSettingTrapControl();
             }
+            else if(controllerMode == ControllerMode.Throwing)
+            {
+                ManagerThrowControl();
+            }
         }
     }
 
@@ -153,6 +158,38 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
+    void ManagerThrowControl()
+    {
+        
+        if(Input.GetMouseButton(1))
+        {
+            
+            Vector3 mouseToPlayerDir = MouseUtils.MousePositon(mainCamera, chrMvmnt.t_mesh, terrainMask);
+             Quaternion wantedRotation = Quaternion.LookRotation(mouseToPlayerDir);
+            chrMvmnt.t_mesh.rotation = wantedRotation;
+        
+            if(Input.GetMouseButton(0))
+            {
+                playerTriggers.ContinueAimToThrow();
+            }
+            else if(Input.GetMouseButtonUp(0))
+            {
+                character.StartTriggerAction(playerTriggers.ThrowWeapon); //I should create each logic
+                playerTriggers.ResetThrowState();
+                controllerMode = ControllerMode.Normal;
+            }
+  
+        }
+        else 
+        {
+            playerTriggers.RelaseThrow();
+            controllerMode = ControllerMode.Normal;
+
+        }
+            //of weapon attack in weapon script, with some interface
+
+    }
+
     void ManageSettingTrapControl()
     {
         if(Input.GetKey(KeyCode.Escape))
@@ -178,6 +215,11 @@ public class PlayerInput : MonoBehaviour
             {
                 if(obstacleInteractionManager.obstacleInteraction != null)
                     character.StartTriggerAction(obstacleInteractionManager.InteractObstacle);
+            }
+            else if(Input.GetMouseButtonDown(1) && chrMvmnt.GetHoldMode() != HoldMode.Default)
+            {
+                controllerMode = ControllerMode.Throwing;
+                playerTriggers.StartAim();
             }
             else if (Input.GetMouseButtonDown(0))
             {

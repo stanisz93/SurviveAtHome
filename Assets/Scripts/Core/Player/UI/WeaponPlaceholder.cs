@@ -26,7 +26,7 @@ public class WeaponPlaceholder : MonoBehaviour
         DoTweenUtils.PoopUpImage(weaponImage, 0.8f);
     }
 
-    void RemoveWeapon()
+    public void RemoveWeapon()
     {
         this.defendable = null;
         weaponImage.sprite = null;

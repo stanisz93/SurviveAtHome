@@ -19,6 +19,8 @@ public class Character : MonoBehaviour
     public Transform leftHand;
     public GameObject pfBloodEffect;
     public Transform bloodEffectPos;
+
+    public Transform head;
     public Transform opponentFocus = null;
     private Health health;
 
@@ -58,6 +60,11 @@ public class Character : MonoBehaviour
         transform.position = respawn.position;
         healthBar.SetMaxHealth(health.maxHealth);
  
+    }
+
+    public Vector3 GetHeadPosition()
+    {
+        return head.position;
     }
 
     public bool justDied()

@@ -18,7 +18,7 @@ TagManager:
   - UI
   - BeVisible
   - Obstacles
-  - BeSmellible
+  - Opponents
   - BeHearable
   - SnapPlayer
   - 

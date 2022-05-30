@@ -723,8 +723,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 60
-  hittingArm: {fileID: 2486387590880200996}
-  hittingPoint: {fileID: 2776234412801021388}
 --- !u!114 &1979573050972691322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -837,7 +835,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   head: {fileID: 4597343827526528492}
-  floor: {fileID: 0}
   pfBloodTextures:
   - {fileID: 100000, guid: 295fd3321dc75894cb55137e16e294bb, type: 3}
   - {fileID: 100000, guid: 1e1d8c8382961094d85192c9bbe5edee, type: 3}
@@ -3856,6 +3853,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9820a72e50e4ced4798a47f2e6995a06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hittingArm: {fileID: 2486387590880200996}
 --- !u!1 &8918456472391170496
 GameObject:
   m_ObjectHideFlags: 0
