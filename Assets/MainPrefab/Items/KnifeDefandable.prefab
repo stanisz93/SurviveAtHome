@@ -180,7 +180,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   throwVelocity: 15
-  forceThrow: 10
+  forceThrow: 7
   ThrowSlowDown: 1
 --- !u!1 &4665263876838457212
 GameObject:
@@ -420,7 +420,7 @@ GameObject:
   - component: {fileID: 6439607076154394055}
   - component: {fileID: 6517578638938719017}
   m_Layer: 0
-  m_Name: trigger
+  m_Name: AttackTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

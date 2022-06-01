@@ -102,6 +102,8 @@ public class ThrowableKnife : MonoBehaviour
         hasCollideWhileThrow = false;
         item.physicsCollider.enabled = true;
         throwSequence = DOTween.Sequence();
+        Vector3 itemModPos = new Vector3(item.transform.position.x, targetThrowPos.y, item.transform.position.z);
+        Vector3 force = (targetThrowPos - item.transform.position).normalized * forceThrow;
         //calcualte number or rotation base on distance
         float throwTime = GetPlannedTimeOfThrow(targetThrowPos);
         throwSequence.Append(item.transform.DOMove(targetThrowPos, throwTime).SetEase(throwAcceleration));
@@ -110,7 +112,6 @@ public class ThrowableKnife : MonoBehaviour
         throwSequence.Join(item.transform.DOLocalRotate(new Vector3(0, 0, finalRotate), throwTime, RotateMode.FastBeyond360).SetRelative(true).SetEase(Ease.Linear));
         throwSequence.AppendCallback(() =>  Time.timeScale = 1f);
 
-        Vector3 force = (targetThrowPos - item.transform.position).normalized * forceThrow;
         throwSequence.AppendCallback(() => 
         {   
             if(!hasCollideWhileThrow)

@@ -27,7 +27,9 @@ public class PlayerTriggers : MonoBehaviour
 
     public Transform throwingHand;
     public float maxThrowDistance = 10f;
-    public float currentThrowDistance = 0f;
+
+    public const float minDistance = 1f;
+    public float currentThrowDistance = minDistance;
     public float throwDistanceSpeed = 5f;
     public float maxHeightOfThrow = 1f;
     private bool isAimingStarted = false;
@@ -93,7 +95,7 @@ public class PlayerTriggers : MonoBehaviour
     public void ResetThrowState()
     {
         ThrowProjectionCanvas.enabled = false;
-        currentThrowDistance = 0f;
+        currentThrowDistance = minDistance;
         isAimingStarted = false;
     }
 

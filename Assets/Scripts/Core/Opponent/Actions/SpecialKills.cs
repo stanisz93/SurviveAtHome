@@ -59,6 +59,7 @@ public class SpecialKills : MonoBehaviour
     public void GotKilledByThrow(Transform throwTransform)
     {
         animator.SetTrigger("DieByThrow");
+        GetComponent<Ragdoll>().ToggleRagdoll();
         GetComponentInChildren<TaskManager>().BlockAnyTaskAssigning();
         vfov.TurnOffSense();
         Instantiate(pfThrowKillEffect, throwTransform.position, Quaternion.identity, throwTransform);
