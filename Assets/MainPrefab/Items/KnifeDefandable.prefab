@@ -117,14 +117,14 @@ MonoBehaviour:
   eventController: {fileID: 0}
   pfDestroyObject: {fileID: 2036080073528332715, guid: 54d478af6eb4837459f6529add936632, type: 3}
   holdMode: 1
-  PushEffectTrigger: {fileID: 6517578638938719017}
+  attackTrigger: {fileID: 6517578638938719017}
   physicsCollider: {fileID: 0}
   pickPosition: {x: 0, y: 0, z: 0}
   pickRotation: {x: 0, y: 0, z: 0}
   attackPosition: {x: 0, y: 0, z: 0}
   attackRotation: {x: 0, y: 0, z: 0}
   icon: {fileID: 0}
-  maxEndurance: 200
+  initialEndurance: 200
   enduranceStep: 20
 --- !u!54 &8907907133807126568
 Rigidbody:

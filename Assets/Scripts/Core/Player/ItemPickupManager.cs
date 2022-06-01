@@ -13,8 +13,8 @@ public class ItemPickupManager: BestCandidateManager
         if(best != null)
         {
             ICollectible collectible = best.GetComponent<ICollectible>();
-            IDefendable defendable = best.GetComponent<IDefendable>();
-            if (collectible == null && defendable == null)
+            DefendItem defendItem = best.GetComponent<DefendItem>();
+            if (collectible == null && defendItem == null)
             {
                 Debug.LogError("This is not collectible!");
             }
@@ -26,9 +26,9 @@ public class ItemPickupManager: BestCandidateManager
                 {
                     onCollectProcess = collectible.Collect;
                 }
-                else if(defendable != null)
+                else if(defendItem != null)
                 {
-                    onCollectProcess = defendable.Collect;
+                    onCollectProcess = defendItem.Collect;
                     // weaponPlaceholder.SetDefendable(defendable);
 
                     //Here I should change player move mode to hold spear

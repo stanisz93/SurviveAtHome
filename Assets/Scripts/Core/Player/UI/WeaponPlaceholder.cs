@@ -11,7 +11,7 @@ public class WeaponPlaceholder : MonoBehaviour
     [SerializeField]
     public Image weaponImage;
     public Image endurancePointer;
-    private IDefendable defendable;
+    private DefendItem defendItem;
 
     void Start()
     {
@@ -21,57 +21,48 @@ public class WeaponPlaceholder : MonoBehaviour
     // Update is called once per frame
     void SetWeaponImage()
     {
-        weaponImage.sprite = defendable.GetImage();
+        weaponImage.sprite = this.defendItem.GetImage();
         weaponImage.color = new Color32(255, 255, 255, 255);
         DoTweenUtils.PoopUpImage(weaponImage, 0.8f);
     }
 
-    public void RemoveWeapon()
+    public void RemoveWeapon(DefendItem defendItem)
     {
-        this.defendable = null;
+        this.defendItem = null;
         weaponImage.sprite = null;
         weaponImage.color = new Color32(255, 255, 255, 0);
         DoTweenUtils.PoopUpImage(weaponImage, 0.8f);
+        RemoveEndurance();
     }
 
-    public void SetDefendable(IDefendable defendable)
+    public void AttachWeapon(DefendItem defendItem)
     {
-        if(this.defendable != null)
-           this.defendable.Drop();
-        this.defendable = defendable;
-        SetWeaponImage();
-        SetMaxEndurance();
-        UpdateEndurance();
-    }
-
-
-    void SetMaxEndurance()
-    {
-
-        slider.maxValue = this.defendable.GetMaxEndurance();
-        slider.value =  this.defendable.GetMaxEndurance();
+        if(this.defendItem != null)
+           this.defendItem.Drop(this.defendItem);
+        this.defendItem = defendItem;
+        float initialVal = (float)this.defendItem.GetInitialEndurance();
+        slider.maxValue = initialVal;
         endurancePointer.enabled = true;
-        endurancePointer.color = gradient.Evaluate(0f);
-
+        SetWeaponImage();
+        UpdateEndurance(initialVal);
+        // UpdateEndurance();
     }
 
-    public void RemoveEndurance()
+
+    void RemoveEndurance()
     {
         slider.maxValue = 0f;
         slider.value = 0f;
         endurancePointer.enabled = false;
     }
 
-    public void UpdateEndurance()
+    public void UpdateEndurance(float endurance)
     {
-        var currEndurance = (float)defendable.GetCurrentEndurance();
-        slider.value = currEndurance;
+        slider.value = endurance;
         DoTweenUtils.PoopUpImage(endurancePointer, 0.16f, 0.16f);
-        var maxVal = (float)defendable.GetMaxEndurance();
-        var ratio = (maxVal - currEndurance) / maxVal;
+        var maxVal = (float)defendItem.GetInitialEndurance();
+        var ratio = (maxVal - endurance) / maxVal;
         endurancePointer.color = gradient.Evaluate(ratio);
-        if( slider.value <= 0)
-            RemoveWeapon();
     }
 
 

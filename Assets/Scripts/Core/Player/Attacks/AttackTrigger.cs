@@ -10,25 +10,23 @@ public float cameraShake = 1f;
 public float pushForce = 1f;
 public float pushTime = 0.1f;
 
-public Action OnHit;
 private Collider hitTriggerCollider;
-protected StressReceiver stressReceiver;
 protected Transform player;
 
 private HashSet<Opponent> meetDuringTurn; //add flag true if 
 private HitBonus bonus;
-
+private DefendItem defendItem;
 
 
 private void Awake() {
-    stressReceiver = GameObject.FindWithTag("MainCamera").GetComponent<StressReceiver>();
+    defendItem = GetComponentInParent<DefendItem>();
     player = GameObject.FindWithTag("PlayerMesh").transform;
     bonus = GameObject.FindWithTag("Player").GetComponent<HitBonus>();
     hitTriggerCollider = GetComponent<Collider>();
     meetDuringTurn = new HashSet<Opponent>();
-    OnHit += bonus.IncreaseCounts;
-    
+      
 }
+
 
 private void Start() {
     GetComponent<Collider>().enabled = false;
@@ -86,8 +84,7 @@ private void OnTriggerEnter(Collider other) {
                 targetDirection = new Vector3(targetDirection.x,  player.position.y, targetDirection.z);
                 player.rotation = Quaternion.LookRotation(targetDirection);
                 OpponentReaction(opponent);
-                OnHit?.Invoke();
-                stressReceiver.InduceStress(cameraShake);
+                defendItem.OnHit?.Invoke(defendItem);
             }
         }
     }

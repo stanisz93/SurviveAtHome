@@ -7,13 +7,13 @@ using DG.Tweening;
 
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
-public class DefendItem : MonoBehaviour, IDefendable {
+public class DefendItem : MonoBehaviour {
     
     public PlayerAnimatorEventController eventController;
     public GameObject pfDestroyObject;
 
     public HoldMode holdMode;
-    public AttackTrigger PushEffectTrigger;
+    public AttackTrigger attackTrigger;
 
     public Collider physicsCollider;
 
@@ -33,22 +33,25 @@ public class DefendItem : MonoBehaviour, IDefendable {
     private WeaponPlaceholder weaponPlaceholder;
     
     private Action<DefendItem> OnPickup;
-     private Action OnDrop;
+     private Action<DefendItem> OnDrop;
+    
+    public Action<DefendItem> OnHit;
 
 
     
 
-    public int maxEndurance = 200;
+    public int initialEndurance = 200;
     private int endurance;
     [SerializeField]
     private int enduranceStep = 20;
     private bool isCollected = false;
     private HitBonus bonus;
-
+    private StressReceiver stressReceiver;
     private TrailRenderer trail;
     
     private void Awake() {
-        endurance = maxEndurance;
+        stressReceiver = GameObject.FindWithTag("MainCamera").GetComponent<StressReceiver>();
+        endurance = initialEndurance;
         var plr = GameObject.FindWithTag("Player");
         bonus = plr.GetComponent<HitBonus>();
         if(plr != null)
@@ -59,25 +62,27 @@ public class DefendItem : MonoBehaviour, IDefendable {
         interactCollider = GetComponent<Collider>();
         m_Rigidbody = GetComponent<Rigidbody>();
         weaponPlaceholder = plr.GetComponent<WeaponPlaceholder>();
-        OnPickup += weaponPlaceholder.SetDefendable;
+        OnPickup += weaponPlaceholder.AttachWeapon;
+        OnDrop += weaponPlaceholder.RemoveWeapon;
+
+        OnHit += bonus.IncreaseCounts;
+        OnHit += stressReceiver.InduceStressByHit;
+        OnHit += ReduceEndurance;
+
         
     }
     public void Collect()
     {
         isCollected = true;
         OnPickup?.Invoke(this);
-        OnDrop += weaponPlaceholder.RemoveWeapon;
-        OnDrop += weaponPlaceholder.RemoveEndurance;
+
         GameObject plr = GameObject.FindWithTag("Player");
         physicsCollider.enabled = false;
         m_Rigidbody.isKinematic = true;
         transform.parent = hand;
         ChangeWeaponPositionToHold();
         characterMovement.SetHoldMode(holdMode);
-        eventController.SetAttackTriggerCollider(PushEffectTrigger);
-        PushEffectTrigger.OnHit += ReduceEndurance;
-        PushEffectTrigger.OnHit += weaponPlaceholder.UpdateEndurance; //remember to remove it when drop
-
+        eventController.SetAttackTriggerCollider(attackTrigger);
         interactCollider.enabled = false;
     }
 
@@ -89,6 +94,7 @@ public class DefendItem : MonoBehaviour, IDefendable {
             body.AddForce(UnityEngine.Random.insideUnitCircle.normalized * 400, ForceMode.Impulse);
         eventController.SetToDefaultPushTrigger();
         characterMovement.SetHoldMode(HoldMode.Default);
+        weaponPlaceholder.RemoveWeapon(this);
         Destroy(gameObject);
         Destroy(pfInstance, 0.15f);
     }
@@ -98,9 +104,9 @@ public class DefendItem : MonoBehaviour, IDefendable {
         m_Rigidbody.isKinematic = state;
     }
 
-    public int GetMaxEndurance()
+    public int GetInitialEndurance()
     {
-        return maxEndurance;
+        return initialEndurance;
     }
 
     public int GetCurrentEndurance()
@@ -108,7 +114,7 @@ public class DefendItem : MonoBehaviour, IDefendable {
         return endurance;
     }
 
-    public void Drop()
+    public void Drop(DefendItem defendItem)
     {
         DetachFromPlayer();
         physicsCollider.enabled = true;
@@ -121,12 +127,11 @@ public class DefendItem : MonoBehaviour, IDefendable {
         // this could also be added to OnDrp
         eventController.SetToDefaultPushTrigger();
         characterMovement.SetHoldMode(HoldMode.Default);
-        OnDrop?.Invoke();
+        OnDrop?.Invoke(this);
         OnDrop = null;
         isCollected = false;
         interactCollider.enabled = true;
-        PushEffectTrigger.OnHit -= ReduceEndurance;
-        PushEffectTrigger.OnHit -= weaponPlaceholder.UpdateEndurance;
+        OnHit -= ReduceEndurance;
         transform.parent = null;
     }
 
@@ -165,19 +170,18 @@ public class DefendItem : MonoBehaviour, IDefendable {
         }
     }
 
-    public void ReduceEndurance()
+    public void ReduceEndurance(DefendItem idefendable)
     {
         endurance -= enduranceStep;
+        weaponPlaceholder.UpdateEndurance(endurance); //remember to remove it when drop
+    
         if(endurance <= 0)
         {
             BreakWeapon();
         }
+
     }
 
-    public void AddActionOnHit(Action action)
-    {
-        PushEffectTrigger.OnHit += action;
-    }
 
 
     public Sprite GetImage()
