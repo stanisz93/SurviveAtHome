@@ -17,6 +17,7 @@ public class ThrowableKnife : MonoBehaviour
     
     private Sequence throwSequence;
     private DefendItem item;
+    private AttackTrigger attackTrigger;
     private bool hasCollideWhileThrow = false;
 
     private TrailRenderer trail;
@@ -29,6 +30,7 @@ public class ThrowableKnife : MonoBehaviour
     
     void Start()
     {
+        attackTrigger = GetComponentInChildren<AttackTrigger>();
         item = GetComponentInParent<DefendItem>();
         trail = GetComponentInChildren<TrailRenderer>();
         trail.enabled = false;
@@ -47,6 +49,8 @@ public class ThrowableKnife : MonoBehaviour
                     throwSequence.Kill();
                 hasCollideWhileThrow = true;
                 item.SetKinematic(true);
+                item.SetParentObj(other.transform);
+                item.physicsCollider.enabled = false;
                 // if(other.gameObject.GetComponentInParent<Opponent>())
                 //     stressReceiver.InduceStress(2f);
                 
@@ -81,6 +85,7 @@ public class ThrowableKnife : MonoBehaviour
             Time.timeScale = ThrowSlowDown;
             TurnOnTrail();
             item.DetachFromPlayer();
+            
             item.transform.localRotation = Quaternion.FromToRotation(Vector3.right, -(targetThrowPos - item.transform.position).normalized);
         
 
@@ -99,11 +104,12 @@ public class ThrowableKnife : MonoBehaviour
 
     public void ApplyThrowSequence(Vector3 targetThrowPos)
     {
+        attackTrigger.GetComponent<Collider>().enabled = true;
         hasCollideWhileThrow = false;
         item.physicsCollider.enabled = true;
         throwSequence = DOTween.Sequence();
         Vector3 itemModPos = new Vector3(item.transform.position.x, targetThrowPos.y, item.transform.position.z);
-        Vector3 force = (targetThrowPos - item.transform.position).normalized * forceThrow;
+        Vector3 force = (targetThrowPos - itemModPos).normalized * forceThrow;
         //calcualte number or rotation base on distance
         float throwTime = GetPlannedTimeOfThrow(targetThrowPos);
         throwSequence.Append(item.transform.DOMove(targetThrowPos, throwTime).SetEase(throwAcceleration));
@@ -118,7 +124,7 @@ public class ThrowableKnife : MonoBehaviour
                 GetComponentInParent<DefendItem>().PhysicFinishOfThrow(force);
         });
         throwSequence.OnComplete(() => {  
-    Debug.Log("Done");
+    Debug.Log("Done"); 
 });
     }
 

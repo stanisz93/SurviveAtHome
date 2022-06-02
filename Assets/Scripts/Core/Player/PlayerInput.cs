@@ -259,7 +259,7 @@ public class PlayerInput : MonoBehaviour
             {
 
                 bool success = itemPickupManager.PickItem();
-                if(success != null)
+                if(success)
                     StartCoroutine(playerAnimationController.PickupItem());
             }   
             else if(Input.GetKey(KeyCode.Tab))

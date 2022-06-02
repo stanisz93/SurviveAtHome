@@ -367,6 +367,7 @@ GameObject:
   - component: {fileID: 3642071922470276749}
   - component: {fileID: 3642071922470276739}
   - component: {fileID: 3642071922470276738}
+  - component: {fileID: 8925890344445805350}
   m_Layer: 0
   m_Name: Base HumanRArmCollarbone
   m_TagString: Untagged
@@ -465,6 +466,19 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &8925890344445805350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1960708164886253123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bb3bd24c065481459585290633ba1e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damagable: 0
 --- !u!1 &2019321508906673719
 GameObject:
   m_ObjectHideFlags: 0
@@ -645,6 +659,7 @@ GameObject:
   - component: {fileID: 2397819963991360258}
   - component: {fileID: 5552930046791271193}
   - component: {fileID: 4123497014353931719}
+  - component: {fileID: 54583718236642984}
   m_Layer: 8
   m_Name: OpponentRagdollSupported
   m_TagString: Opponent
@@ -845,6 +860,7 @@ MonoBehaviour:
   pfThrowKillEffect: {fileID: 6115847214822075018, guid: 665a9905001330142adb9ed828674cd7, type: 3}
   bloodEmmiterHeight: 0.3
   bloodTextureActivateDelay: 0.1
+  bloodTextureThrowDelay: 0.2
   bloodTextureOffsetAlongSpine: -0.5
 --- !u!114 &4123497014353931719
 MonoBehaviour:
@@ -861,6 +877,19 @@ MonoBehaviour:
   Zombie: {fileID: 8082977296514454214}
   ragdollHead: {fileID: 3642071921703254195}
   isRagdoll: 0
+--- !u!114 &54583718236642984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2397819963991360380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bb3bd24c065481459585290633ba1e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damagable: 0
 --- !u!1 &2397819964081491873
 GameObject:
   m_ObjectHideFlags: 0
@@ -1660,7 +1689,7 @@ GameObject:
   - component: {fileID: 3642071920920584076}
   - component: {fileID: 3642071920920584066}
   - component: {fileID: 3642071920920584077}
-  - component: {fileID: 4201501911479519415}
+  - component: {fileID: 2338041828257797605}
   m_Layer: 0
   m_Name: Base HumanSpine2
   m_TagString: Untagged
@@ -1710,7 +1739,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.33279327, y: 0.26196125, z: 0.16784191}
+  m_Size: {x: 0.33279327, y: 0.2, z: 0.16784191}
   m_Center: {x: -0.16639662, y: -0.002019617, z: 0.000000065645565}
 --- !u!144 &3642071920920584077
 CharacterJoint:
@@ -1758,7 +1787,7 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!114 &4201501911479519415
+--- !u!114 &2338041828257797605
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2106,6 +2135,7 @@ GameObject:
   - component: {fileID: 3642071921563711980}
   - component: {fileID: 3642071921563711970}
   - component: {fileID: 3642071921563711981}
+  - component: {fileID: 2634650057134647213}
   m_Layer: 0
   m_Name: Base HumanLArmCollarbone
   m_TagString: Untagged
@@ -2204,6 +2234,19 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &2634650057134647213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4835590295372321108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bb3bd24c065481459585290633ba1e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damagable: 0
 --- !u!1 &4996389428832651262
 GameObject:
   m_ObjectHideFlags: 0
@@ -2662,6 +2705,7 @@ GameObject:
   - component: {fileID: 7243347913444595822}
   - component: {fileID: 3642071921372934846}
   - component: {fileID: 3642071921372934847}
+  - component: {fileID: 7511053995850909873}
   m_Layer: 0
   m_Name: Base HumanPelvis
   m_TagString: Untagged
@@ -2713,8 +2757,21 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.27080226, y: 0.23222971, z: 0.16784191}
+  m_Size: {x: 0.23, y: 0.23222971, z: 0.16784191}
   m_Center: {x: -0.13540113, y: 0.02627891, z: 0.000000044703484}
+--- !u!114 &7511053995850909873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6272932511315430827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bb3bd24c065481459585290633ba1e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damagable: 0
 --- !u!1 &6313918709167144473
 GameObject:
   m_ObjectHideFlags: 0
@@ -2757,7 +2814,7 @@ GameObject:
   - component: {fileID: 3642071921703254195}
   - component: {fileID: 3642071921703254192}
   - component: {fileID: 3642071921703254194}
-  - component: {fileID: 1552135772792075608}
+  - component: {fileID: 271178562078410309}
   m_Layer: 0
   m_Name: Base HumanHead
   m_TagString: Untagged
@@ -2859,7 +2916,7 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!114 &1552135772792075608
+--- !u!114 &271178562078410309
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2884,7 +2941,7 @@ GameObject:
   - component: {fileID: 3642071921552152524}
   - component: {fileID: 3642071921552152514}
   - component: {fileID: 3642071921552152525}
-  - component: {fileID: 336878938133833495}
+  - component: {fileID: 5256239660039789265}
   m_Layer: 0
   m_Name: Base HumanLLegThigh
   m_TagString: Untagged
@@ -2983,7 +3040,7 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!114 &336878938133833495
+--- !u!114 &5256239660039789265
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3070,7 +3127,7 @@ GameObject:
   - component: {fileID: 3642071921607826908}
   - component: {fileID: 3642071921607826898}
   - component: {fileID: 3642071921607826909}
-  - component: {fileID: 1109042605564109953}
+  - component: {fileID: 4840421218976540878}
   m_Layer: 0
   m_Name: Base HumanRThigh
   m_TagString: Untagged
@@ -3169,7 +3226,7 @@ CharacterJoint:
   m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!114 &1109042605564109953
+--- !u!114 &4840421218976540878
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3640,6 +3697,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6afa261ad065c1a41975289dfa67e69a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isOpenForTask: 1
 --- !u!114 &2397819965307870976
 MonoBehaviour:
   m_ObjectHideFlags: 0

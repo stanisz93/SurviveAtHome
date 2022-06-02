@@ -52,7 +52,8 @@ public class SpecialAttacks : MonoBehaviour
     public void ThrowWeapon()
     {
         ThrowableKnife thrownKnife = GetComponentInChildren<ThrowableKnife>();
-        thrownKnife.Throw(playerTriggers.GetThrowTargetPos());  //this should be moved
+        if(thrownKnife != null)
+            thrownKnife.Throw(playerTriggers.GetThrowTargetPos());  //this should be moved
         // from playerTriggers to some throw mechanism managment 
     }
 

@@ -23,7 +23,7 @@ RenderSettings:
   m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
   m_AmbientEquatorColor: {r: 0.9150943, g: 0.9150943, b: 0.9150943, a: 1}
   m_AmbientGroundColor: {r: 0.6037736, g: 0.6037736, b: 0.6037736, a: 1}
-  m_AmbientIntensity: 1.26
+  m_AmbientIntensity: 1.6
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 1, g: 1, b: 1, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
@@ -7040,7 +7040,8 @@ PrefabInstance:
       propertyPath: m_ConnectedAnchor.y
       value: 0.014994473
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1109042605564109953, guid: 08c63de60c0e61b4daa3de1531a5eb4c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 08c63de60c0e61b4daa3de1531a5eb4c, type: 3}
 --- !u!4 &1995820742 stripped
 Transform:

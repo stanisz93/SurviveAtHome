@@ -9,7 +9,7 @@ public interface ICollectible
     int GetAmount();
     ResourceType GetResourceType();
 
-    void DestroyItem();
+    void DestroyItem(float delay=0.0f, bool usingAnimation=true);
 
     Sprite GetImage();
 

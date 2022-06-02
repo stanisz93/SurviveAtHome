@@ -56,6 +56,10 @@ public class WeaponPlaceholder : MonoBehaviour
         endurancePointer.enabled = false;
     }
 
+    public bool isItemCurrentOne(DefendItem item)
+    {
+        return item == this.defendItem;
+    }
     public void UpdateEndurance(float endurance)
     {
         slider.value = endurance;

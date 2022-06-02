@@ -12,11 +12,11 @@ public class CustomInspector : Editor
        Ragdoll ragdoll = (Ragdoll)target;
        if(GUILayout.Button("Apply Force"))
        {
-           ragdoll.AddForce();
+           ragdoll.AddForce(new Vector3(200f, 200f, 200f));
        }
        if(GUILayout.Button("Toggle ragdoll"))
        {
-           ragdoll.ToggleRagdoll();
+           ragdoll.ToggleRagdoll(Vector3.zero);
        }
     }
 }

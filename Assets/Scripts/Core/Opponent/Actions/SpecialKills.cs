@@ -50,22 +50,22 @@ public class SpecialKills : MonoBehaviour
         Instantiate(pfBloodKillEffect, pos, Quaternion.LookRotation(-headRightXZDirection));
         StartCoroutine(InstantiateBloodTexture(bloodTextureActivateDelay, head.position));
         animator.SetTrigger("KickKill");
-        GetComponent<Ragdoll>().ToggleRagdoll();
+        GetComponent<Ragdoll>().ToggleRagdoll(Vector3.zero);
         Invoke("DestroyOpponentObject", 0.3f);
 
     }
 
 
-    public void GotKilledByThrow(Transform throwTransform)
+    public void GotKilledByThrow(Transform throwTransform, Vector3 force)
     {
         animator.SetTrigger("DieByThrow");
-        GetComponent<Ragdoll>().ToggleRagdoll();
+        StartCoroutine(GetComponent<Ragdoll>().ToggleRagdollAfter(0.0f, force));
         GetComponentInChildren<TaskManager>().BlockAnyTaskAssigning();
         vfov.TurnOffSense();
         Instantiate(pfThrowKillEffect, throwTransform.position, Quaternion.identity, throwTransform);
         StartCoroutine(InstantiateBloodTexture(bloodTextureThrowDelay, throwTransform.position));
         GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
-        Invoke("DestroyOpponentObject", 1f);
+        Invoke("DestroyOpponentObject", 2f);
     }
 
     void DestroyOpponentObject()

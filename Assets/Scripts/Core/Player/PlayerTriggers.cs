@@ -39,6 +39,7 @@ public class PlayerTriggers : MonoBehaviour
     public bool isDebugObjOn = false;
     public Transform debugObj;
     private Vector3 targetThrowPos;
+    PlayerAnimatorEventController playerAnimatorEventController;
 
 
     ///end of Throwing Params
@@ -48,6 +49,7 @@ public class PlayerTriggers : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerAnimatorEventController = GetComponentInChildren<PlayerAnimatorEventController>();
         playerInput = GetComponent<PlayerInput>();
         character = GetComponent<Character>();
         playerAnimationController = GetComponent<PlayerAnimationController>(); 
@@ -149,6 +151,7 @@ public class PlayerTriggers : MonoBehaviour
 
     public void ThrowWeapon() // later move it to be handled by each weapon script separatable
     {
+        playerAnimatorEventController.currentAttackTrigger.SetTriggerType(AttackTrigger.TriggerType.Distant);
         playerAnimationController.animator.SetTrigger("Throw");
         StartCoroutine(BlockMovementUntilTriggerIsEmpty());
         StartCoroutine(ReleaseTriggerAfterSeconds(0.4f));
@@ -167,6 +170,7 @@ public class PlayerTriggers : MonoBehaviour
 
     public void StickAttack()
     {
+        playerAnimatorEventController.currentAttackTrigger.SetTriggerType(AttackTrigger.TriggerType.Melee);
         DefendItem defendItem = GetComponentInChildren<DefendItem>();
         defendItem.ChangeWeaponPositionToAttack();
         character.SpeedBeforeKick = character.GetVelocityMagnitude();
@@ -177,6 +181,7 @@ public class PlayerTriggers : MonoBehaviour
 
     public void KnifeAttack()
     {
+        playerAnimatorEventController.currentAttackTrigger.SetTriggerType(AttackTrigger.TriggerType.Melee);
         DefendItem defendItem = GetComponentInChildren<DefendItem>();
         defendItem.ChangeWeaponPositionToAttack();
         character.SpeedBeforeKick = character.GetVelocityMagnitude();

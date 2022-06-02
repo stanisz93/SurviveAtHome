@@ -51,7 +51,7 @@ public class InteractionBonus : MonoBehaviour {
 
     public void TurnOffVaultBonus()
     {
-        playerAnimatorEventController.TurnOffPushCollider();
+        playerAnimatorEventController.TurnOffDamage();
         isVaultContext = false;
         Time.timeScale = 1f;
     }

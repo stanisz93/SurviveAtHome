@@ -42,9 +42,9 @@ public class SpoonItem : MonoBehaviour, ICollectible
 
     public Sprite GetImage() {return null;}
 
-    public void DestroyItem()
+    public void DestroyItem(float delay=0f, bool usingAnimation=false)
     { 
-        Destroy(gameObject);
+        Destroy(gameObject, delay);
     }
 
 }

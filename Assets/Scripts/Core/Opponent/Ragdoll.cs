@@ -25,10 +25,17 @@ public class Ragdoll : MonoBehaviour
     }
 
     // Update is called once per frame
-    public void ToggleRagdoll()
+    
+    public IEnumerator ToggleRagdollAfter(float delay, Vector3 force)
+    {
+        yield return new WaitForSeconds(delay);
+        ToggleRagdoll(force);
+    }
+    public void ToggleRagdoll(Vector3 force)
     {
         isRagdoll = !isRagdoll;
         animator.enabled = !isRagdoll;
+        GetComponent<Collider>().enabled = !isRagdoll;
         ToogleRigidbodies(isRagdoll);
         foreach( var c in ragdollColliders)
         {
@@ -36,22 +43,29 @@ public class Ragdoll : MonoBehaviour
         }
 
         var components = GetComponents<MonoBehaviour>();
-        foreach( var t in components )
+        foreach( var t in components)
         {
             t.enabled = !isRagdoll;
         }
+        if (force != Vector3.zero)
+            AddForce(force);
+        
 
     }
 
-    public void AddForce()
+    public void AddForce(Vector3 force)
     {
-        ragdollHead.AddForce(transform.forward * 200f);
+        foreach(var rb in rigidBodies)
+        {
+            rb.AddForce(force * 1000f);
+        }
     }
 
     public void ToogleRigidbodies(bool state)
     {
         foreach(var rb in rigidBodies)
         {
+            rb.velocity = Vector3.zero;
             rb.isKinematic = !state;
         }
     }

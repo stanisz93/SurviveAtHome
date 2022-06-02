@@ -118,7 +118,7 @@ MonoBehaviour:
   pfDestroyObject: {fileID: 2036080073528332715, guid: 54d478af6eb4837459f6529add936632, type: 3}
   holdMode: 1
   attackTrigger: {fileID: 6517578638938719017}
-  physicsCollider: {fileID: 0}
+  physicsCollider: {fileID: 6436430692303678042}
   pickPosition: {x: 0, y: 0, z: 0}
   pickRotation: {x: 0, y: 0, z: 0}
   attackPosition: {x: 0, y: 0, z: 0}

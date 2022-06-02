@@ -79,17 +79,24 @@ public class DefendItem : MonoBehaviour, ICollectible{
         interactCollider.enabled = false;
     }
 
-    public void DestroyItem() {
-        
+    void InvokeDestroyObjectAnimation(float destroyDelay=0.15f)
+    {
         GameObject pfInstance = Instantiate(pfDestroyObject, transform.position, transform.rotation);  
         var rigidbodies = pfInstance.GetComponentsInChildren<Rigidbody>();
         foreach (Rigidbody body in rigidbodies)
             body.AddForce(UnityEngine.Random.insideUnitCircle.normalized * 400, ForceMode.Impulse);
+        Destroy(pfInstance, destroyDelay);
+    }
+
+    public void DestroyItem(float delay=0f, bool usingAnimation=true) {
+        
+        if(usingAnimation)
+            InvokeDestroyObjectAnimation();
         eventController.SetToDefaultAttackTrigger();
         characterMovement.SetHoldMode(HoldMode.Default);
         weaponPlaceholder.RemoveWeapon();
         Destroy(gameObject);
-        Destroy(pfInstance, 0.15f);
+
     }
 
     public void SetKinematic(bool state)
@@ -114,6 +121,7 @@ public class DefendItem : MonoBehaviour, ICollectible{
         physicsCollider.enabled = true;
         m_Rigidbody.isKinematic = false;
         interactCollider.enabled = true;
+
         m_Rigidbody.AddForce(GameObject.FindWithTag("PlayerMesh").transform.forward * 2f, ForceMode.Impulse); 
     } 
 
@@ -163,10 +171,11 @@ public class DefendItem : MonoBehaviour, ICollectible{
         }
     }
 
-    public void ReduceEndurance(AttackTrigger actionTrigger)
+    public void ReduceEndurance(AttackTrigger attackTrigger)
     {
-        endurance -= enduranceStep;
-        weaponPlaceholder.UpdateEndurance(endurance); //remember to remove it when drop
+        endurance -= enduranceStep * (int) attackTrigger.GetEnduranceMultiplier();
+        if(weaponPlaceholder.isItemCurrentOne(this))
+            weaponPlaceholder.UpdateEndurance(endurance); //remember to remove it when drop
     
         if(endurance <= 0)
         {
@@ -180,6 +189,12 @@ public class DefendItem : MonoBehaviour, ICollectible{
     public Sprite GetImage()
     {
         return icon.sprite;
+    }
+
+    public void SetParentObj(Transform parent)
+    {
+        transform.parent = parent;
+         
     }
 
 

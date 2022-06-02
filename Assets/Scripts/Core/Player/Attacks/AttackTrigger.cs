@@ -10,6 +10,8 @@ public float cameraShake = 1f;
 public float pushForce = 1f;
 public float pushTime = 0.1f;
 
+public float ForceOrRagdollPushWhileThrow = 1f; //this is later multiplied by 1000
+
 private Collider hitTriggerCollider;
 protected Transform player;
 
@@ -19,8 +21,9 @@ private DefendItem defendItem;
 private StressReceiver stressReceiver;
 
 private Action<AttackTrigger> OnHit;
+private TriggerType currentTriggerType;
 
-
+public enum TriggerType{Melee, Distant};
 
 private void Awake() {
     stressReceiver = GameObject.FindWithTag("MainCamera").GetComponent<StressReceiver>();
@@ -37,6 +40,21 @@ private void Awake() {
 }
 
 
+public float GetEnduranceMultiplier()
+{
+    return currentTriggerType switch
+    {
+        TriggerType.Distant => 3f,
+        TriggerType.Melee => 1f,
+    };
+}
+
+public void SetTriggerType(TriggerType triggerType)
+{
+    currentTriggerType = triggerType;
+}
+
+
 private void Start() {
     GetComponent<Collider>().enabled = false;
 }
@@ -46,14 +64,15 @@ public void ResetHitOpponentsThisTurn()
     meetDuringTurn.Clear();
 }
 
-
-public void HitEnemy()
+private void OpponentDistantReaction(Opponent opponent)
 {
-
-    OnHit?.Invoke(this);
+            // defendItem.transform.parent = opponent.transform;
+            GetComponent<Collider>().enabled = false;
+            Vector3 force = (defendItem.transform.position - player.position).normalized * ForceOrRagdollPushWhileThrow;
+            opponent.GetComponent<SpecialKills>().GotKilledByThrow(defendItem.transform, force);
 }
 
-private void OpponentReaction(Opponent opponent)
+private void OpponentMeleeReaction(Opponent opponent)
 {
     DefendItem defendItem = GetComponentInParent<DefendItem>();
     HoldMode weaponMode = HoldMode.Default;
@@ -99,8 +118,11 @@ private void OnTriggerEnter(Collider other) {
                 Vector3 targetDirection = other.gameObject.transform.position - player.position;
                 targetDirection = new Vector3(targetDirection.x,  player.position.y, targetDirection.z);
                 player.rotation = Quaternion.LookRotation(targetDirection);
-                OpponentReaction(opponent);
-                HitEnemy();
+                if (currentTriggerType == TriggerType.Melee)
+                    OpponentMeleeReaction(opponent);
+                else if(currentTriggerType == TriggerType.Distant)
+                    OpponentDistantReaction(opponent);
+                 OnHit?.Invoke(this);
             }
         }
     }

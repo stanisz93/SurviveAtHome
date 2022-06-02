@@ -23,13 +23,13 @@ public class PlayerAnimatorEventController : MonoBehaviour
     }
 
         
-    public void TurnOnPushCollider()
+    public void TurnOnDamage()
     {
         currentAttackTrigger.GetComponent<Collider>().enabled = true;
         currentAttackTrigger.ResetHitOpponentsThisTurn();
     }
 
-    public void TurnOffPushCollider()
+    public void TurnOffDamage()
     {
          currentAttackTrigger.GetComponent<Collider>().enabled = false;
     }
