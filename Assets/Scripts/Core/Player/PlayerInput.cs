@@ -258,10 +258,10 @@ public class PlayerInput : MonoBehaviour
             else if(Input.GetKeyDown(KeyCode.F))
             {
 
-                Action collectProcess = itemPickupManager.PickItem();
-                if(collectProcess != null)
-                    StartCoroutine(playerAnimationController.PickupItem(collectProcess));
-            }
+                bool success = itemPickupManager.PickItem();
+                if(success != null)
+                    StartCoroutine(playerAnimationController.PickupItem());
+            }   
             else if(Input.GetKey(KeyCode.Tab))
             {
                 inventoryUI.GoToInventory();

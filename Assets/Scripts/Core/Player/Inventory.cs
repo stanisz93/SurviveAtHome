@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Linq;
-public enum ResourceType {Metal, Cloth};
+public enum ResourceType {Metal, Cloth, None};
 public enum CraftType {Wire, SoundNoiser};
 public enum CollectibleType {Spoon};
 
@@ -19,6 +19,8 @@ public class Inventory : MonoBehaviour
     public Dictionary<string, int> resources;
     public Dictionary<string, int> crafts;
     private InventoryUI inventoryUI;
+
+    private DefendItem defendItem;
     
 
 
@@ -63,14 +65,20 @@ public class Inventory : MonoBehaviour
 
     public void AddResource(ResourceType resType, int amount)
     {
-        resources[resType.ToString()] += amount;
-        inventoryUI.UpdateResourcesUI(resType, resources[resType.ToString()]);
+        if(resType != ResourceType.None)
+        {
+            resources[resType.ToString()] += amount;
+            inventoryUI.UpdateResourcesUI(resType, resources[resType.ToString()]);
+        }
     }
 
     public void SubstractResource(ResourceType resType, int amount)
     {
-        resources[resType.ToString()] -= amount;
-        inventoryUI.UpdateResourcesUI(resType, resources[resType.ToString()]);
+        if(resType != ResourceType.None)
+        {
+            resources[resType.ToString()] -= amount;
+            inventoryUI.UpdateResourcesUI(resType, resources[resType.ToString()]);
+        }
     }
 
     public void AddCraftItem(CraftType trapType, int amount)
@@ -89,7 +97,7 @@ public class Inventory : MonoBehaviour
     public void HandleResourcePickup(ICollectible item)
     {
         AddItem(item.gameObject);
-        item.OnDestroy();
+        item.DestroyItem();
     }
 
     

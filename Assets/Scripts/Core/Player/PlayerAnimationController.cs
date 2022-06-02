@@ -77,11 +77,10 @@ public class PlayerAnimationController : MonoBehaviour
         isHitAnimLaunch = false;
     }
 
-    public IEnumerator PickupItem(Action collectProcess)
+    public IEnumerator PickupItem()
     {
         layerInvoker.Reset(2);
         yield return layerInvoker.RunUntil("Pickup.PickingUp", 2, pickAnimLifeTime);
-        collectProcess?.Invoke();
         yield return layerInvoker.SmoothlyFadeOutLayer(pickFadeOutTime, 2);
     }
 

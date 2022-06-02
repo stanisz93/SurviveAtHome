@@ -7,7 +7,7 @@ using DG.Tweening;
 
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
-public class DefendItem : MonoBehaviour {
+public class DefendItem : MonoBehaviour, ICollectible{
     
     public PlayerAnimatorEventController eventController;
     public GameObject pfDestroyObject;
@@ -32,11 +32,8 @@ public class DefendItem : MonoBehaviour {
     private Rigidbody m_Rigidbody;
     private WeaponPlaceholder weaponPlaceholder;
     
-    private Action<DefendItem> OnPickup;
-     private Action<DefendItem> OnDrop;
-    
-    public Action<DefendItem> OnHit;
-
+    public Action<ICollectible> OnPickup {get; set;}
+    private Action OnDetachFromPlayer;
 
     
 
@@ -46,11 +43,9 @@ public class DefendItem : MonoBehaviour {
     private int enduranceStep = 20;
     private bool isCollected = false;
     private HitBonus bonus;
-    private StressReceiver stressReceiver;
     private TrailRenderer trail;
     
     private void Awake() {
-        stressReceiver = GameObject.FindWithTag("MainCamera").GetComponent<StressReceiver>();
         endurance = initialEndurance;
         var plr = GameObject.FindWithTag("Player");
         bonus = plr.GetComponent<HitBonus>();
@@ -63,20 +58,18 @@ public class DefendItem : MonoBehaviour {
         m_Rigidbody = GetComponent<Rigidbody>();
         weaponPlaceholder = plr.GetComponent<WeaponPlaceholder>();
         OnPickup += weaponPlaceholder.AttachWeapon;
-        OnDrop += weaponPlaceholder.RemoveWeapon;
-
-        OnHit += bonus.IncreaseCounts;
-        OnHit += stressReceiver.InduceStressByHit;
-        OnHit += ReduceEndurance;
+        OnDetachFromPlayer += weaponPlaceholder.RemoveWeapon;
 
         
     }
+
+    public ResourceType GetResourceType() {return ResourceType.None;}
+
+    public int GetAmount() { return 0;}
     public void Collect()
     {
-        isCollected = true;
         OnPickup?.Invoke(this);
-
-        GameObject plr = GameObject.FindWithTag("Player");
+        isCollected = true;
         physicsCollider.enabled = false;
         m_Rigidbody.isKinematic = true;
         transform.parent = hand;
@@ -86,15 +79,15 @@ public class DefendItem : MonoBehaviour {
         interactCollider.enabled = false;
     }
 
-    void BreakWeapon() {
+    public void DestroyItem() {
         
         GameObject pfInstance = Instantiate(pfDestroyObject, transform.position, transform.rotation);  
         var rigidbodies = pfInstance.GetComponentsInChildren<Rigidbody>();
         foreach (Rigidbody body in rigidbodies)
             body.AddForce(UnityEngine.Random.insideUnitCircle.normalized * 400, ForceMode.Impulse);
-        eventController.SetToDefaultPushTrigger();
+        eventController.SetToDefaultAttackTrigger();
         characterMovement.SetHoldMode(HoldMode.Default);
-        weaponPlaceholder.RemoveWeapon(this);
+        weaponPlaceholder.RemoveWeapon();
         Destroy(gameObject);
         Destroy(pfInstance, 0.15f);
     }
@@ -114,26 +107,26 @@ public class DefendItem : MonoBehaviour {
         return endurance;
     }
 
-    public void Drop(DefendItem defendItem)
-    {
+    public void Drop()
+    {//Difference from detach from Player is that it is a part
+    // that is happening while swamping weapon, or getin rid of it
         DetachFromPlayer();
         physicsCollider.enabled = true;
         m_Rigidbody.isKinematic = false;
+        interactCollider.enabled = true;
         m_Rigidbody.AddForce(GameObject.FindWithTag("PlayerMesh").transform.forward * 2f, ForceMode.Impulse); 
-    }
+    } 
 
     public void DetachFromPlayer()
     {
+        OnDetachFromPlayer?.Invoke();
         // this could also be added to OnDrp
-        eventController.SetToDefaultPushTrigger();
+        eventController.SetToDefaultAttackTrigger();
         characterMovement.SetHoldMode(HoldMode.Default);
-        OnDrop?.Invoke(this);
-        OnDrop = null;
         isCollected = false;
-        interactCollider.enabled = true;
-        OnHit -= ReduceEndurance;
         transform.parent = null;
     }
+
 
     public void PhysicFinishOfThrow(Vector3 forceDir)
     {
@@ -170,14 +163,14 @@ public class DefendItem : MonoBehaviour {
         }
     }
 
-    public void ReduceEndurance(DefendItem idefendable)
+    public void ReduceEndurance(AttackTrigger actionTrigger)
     {
         endurance -= enduranceStep;
         weaponPlaceholder.UpdateEndurance(endurance); //remember to remove it when drop
     
         if(endurance <= 0)
         {
-            BreakWeapon();
+            DestroyItem();
         }
 
     }

@@ -39,16 +39,16 @@ public class ThrowableKnife : MonoBehaviour
     // Update is called once per frame
     
     private void OnCollisionEnter(Collision other) {
-        IThrowStickable stickable = other.gameObject.GetComponent<IThrowStickable>();
         trail.enabled = false;
+        IThrowStickable stickable = other.gameObject.GetComponent<IThrowStickable>();
         if (stickable != null)
             {
                 if(throwSequence.IsActive())
                     throwSequence.Kill();
                 hasCollideWhileThrow = true;
                 item.SetKinematic(true);
-                if(other.gameObject.GetComponentInParent<Opponent>())
-                    stressReceiver.InduceStress(2f);
+                // if(other.gameObject.GetComponentInParent<Opponent>())
+                //     stressReceiver.InduceStress(2f);
                 
             }
     }

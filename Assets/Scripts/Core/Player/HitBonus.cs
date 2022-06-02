@@ -65,7 +65,7 @@ public class HitBonus : MonoBehaviour
     }
 
     // Update is called once per frame
-    public void IncreaseCounts(DefendItem defendItem)
+    public void IncreaseCounts(AttackTrigger attackTrigger)
     {
         if(superHitMode)
             slider.value = 0;

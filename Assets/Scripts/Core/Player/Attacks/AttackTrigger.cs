@@ -16,14 +16,23 @@ protected Transform player;
 private HashSet<Opponent> meetDuringTurn; //add flag true if 
 private HitBonus bonus;
 private DefendItem defendItem;
+private StressReceiver stressReceiver;
+
+private Action<AttackTrigger> OnHit;
+
 
 
 private void Awake() {
+    stressReceiver = GameObject.FindWithTag("MainCamera").GetComponent<StressReceiver>();
     defendItem = GetComponentInParent<DefendItem>();
     player = GameObject.FindWithTag("PlayerMesh").transform;
     bonus = GameObject.FindWithTag("Player").GetComponent<HitBonus>();
     hitTriggerCollider = GetComponent<Collider>();
     meetDuringTurn = new HashSet<Opponent>();
+    OnHit += bonus.IncreaseCounts;
+    OnHit += stressReceiver.InduceStressByHit;
+    if(defendItem != null) //in case of neutral kick it wont happened
+        OnHit += defendItem.ReduceEndurance;
       
 }
 
@@ -35,6 +44,13 @@ private void Start() {
 public void ResetHitOpponentsThisTurn()
 {
     meetDuringTurn.Clear();
+}
+
+
+public void HitEnemy()
+{
+
+    OnHit?.Invoke(this);
 }
 
 private void OpponentReaction(Opponent opponent)
@@ -84,7 +100,7 @@ private void OnTriggerEnter(Collider other) {
                 targetDirection = new Vector3(targetDirection.x,  player.position.y, targetDirection.z);
                 player.rotation = Quaternion.LookRotation(targetDirection);
                 OpponentReaction(opponent);
-                defendItem.OnHit?.Invoke(defendItem);
+                HitEnemy();
             }
         }
     }

@@ -57,8 +57,8 @@ public class StressReceiver : MonoBehaviour
         _trauma = Mathf.Clamp01(_trauma + Stress);
     }
 
-    public void InduceStressByHit(DefendItem defendItem)
+    public void InduceStressByHit(AttackTrigger attackTrigger)
     {
-        _trauma = Mathf.Clamp01(_trauma + defendItem.attackTrigger.cameraShake);
+        _trauma = Mathf.Clamp01(_trauma + attackTrigger.cameraShake);
     }
 }

@@ -326,22 +326,13 @@ GameObject:
   m_Component:
   - component: {fileID: 46223604}
   - component: {fileID: 46223603}
-  - component: {fileID: 46223602}
   m_Layer: 0
   m_Name: FreeFloatCAmera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!81 &46223602
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 46223600}
-  m_Enabled: 1
+  m_IsActive: 0
 --- !u!20 &46223603
 Camera:
   m_ObjectHideFlags: 0
@@ -6026,6 +6017,17 @@ BoxCollider:
   m_CorrespondingSourceObject: {fileID: 6436430692303678042, guid: fd2316186021f1c45a5b529f71c4f503, type: 3}
   m_PrefabInstance: {fileID: 426050568}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1543809638 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1459826263, guid: 2f2acb786d48b2a48b1ddf17d16cd292, type: 3}
+  m_PrefabInstance: {fileID: 3398933801269008175}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72c8315bbcbc17c45a8b9be574c43520, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1543814988
 GameObject:
   m_ObjectHideFlags: 0
@@ -8284,6 +8286,10 @@ PrefabInstance:
       propertyPath: m_Intensity
       value: 1.03
       objectReference: {fileID: 0}
+    - target: {fileID: 130972337, guid: 2f2acb786d48b2a48b1ddf17d16cd292, type: 3}
+      propertyPath: kickTrigger
+      value: 
+      objectReference: {fileID: 1543809638}
     - target: {fileID: 130972339, guid: 2f2acb786d48b2a48b1ddf17d16cd292, type: 3}
       propertyPath: stressReceiver
       value: 

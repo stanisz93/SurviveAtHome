@@ -26,7 +26,7 @@ public class WeaponPlaceholder : MonoBehaviour
         DoTweenUtils.PoopUpImage(weaponImage, 0.8f);
     }
 
-    public void RemoveWeapon(DefendItem defendItem)
+    public void RemoveWeapon()
     {
         this.defendItem = null;
         weaponImage.sprite = null;
@@ -35,16 +35,16 @@ public class WeaponPlaceholder : MonoBehaviour
         RemoveEndurance();
     }
 
-    public void AttachWeapon(DefendItem defendItem)
+    public void AttachWeapon(ICollectible collectible)
     {
         if(this.defendItem != null)
-           this.defendItem.Drop(this.defendItem);
-        this.defendItem = defendItem;
+           defendItem.Drop();
+        defendItem = (DefendItem)collectible;
         float initialVal = (float)this.defendItem.GetInitialEndurance();
         slider.maxValue = initialVal;
         endurancePointer.enabled = true;
         SetWeaponImage();
-        UpdateEndurance(initialVal);
+        UpdateEndurance(defendItem.GetCurrentEndurance());
         // UpdateEndurance();
     }
 

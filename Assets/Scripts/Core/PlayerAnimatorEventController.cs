@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerAnimatorEventController : MonoBehaviour
 {
 
-    public AttackTrigger defaultPushTrigger;
+    public AttackTrigger kickTrigger;
     public AttackTrigger currentAttackTrigger;
 
     // Start is called before the first frame update
@@ -16,7 +16,7 @@ public class PlayerAnimatorEventController : MonoBehaviour
   
     void Start()
     {
-        currentAttackTrigger = defaultPushTrigger;
+        currentAttackTrigger = kickTrigger;
         animator = GetComponent<Animator>();
         playerInput = GetComponentInParent<PlayerInput>();
         playerTriggers = GetComponentInParent<PlayerTriggers>();
@@ -48,9 +48,9 @@ public class PlayerAnimatorEventController : MonoBehaviour
             currentAttackTrigger = trigger;
     }
 
-    public void SetToDefaultPushTrigger()
+    public void SetToDefaultAttackTrigger()
     {
-        currentAttackTrigger = defaultPushTrigger;
+        currentAttackTrigger = kickTrigger;
     }
 
     public void ReleasePlayerControl()

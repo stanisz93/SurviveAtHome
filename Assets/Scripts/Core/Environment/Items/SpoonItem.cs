@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Collider))]
 public class SpoonItem : MonoBehaviour, ICollectible
@@ -38,10 +38,11 @@ public class SpoonItem : MonoBehaviour, ICollectible
     public void Collect()
     {
         OnPickup?.Invoke(this);
-        OnPickup = null;
     }
 
-    public void OnDestroy()
+    public Sprite GetImage() {return null;}
+
+    public void DestroyItem()
     { 
         Destroy(gameObject);
     }
