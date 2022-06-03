@@ -34,7 +34,7 @@ public void InvokeReaction(WeaponType holdMode, Transform player, float force, f
             case(WeaponType.None):
             {
                 var superKick = false;
-                if(GetComponent<HitBonus>().GetBonusMode() == BonusMode.SuperKick)
+                if(bonus.GetBonusMode() == BonusMode.SuperKick)
                     superKick = true;    
                 opponent.GotPushed(player, force, pushTime, superKick);
                 opponent.SetKickPos(transform.position);

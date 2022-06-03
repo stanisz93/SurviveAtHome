@@ -126,7 +126,8 @@ private void OnTriggerEnter(Collider other) {
             if(opponentReaction != null)
             {
                 opponentReaction.targetDirection = other.gameObject.transform.position - player.position;
-                opponentReaction.weapon = defendItem.transform;
+                if(defendItem != null)
+                    opponentReaction.weapon = defendItem.transform;
                 opponentReaction.bonus = bonus;
 
                 OpponentMode mode = other.gameObject.GetComponent<OpponentActions>().GetOpponentMode();

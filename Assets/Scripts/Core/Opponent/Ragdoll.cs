@@ -10,6 +10,7 @@ public class Ragdoll : MonoBehaviour
     public GameObject Zombie;
 
     public Rigidbody ragdollHead;
+    public Rigidbody hips;
 
     public bool isRagdoll = false;
     private Rigidbody[] rigidBodies;
@@ -26,12 +27,12 @@ public class Ragdoll : MonoBehaviour
 
     // Update is called once per frame
     
-    public IEnumerator ToggleRagdollAfter(float delay, Vector3 force)
+    public IEnumerator ToggleRagdollAfter(float delay, Vector3 force, float rotateForce)
     {
         yield return new WaitForSeconds(delay);
-        ToggleRagdoll(force);
+        ToggleRagdoll(force, rotateForce);
     }
-    public void ToggleRagdoll(Vector3 force)
+    public void ToggleRagdoll(Vector3 force, float rotateForce)
     {
         isRagdoll = !isRagdoll;
         animator.enabled = !isRagdoll;
@@ -49,12 +50,26 @@ public class Ragdoll : MonoBehaviour
         }
         if (force != Vector3.zero)
             AddForce(force);
+
+        if (rotateForce != 0.0f)
+            AddRotationForce(rotateForce);
         
 
     }
 
+    public void AddRotationForce(float rotateForce)
+    {
+        hips.AddTorque(Vector3.up * rotateForce, ForceMode.Impulse);
+        // } 
+        // foreach(var rb in rigidBodies)
+        // {
+        //     rb.AddTorque(ragdollHead.transform.up * rotateForce, ForceMode.Impulse);
+        // } 
+    }
+
     public void AddForce(Vector3 force)
     {
+        // ragdollHead.AddForce(force * 1000f);
         foreach(var rb in rigidBodies)
         {
             rb.AddForce(force * 1000f);

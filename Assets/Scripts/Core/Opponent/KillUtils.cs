@@ -50,12 +50,13 @@ public class KillUtils : MonoBehaviour
     // Update is called once per frame
     public void GotKilled()
     {
+        vfov.TurnOffSense();
         Vector3 headRightXZDirection = new Vector3(head.right.x, 0, head.right.z);
         Vector3 pos = new Vector3(head.position.x, floor.position.y + bloodEmmiterHeight, head.position.z);
         Instantiate(pfBloodKillEffect, pos, Quaternion.LookRotation(-headRightXZDirection));
         StartCoroutine(InstantiateBloodTexture(bloodTextureActivateDelay, head, offsetAlongOpponentSpine));
         animator.SetTrigger("KickKill");
-        GetComponent<Ragdoll>().ToggleRagdoll(Vector3.zero);
+        GetComponent<Ragdoll>().ToggleRagdoll(Vector3.zero, 0.0f);
         StartCoroutine(DestroyOpponentObject(0.3f));
 
     }

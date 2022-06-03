@@ -878,6 +878,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Zombie: {fileID: 8082977296514454214}
   ragdollHead: {fileID: 3642071921703254195}
+  hips: {fileID: 3642071921372934846}
   isRagdoll: 0
 --- !u!114 &54583718236642984
 MonoBehaviour:
@@ -905,9 +906,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pfThrowKillEffect: {fileID: 6115847214822075018, guid: 665a9905001330142adb9ed828674cd7, type: 3}
-  ForceOrRagdollPushWhileThrow: 1
+  ForceOrRagdollPushWhileThrow: 1.5
   bloodTextureThrowDelay: 0.2
   offsetAlongOpponentSpine: 0
+  rotateForce: 0
 --- !u!114 &941600329375141175
 MonoBehaviour:
   m_ObjectHideFlags: 0

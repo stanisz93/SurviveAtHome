@@ -16,7 +16,7 @@ public class CustomInspector : Editor
        }
        if(GUILayout.Button("Toggle ragdoll"))
        {
-           ragdoll.ToggleRagdoll(Vector3.zero);
+           ragdoll.ToggleRagdoll(Vector3.zero, 0.0f);
        }
     }
 }

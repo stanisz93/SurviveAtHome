@@ -13,7 +13,7 @@ public class DistanceAttackReaction : MonoBehaviour, IOpponentReaction
     public float bloodTextureThrowDelay = 0.2f; // texture for throwing
     public float offsetAlongOpponentSpine = 0.0f;
 
-
+    public float rotateForce = 1f;
     public Vector3 targetDirection {set; get;}
     public HitBonus bonus {set; get;}
     public Transform weapon {set; get;}
@@ -45,7 +45,7 @@ public class DistanceAttackReaction : MonoBehaviour, IOpponentReaction
             Vector3 Ragdollforce = targetDirection.normalized * ForceOrRagdollPushWhileThrow;
             // opponent.GetComponent<SpecialKills>().GotKilledByThrow(defendItem.transform, force);
             animator.SetTrigger("DieByThrow");
-            StartCoroutine(ragdoll.ToggleRagdollAfter(0.05f, Ragdollforce));
+            StartCoroutine(ragdoll.ToggleRagdollAfter(0.05f, Ragdollforce, rotateForce));
             taskManager.BlockAnyTaskAssigning();
             vfov.TurnOffSense();
             Instantiate(pfThrowKillEffect, weapon.position, Quaternion.identity, weapon);
