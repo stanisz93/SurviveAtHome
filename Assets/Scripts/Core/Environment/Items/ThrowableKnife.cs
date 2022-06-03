@@ -23,6 +23,7 @@ public class ThrowableKnife : MonoBehaviour
     private TrailRenderer trail;
 
     private bool isKillingThrow = false;
+    private bool alreadParented = false;
 
     private StressReceiver stressReceiver;
 
@@ -49,7 +50,11 @@ public class ThrowableKnife : MonoBehaviour
                     throwSequence.Kill();
                 hasCollideWhileThrow = true;
                 item.SetKinematic(true);
-                item.SetParentObj(other.transform);
+                if(!alreadParented)
+                    {
+                        item.SetParentObj(other.transform);
+                        alreadParented = true;
+                    }
                 item.physicsCollider.enabled = false;
                 // if(other.gameObject.GetComponentInParent<Opponent>())
                 //     stressReceiver.InduceStress(2f);

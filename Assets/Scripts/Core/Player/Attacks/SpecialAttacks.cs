@@ -13,7 +13,7 @@ public class SpecialAttacks : MonoBehaviour
     private PlayerTriggers playerTriggers;
 
     [SerializeField]
-    private SpecialKills target;
+    private KillUtils target;
     private Transform playerMesh;
     private Transform player;
     [SerializeField]
@@ -35,7 +35,7 @@ public class SpecialAttacks : MonoBehaviour
     }
     public void SetTarget(Transform opponent)
     {
-        target = opponent.GetComponent<SpecialKills>();
+        target = opponent.GetComponent<KillUtils>();
         isCandidateToDie = true;
     }
 
@@ -78,6 +78,7 @@ public class SpecialAttacks : MonoBehaviour
     public void InvokeOpponentKillReaction()
     {
         stressReceiver.InduceStress(2f);
+        
         target.GotKilled();
         isKillingEvent = false;
 

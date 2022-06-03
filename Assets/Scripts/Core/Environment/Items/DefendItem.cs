@@ -12,7 +12,7 @@ public class DefendItem : MonoBehaviour, ICollectible{
     public PlayerAnimatorEventController eventController;
     public GameObject pfDestroyObject;
 
-    public HoldMode holdMode;
+    public WeaponType weaponType;
     public AttackTrigger attackTrigger;
 
     public Collider physicsCollider;
@@ -74,7 +74,7 @@ public class DefendItem : MonoBehaviour, ICollectible{
         m_Rigidbody.isKinematic = true;
         transform.parent = hand;
         ChangeWeaponPositionToHold();
-        characterMovement.SetHoldMode(holdMode);
+        characterMovement.SetHoldMode(weaponType);
         eventController.SetAttackTriggerCollider(attackTrigger);
         interactCollider.enabled = false;
     }
@@ -93,7 +93,7 @@ public class DefendItem : MonoBehaviour, ICollectible{
         if(usingAnimation)
             InvokeDestroyObjectAnimation();
         eventController.SetToDefaultAttackTrigger();
-        characterMovement.SetHoldMode(HoldMode.Default);
+        characterMovement.SetHoldMode(WeaponType.None);
         weaponPlaceholder.RemoveWeapon();
         Destroy(gameObject);
 
@@ -130,7 +130,7 @@ public class DefendItem : MonoBehaviour, ICollectible{
         OnDetachFromPlayer?.Invoke();
         // this could also be added to OnDrp
         eventController.SetToDefaultAttackTrigger();
-        characterMovement.SetHoldMode(HoldMode.Default);
+        characterMovement.SetHoldMode(WeaponType.None);
         isCollected = false;
         transform.parent = null;
     }

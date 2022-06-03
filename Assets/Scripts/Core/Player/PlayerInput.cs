@@ -216,7 +216,7 @@ public class PlayerInput : MonoBehaviour
                 if(obstacleInteractionManager.obstacleInteraction != null)
                     character.StartTriggerAction(obstacleInteractionManager.InteractObstacle);
             }
-            else if(Input.GetMouseButtonDown(1) && chrMvmnt.GetHoldMode() != HoldMode.Default)
+            else if(Input.GetMouseButtonDown(1) && chrMvmnt.GetHoldMode() != WeaponType.None)
             {
                 controllerMode = ControllerMode.Throwing;
                 playerTriggers.StartAim();
@@ -233,11 +233,11 @@ public class PlayerInput : MonoBehaviour
                 }
                 else
                 {
-                    if(chrMvmnt.GetHoldMode() == HoldMode.WoddenStick)
+                    if(chrMvmnt.GetHoldMode() == WeaponType.WoddenStick)
                     {
                         character.StartTriggerAction(playerTriggers.StickAttack);
                     }
-                    else if(chrMvmnt.GetHoldMode() == HoldMode.Knife)
+                    else if(chrMvmnt.GetHoldMode() == WeaponType.Knife)
                     {
                         character.StartTriggerAction(playerTriggers.KnifeAttack);
                     }

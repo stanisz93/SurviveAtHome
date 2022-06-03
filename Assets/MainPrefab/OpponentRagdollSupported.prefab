@@ -660,6 +660,8 @@ GameObject:
   - component: {fileID: 5552930046791271193}
   - component: {fileID: 4123497014353931719}
   - component: {fileID: 54583718236642984}
+  - component: {fileID: 6840890691102475327}
+  - component: {fileID: 941600329375141175}
   m_Layer: 8
   m_Name: OpponentRagdollSupported
   m_TagString: Opponent
@@ -860,8 +862,8 @@ MonoBehaviour:
   pfThrowKillEffect: {fileID: 6115847214822075018, guid: 665a9905001330142adb9ed828674cd7, type: 3}
   bloodEmmiterHeight: 0.3
   bloodTextureActivateDelay: 0.1
+  offsetAlongOpponentSpine: 0
   bloodTextureThrowDelay: 0.2
-  bloodTextureOffsetAlongSpine: -0.5
 --- !u!114 &4123497014353931719
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -890,6 +892,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damagable: 0
+--- !u!114 &6840890691102475327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2397819963991360380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f0d3815f39d3ee42a14d7f3bfed75a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pfThrowKillEffect: {fileID: 6115847214822075018, guid: 665a9905001330142adb9ed828674cd7, type: 3}
+  ForceOrRagdollPushWhileThrow: 1
+  bloodTextureThrowDelay: 0.2
+  offsetAlongOpponentSpine: 0
+--- !u!114 &941600329375141175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2397819963991360380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44bf8266489f38349bad3aebc57c5a30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2397819964081491873
 GameObject:
   m_ObjectHideFlags: 0

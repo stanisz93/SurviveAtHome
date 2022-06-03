@@ -5,7 +5,7 @@ using UnityEngine;
 
 public enum MovementMode {Walking, Running, Crouching, Staying};
 public enum FightMode {Default, ReceiveDamage};
-public enum HoldMode {WoddenStick, Knife, Default};
+public enum WeaponType {WoddenStick, Knife, None};
 
 [RequireComponent(typeof(Rigidbody))]
 public class CharacterMovement : MonoBehaviour
@@ -26,7 +26,7 @@ public class CharacterMovement : MonoBehaviour
     MovementMode movementMode = MovementMode.Staying;
     FightMode fightMode = FightMode.Default;
 
-    HoldMode holdMode = HoldMode.Default;
+    WeaponType holdMode = WeaponType.None;
 
     private Rigidbody rigidbody;
     private Vector3 velocity;
@@ -74,9 +74,9 @@ public class CharacterMovement : MonoBehaviour
     }
 
     public void SetFightMode(FightMode mode) { fightMode = mode;}
-    public void SetHoldMode(HoldMode mode) { holdMode = mode;}
+    public void SetHoldMode(WeaponType mode) { holdMode = mode;}
     public FightMode GetFightMode() {return fightMode;}
-    public HoldMode GetHoldMode() {return holdMode;}
+    public WeaponType GetHoldMode() {return holdMode;}
 
 
     public void SetMovementMode(MovementMode mode)
