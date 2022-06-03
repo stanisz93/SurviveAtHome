@@ -93,7 +93,7 @@ public class OpponentActions : MonoBehaviour
 
     public IEnumerator Fall()
     {
-        SetOpponentMode(OpponentMode.Fall);
+        SetOpponentMode(OpponentMode.Faint);
         animator.SetTrigger("Fall");
         transform.DOMove(m_Rigidbody.transform.position + m_Rigidbody.transform.forward * 2f, .5f);
         vfov.ResetSense(7f);
