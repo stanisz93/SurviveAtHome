@@ -93,6 +93,15 @@ public class Opponent : MonoBehaviour
         }
 
     }
+
+    private void OnCollisionEnter(Collision other) {
+        Opponent opponent = other.gameObject.GetComponent<Opponent>();
+        if(opponent != null)
+        {
+            ContactPoint contact = other.contacts[0];
+            opponent.GotTackled(contact.normal);
+        }
+    }
     
 }
 

@@ -24,6 +24,7 @@ public class DistanceAttackReaction : MonoBehaviour, IOpponentReaction
      private TaskManager taskManager;
      private Ragdoll ragdoll;
      private NavMeshAgent agent;
+     private OpponentHit opponentHit;
 
     private void Start() {
         opponent = GetComponent<Opponent>();
@@ -34,23 +35,30 @@ public class DistanceAttackReaction : MonoBehaviour, IOpponentReaction
         agent = GetComponent<NavMeshAgent>();
         bonus = GetComponent<HitBonus>();
         ragdoll = GetComponent<Ragdoll>();
+        opponentHit = GetComponentInChildren<OpponentHit>();
     }
 
 
-
-    public void InvokeReaction(WeaponType holdMode, Transform player, float force, float time)
+    void KillingThrow()
     {
-            // defendItem.transform.parent = opponent.transform;
             GetComponent<Collider>().enabled = false;
             Vector3 Ragdollforce = targetDirection.normalized * ForceOrRagdollPushWhileThrow;
             // opponent.GetComponent<SpecialKills>().GotKilledByThrow(defendItem.transform, force);
             animator.SetTrigger("DieByThrow");
             StartCoroutine(ragdoll.ToggleRagdollAfter(0.05f, Ragdollforce, rotateForce));
             taskManager.BlockAnyTaskAssigning();
+            opponentHit.enabled = false;
             vfov.TurnOffSense();
             Instantiate(pfThrowKillEffect, weapon.position, Quaternion.identity, weapon);
             StartCoroutine(killUtils.InstantiateBloodTexture(bloodTextureThrowDelay, weapon, offsetAlongOpponentSpine));
             agent.enabled = false;
             StartCoroutine(killUtils.DestroyOpponentObject(2f));
+    }
+
+
+    public void InvokeReaction(DamageType damageType, WeaponType holdMode, Transform player, float force, float time)
+    {
+            if(damageType == DamageType.Killing)
+                KillingThrow();
     }
 }

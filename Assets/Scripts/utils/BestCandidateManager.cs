@@ -37,6 +37,10 @@ public abstract class BestCandidateManager: MonoBehaviour
             return null;
     }
 
+    public bool ExistInList(Transform obj)
+    {
+        return PossibleToPicked.Contains(obj);
+    }
 
     public virtual float GetRelativeDirection(Transform objTransform)
     {

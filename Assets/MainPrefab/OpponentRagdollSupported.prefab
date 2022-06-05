@@ -659,7 +659,6 @@ GameObject:
   - component: {fileID: 2397819963991360258}
   - component: {fileID: 5552930046791271193}
   - component: {fileID: 4123497014353931719}
-  - component: {fileID: 54583718236642984}
   - component: {fileID: 6840890691102475327}
   - component: {fileID: 941600329375141175}
   m_Layer: 8
@@ -880,19 +879,6 @@ MonoBehaviour:
   ragdollHead: {fileID: 3642071921703254195}
   hips: {fileID: 3642071921372934846}
   isRagdoll: 0
---- !u!114 &54583718236642984
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2397819963991360380}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7bb3bd24c065481459585290633ba1e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damagable: 0
 --- !u!114 &6840890691102475327
 MonoBehaviour:
   m_ObjectHideFlags: 0

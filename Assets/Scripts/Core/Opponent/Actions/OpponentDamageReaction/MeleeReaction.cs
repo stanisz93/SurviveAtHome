@@ -15,7 +15,7 @@ public class MeleeReaction : MonoBehaviour, IOpponentReaction
         opponent = GetComponent<Opponent>();
     }
     
-public void InvokeReaction(WeaponType holdMode, Transform player, float force, float pushTime)
+public void InvokeReaction(DamageType damageType, WeaponType holdMode, Transform player, float force, float pushTime)
 {
     {
         switch(holdMode)

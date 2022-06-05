@@ -3,29 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-[RequireComponent(typeof(Collider))]
 public class ThrowableKnife : MonoBehaviour
 {
 
     
-    public float degressPerUnit = 2f;
-    public AnimationCurve throwAcceleration;
-    public float throwVelocity = 10f;
-    public float forceThrow = 10f;
+    public AnimationCurve forceCurve;
+    public float forceTorqueThrow = 100f;
 
     public float ThrowSlowDown = 1.0f;
     
-    private Sequence throwSequence;
     private DefendItem item;
     private AttackTrigger attackTrigger;
-    private bool hasCollideWhileThrow = false;
 
     private TrailRenderer trail;
 
-    private bool isKillingThrow = false;
-    private bool alreadParented = false;
 
     private StressReceiver stressReceiver;
+    private Rigidbody rb;
 
     // Start is called before the first frame update
     
@@ -36,6 +30,7 @@ public class ThrowableKnife : MonoBehaviour
         trail = GetComponentInChildren<TrailRenderer>();
         trail.enabled = false;
         stressReceiver = Camera.main.GetComponent<StressReceiver>();
+        rb = GetComponent<Rigidbody>();
         
     }
 
@@ -43,23 +38,25 @@ public class ThrowableKnife : MonoBehaviour
     
     private void OnCollisionEnter(Collision other) {
         trail.enabled = false;
+        Time.timeScale = 1f;
         IThrowStickable stickable = other.gameObject.GetComponent<IThrowStickable>();
         if (stickable != null)
             {
-                if(throwSequence.IsActive())
-                    throwSequence.Kill();
-                hasCollideWhileThrow = true;
+                Debug.Log($"Parented to {other}");
+                item.SetParentObj(other.transform);
                 item.SetKinematic(true);
-                if(!alreadParented)
-                    {
-                        item.SetParentObj(other.transform);
-                        alreadParented = true;
-                    }
                 item.physicsCollider.enabled = false;
+                Opponent opponent = other.gameObject.GetComponentInParent<Opponent>();
+                if(opponent != null)
+                {
+                    attackTrigger.SetDamageType(DamageType.Killing);
+                    attackTrigger.InduceTrigger(opponent.gameObject);
+                }
+            }
+            
                 // if(other.gameObject.GetComponentInParent<Opponent>())
                 //     stressReceiver.InduceStress(2f);
                 
-            }
     }
 
     public void TurnOnTrail()
@@ -68,70 +65,28 @@ public class ThrowableKnife : MonoBehaviour
     }
 
 
-    float GetPlannedTimeOfThrow(Vector3 targetPos)
-    {
-        return(targetPos - item.transform.position).magnitude / throwVelocity;
-    }
-
-    float FinalRotationInDegree(Vector3 targetPos)
-    {
-        return degressPerUnit * (targetPos - item.transform.position).magnitude;
-    }
-
-    void TurnOffKillingThrow()
-    {
-        isKillingThrow = false;
-    }
-
-    public void Throw(Vector3 targetThrowPos)
+    public void Throw(Vector3 targetThrowPos, float distance)
     {
             Vector3 itemPos = item.transform.position;
             Vector3 targetPos = itemPos + (targetThrowPos - itemPos);
             Time.timeScale = ThrowSlowDown;
+            attackTrigger.SetHitType(HitType.OneVictim);
+            // attackTrigger.GetComponent<Collider>().enabled = true;
             TurnOnTrail();
             item.DetachFromPlayer();
-            
             item.transform.localRotation = Quaternion.FromToRotation(Vector3.right, -(targetThrowPos - item.transform.position).normalized);
-        
-
-            if(throwSequence.IsActive())
-                throwSequence.Kill();
+            rb.isKinematic = false;
+            item.interactCollider.enabled = true;
             
-            ApplyThrowSequence(targetThrowPos);
-            // throwSequence.AppendInterval(2f);
-            // throwSequence.AppendCallback(() => {defendItem.transform.parent = throwingHand.transform;
-            //     defendItem.transform.localPosition = initialPos;
-            //     defendItem.transform.localEulerAngles = initialRot;
-            //     defendItem.SetKinematic(true);
-            //     defendItem.physicsCollider.enabled = false;});
-            
+            // hasCollideWhileThrow = false;
+            item.physicsCollider.enabled = true;
+            Vector3 itemModPos = new Vector3(item.transform.position.x, targetThrowPos.y, item.transform.position.z);
+            Vector3 force = (targetThrowPos - itemModPos).normalized * forceCurve.Evaluate(distance);
+            Debug.Log($"Force: {force}");
+            rb.AddForce(force, ForceMode.Impulse);
+            rb.AddTorque(transform.forward * forceTorqueThrow);
     }
-
-    public void ApplyThrowSequence(Vector3 targetThrowPos)
-    {
-        attackTrigger.GetComponent<Collider>().enabled = true;
-        hasCollideWhileThrow = false;
-        item.physicsCollider.enabled = true;
-        throwSequence = DOTween.Sequence();
-        Vector3 itemModPos = new Vector3(item.transform.position.x, targetThrowPos.y, item.transform.position.z);
-        Vector3 force = (targetThrowPos - itemModPos).normalized * forceThrow;
-        //calcualte number or rotation base on distance
-        float throwTime = GetPlannedTimeOfThrow(targetThrowPos);
-        throwSequence.Append(item.transform.DOMove(targetThrowPos, throwTime).SetEase(throwAcceleration));
-        
-        float finalRotate = FinalRotationInDegree(targetThrowPos);
-        throwSequence.Join(item.transform.DOLocalRotate(new Vector3(0, 0, finalRotate), throwTime, RotateMode.FastBeyond360).SetRelative(true).SetEase(Ease.Linear));
-        throwSequence.AppendCallback(() =>  Time.timeScale = 1f);
-
-        throwSequence.AppendCallback(() => 
-        {   
-            if(!hasCollideWhileThrow)
-                GetComponentInParent<DefendItem>().PhysicFinishOfThrow(force);
-        });
-        throwSequence.OnComplete(() => {  
-    Debug.Log("Done"); 
-});
-    }
+    
 
 
 }

@@ -97,7 +97,6 @@ public class PlayerTriggers : MonoBehaviour
     public void ResetThrowState()
     {
         ThrowProjectionCanvas.enabled = false;
-        currentThrowDistance = minDistance;
         isAimingStarted = false;
     }
 
@@ -117,11 +116,11 @@ public class PlayerTriggers : MonoBehaviour
     {
         if(!isAimingStarted)
         {
+            currentThrowDistance = minDistance;
             playerAnimationController.animator.SetTrigger("AimToThrow");
             ThrowProjectionCanvas.enabled = true;
-        }
-        else
             isAimingStarted = true;
+        }
         if(currentThrowDistance < maxThrowDistance)
             currentThrowDistance += Time.deltaTime * throwDistanceSpeed;
         else
@@ -145,13 +144,15 @@ public class PlayerTriggers : MonoBehaviour
         if(isDebugObjOn)
             debugObj.position = targetThrowPos;
         ThrowProjectionCanvas.transform.position = targetThrowPos;
-        ThrowProjectionCanvas.transform.LookAt(ThrowProjectionCanvas.transform.position + Camera.main.transform.forward);
+        var t_mesh = characterMovement.t_mesh.position;
+        Vector3 lookPosition = new Vector3(t_mesh.x, targetThrowPos.y, t_mesh.z);
+        ThrowProjectionCanvas.transform.LookAt(lookPosition); //Camera.main.transform.forward);
         
     }
 
     public void ThrowWeapon() // later move it to be handled by each weapon script separatable
     {
-        playerAnimatorEventController.currentAttackTrigger.SetTriggerType(AttackTrigger.TriggerType.Distant);
+        playerAnimatorEventController.currentAttackTrigger.SetTriggerType(TriggerType.Distant);
         playerAnimationController.animator.SetTrigger("Throw");
         StartCoroutine(BlockMovementUntilTriggerIsEmpty());
         StartCoroutine(ReleaseTriggerAfterSeconds(0.4f));
@@ -170,7 +171,7 @@ public class PlayerTriggers : MonoBehaviour
 
     public void StickAttack()
     {
-        playerAnimatorEventController.currentAttackTrigger.SetTriggerType(AttackTrigger.TriggerType.Melee);
+        playerAnimatorEventController.currentAttackTrigger.SetTriggerType(TriggerType.Melee);
         DefendItem defendItem = GetComponentInChildren<DefendItem>();
         defendItem.ChangeWeaponPositionToAttack();
         character.SpeedBeforeKick = character.GetVelocityMagnitude();
@@ -181,7 +182,7 @@ public class PlayerTriggers : MonoBehaviour
 
     public void KnifeAttack()
     {
-        playerAnimatorEventController.currentAttackTrigger.SetTriggerType(AttackTrigger.TriggerType.Melee);
+        playerAnimatorEventController.currentAttackTrigger.SetTriggerType(TriggerType.Melee);
         DefendItem defendItem = GetComponentInChildren<DefendItem>();
         defendItem.ChangeWeaponPositionToAttack();
         character.SpeedBeforeKick = character.GetVelocityMagnitude();

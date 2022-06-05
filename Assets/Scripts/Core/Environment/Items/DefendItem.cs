@@ -5,14 +5,14 @@ using System;
 using UnityEngine.UI;
 using DG.Tweening;
 
-[RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
 public class DefendItem : MonoBehaviour, ICollectible{
     
     public PlayerAnimatorEventController eventController;
     public GameObject pfDestroyObject;
 
-    public WeaponType weaponType;
+    public Collider interactCollider;
+public WeaponType weaponType;
     public AttackTrigger attackTrigger;
 
     public Collider physicsCollider;
@@ -28,13 +28,13 @@ public class DefendItem : MonoBehaviour, ICollectible{
 
 
     private CharacterMovement characterMovement;
-    private Collider interactCollider;
+
     private Rigidbody m_Rigidbody;
     private WeaponPlaceholder weaponPlaceholder;
     
     public Action<ICollectible> OnPickup {get; set;}
     private Action OnDetachFromPlayer;
-
+            
     
 
     public int initialEndurance = 200;
@@ -44,17 +44,19 @@ public class DefendItem : MonoBehaviour, ICollectible{
     private bool isCollected = false;
     private HitBonus bonus;
     private TrailRenderer trail;
+
+    private ItemPickupManager itemPickuper;
     
     private void Awake() {
         endurance = initialEndurance;
         var plr = GameObject.FindWithTag("Player");
         bonus = plr.GetComponent<HitBonus>();
+        itemPickuper = plr.GetComponent<ItemPickupManager>();
         if(plr != null)
             {
                 hand = plr.GetComponent<Character>().leftHand;
                 characterMovement = plr.GetComponent<CharacterMovement>();
             }
-        interactCollider = GetComponent<Collider>();
         m_Rigidbody = GetComponent<Rigidbody>();
         weaponPlaceholder = plr.GetComponent<WeaponPlaceholder>();
         OnPickup += weaponPlaceholder.AttachWeapon;
@@ -132,16 +134,11 @@ public class DefendItem : MonoBehaviour, ICollectible{
         eventController.SetToDefaultAttackTrigger();
         characterMovement.SetHoldMode(WeaponType.None);
         isCollected = false;
+        if(itemPickuper.ExistInList(this.transform))
+            itemPickuper.RemovePotentialObject(this.transform);
         transform.parent = null;
     }
 
-
-    public void PhysicFinishOfThrow(Vector3 forceDir)
-    {
-        physicsCollider.enabled = true;
-        m_Rigidbody.isKinematic = false;
-        m_Rigidbody.AddForce(forceDir, ForceMode.Impulse);
-    }
 
     public void ChangeWeaponPositionToAttack()
     {
@@ -157,7 +154,6 @@ public class DefendItem : MonoBehaviour, ICollectible{
    {  
         if(other.transform.tag == "Player")
         {
-            var itemPickuper = other.gameObject.GetComponent<ItemPickupManager>(); /// Here 
             if(!isCollected)
                 itemPickuper.AddPotentialObject(this.transform);
         }
@@ -165,7 +161,6 @@ public class DefendItem : MonoBehaviour, ICollectible{
     public  void OnTriggerExit(Collider other) {
         if(other.transform.tag == "Player")
         {
-            var itemPickuper = other.gameObject.GetComponent<ItemPickupManager>();
             if(!isCollected)
                 itemPickuper.RemovePotentialObject(this.transform);
         }

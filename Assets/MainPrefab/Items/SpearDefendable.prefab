@@ -44,6 +44,50 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.13, y: 2.11, z: 0.19}
   m_Center: {x: 0, y: 1.15, z: 0}
+--- !u!1 &4618810379142816769
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3016415568236050691}
+  - component: {fileID: 5603977261207660533}
+  m_Layer: 0
+  m_Name: interactCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3016415568236050691
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4618810379142816769}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7544511872197127681}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &5603977261207660533
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4618810379142816769}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.41, y: 1.9936965, z: 2.35}
+  m_Center: {x: 0, y: 0.9968482, z: -0.093749}
 --- !u!1 &6569836849111794054
 GameObject:
   m_ObjectHideFlags: 0
@@ -56,7 +100,7 @@ GameObject:
   - component: {fileID: 5303285079879445344}
   - component: {fileID: 7989006067861340293}
   m_Layer: 0
-  m_Name: spearForce
+  m_Name: HitTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -104,7 +148,7 @@ MonoBehaviour:
   cameraShake: 1.5
   pushForce: 2
   pushTime: 0.2
-  collider: {fileID: 0}
+  ForceOrRagdollPushWhileThrow: 1
 --- !u!1 &7544511872196768289
 GameObject:
   m_ObjectHideFlags: 0
@@ -117,7 +161,6 @@ GameObject:
   - component: {fileID: 7544511872199994913}
   - component: {fileID: 7544511872199027937}
   - component: {fileID: 4618893059352813844}
-  - component: {fileID: 3089168389053002191}
   - component: {fileID: 6211295615998828727}
   - component: {fileID: 9146579048718051633}
   m_Layer: 0
@@ -140,6 +183,7 @@ Transform:
   m_Children:
   - {fileID: 7003124130036513299}
   - {fileID: 4225936525075731534}
+  - {fileID: 3016415568236050691}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -204,31 +248,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3842e87f650cba44b830c8e2baeab5a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pfDestroyObject: {fileID: 5482885224607544950, guid: ab310c003cabd9a479964719b83ae0fd, type: 3}
   eventController: {fileID: 0}
-  PushEffectTrigger: {fileID: 7989006067861340293}
-  holdMode: 0
+  pfDestroyObject: {fileID: 5482885224607544950, guid: ab310c003cabd9a479964719b83ae0fd, type: 3}
+  interactCollider: {fileID: 5603977261207660533}
+  weaponType: 0
+  attackTrigger: {fileID: 7989006067861340293}
   physicsCollider: {fileID: 3221054336418466359}
   pickPosition: {x: -0.0094, y: 0.01294, z: -0.00665}
   pickRotation: {x: 141.415, y: 66.294, z: 6.455002}
   attackPosition: {x: 0, y: 0, z: 0}
   attackRotation: {x: 0, y: 0, z: 0}
   icon: {fileID: 86086120898963748, guid: d3433ab4f92c55a40a4c222f53f16ebe, type: 3}
-  maxEndurance: 200
+  initialEndurance: 200
   enduranceStep: 100
---- !u!65 &3089168389053002191
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7544511872196768289}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.41, y: 1.9936965, z: 2.35}
-  m_Center: {x: 0, y: 0.9968482, z: -0.093749}
 --- !u!114 &6211295615998828727
 MonoBehaviour:
   m_ObjectHideFlags: 0

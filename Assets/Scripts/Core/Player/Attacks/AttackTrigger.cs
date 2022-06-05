@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+public enum TriggerType{Melee, Distant};
+
+public enum HitType{ManyEnemy, OneVictim};
+
+public enum DamageType{Killing, NormalDamage};
 public class AttackTrigger : MonoBehaviour {
 
 //delay of moving with dween
@@ -22,8 +27,12 @@ private StressReceiver stressReceiver;
 
 private Action<AttackTrigger> OnHit;
 private TriggerType currentTriggerType;
+private HitType hitType = HitType.ManyEnemy;
 
-public enum TriggerType{Melee, Distant};
+private DamageType damageType = DamageType.NormalDamage;
+
+
+
 
 private void Awake() {
     stressReceiver = GameObject.FindWithTag("MainCamera").GetComponent<StressReceiver>();
@@ -44,14 +53,24 @@ public float GetEnduranceMultiplier()
 {
     return currentTriggerType switch
     {
-        TriggerType.Distant => 3f,
+        TriggerType.Distant => 5f,
         TriggerType.Melee => 1f,
     };
+}
+
+public void SetDamageType(DamageType dType)
+{
+    damageType = dType;
 }
 
 public void SetTriggerType(TriggerType triggerType)
 {
     currentTriggerType = triggerType;
+}
+
+public void SetHitType(HitType hitType)
+{
+    this.hitType = hitType;
 }
 
 
@@ -61,47 +80,10 @@ private void Start() {
 
 public void ResetHitOpponentsThisTurn()
 {
+    hitType = HitType.ManyEnemy;
     meetDuringTurn.Clear();
 }
 
-// private void OpponentDistantReaction(Opponent opponent)
-// {
-//             // defendItem.transform.parent = opponent.transform;
-//             GetComponent<Collider>().enabled = false;
-//             Vector3 force = (defendItem.transform.position - player.position).normalized * ForceOrRagdollPushWhileThrow;
-//             opponent.GetComponent<KillUtils>().GotKilledByThrow(defendItem.transform, force);
-// }
-
-// private void OpponentMeleeReaction(Opponent opponent)
-// {
-//     DefendItem defendItem = GetComponentInParent<DefendItem>();
-//     WeaponType weaponMode = WeaponType.Default;
-//     if (defendItem != null){weaponMode = defendItem.holdMode;}
-//         switch(weaponMode)
-//         {
-//             case(WeaponType.Knife):
-//             {
-//                 opponent.GotStabbed(player, pushForce, pushTime);
-//                 break;
-//             }
-//             case(WeaponType.WoddenStick):
-//             {
-//                 opponent.GotPushed(player, pushForce, pushTime);
-//                 opponent.SetKickPos(transform.position);
-//                 break;
-//             }
-//             default:
-//             {
-//                 var superKick = false;
-//                 if(bonus.GetBonusMode() == BonusMode.SuperKick)
-//                     superKick = true;    
-//                 opponent.GotPushed(player, pushForce, pushTime, superKick);
-//                 opponent.SetKickPos(transform.position);
-//                 break;
-//             }
-//         }
-        
-// }
 
 WeaponType GetWeaponHoldType()
     {
@@ -111,35 +93,49 @@ WeaponType GetWeaponHoldType()
             return defendItem.weaponType;
     }
 
+public void InduceTrigger(GameObject gameObject)
+{
 
-private void OnTriggerEnter(Collider other) {
-        
-         Opponent opponent = other.gameObject.GetComponent<Opponent>();
+    Opponent opponent = gameObject.GetComponent<Opponent>();
         if(opponent != null && !meetDuringTurn.Contains(opponent))
         {
             IOpponentReaction opponentReaction = null;
             if (currentTriggerType == TriggerType.Melee)
-                opponentReaction = other.gameObject.GetComponent<MeleeReaction>() as IOpponentReaction;
+                opponentReaction = gameObject.GetComponent<MeleeReaction>() as IOpponentReaction;
             else if(currentTriggerType == TriggerType.Distant)
-                opponentReaction = other.gameObject.GetComponent<DistanceAttackReaction>() as IOpponentReaction;
+                opponentReaction = gameObject.GetComponent<DistanceAttackReaction>() as IOpponentReaction;
             
             if(opponentReaction != null)
             {
-                opponentReaction.targetDirection = other.gameObject.transform.position - player.position;
+                if(hitType == HitType.OneVictim) 
+                    {
+                        hitTriggerCollider.enabled = false;
+                        defendItem.interactCollider.enabled = true;
+                    }
+
+                opponentReaction.targetDirection = gameObject.transform.position - player.position;
                 if(defendItem != null)
                     opponentReaction.weapon = defendItem.transform;
                 opponentReaction.bonus = bonus;
 
-                OpponentMode mode = other.gameObject.GetComponent<OpponentActions>().GetOpponentMode();
+                OpponentMode mode = gameObject.GetComponent<OpponentActions>().GetOpponentMode();
                 if(mode != OpponentMode.Faint)
                 {    
                     meetDuringTurn.Add(opponent);
 
                     OnHit?.Invoke(this);
-                    opponentReaction.InvokeReaction(GetWeaponHoldType(), player, pushForce, pushTime);
+                    opponentReaction.InvokeReaction(damageType, GetWeaponHoldType(), player, pushForce, pushTime);
                 }
             }
         }
+}
+
+
+private void OnTriggerEnter(Collider other) {
+        
+
+       InduceTrigger(other.gameObject);
+
     }
 
 }
