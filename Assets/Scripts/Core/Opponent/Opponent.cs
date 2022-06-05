@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 using UnityEngine.AI;
 
 public class Opponent : MonoBehaviour
@@ -15,7 +16,10 @@ public class Opponent : MonoBehaviour
     private TaskManager taskManager;
 
     public delegate void InterruptTask();
+
+    public Action<Opponent> OnKill;
     InterruptTask interruptTask;
+    private OpponentMagnet opponentMagnet;
    
     
 
@@ -27,6 +31,8 @@ public class Opponent : MonoBehaviour
         opponentUtils = GetComponent<OpponentUtils>();
         taskManager = GetComponentInChildren<TaskManager>();
         vfov = GetComponentInChildren<VisionFieldOfView>();
+        opponentMagnet = GameObject.FindWithTag("Player").GetComponent<OpponentMagnet>();
+        OnKill += opponentMagnet.RemoveOpponent;
 
     }
 

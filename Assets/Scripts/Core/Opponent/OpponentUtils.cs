@@ -6,9 +6,12 @@ public class OpponentUtils : MonoBehaviour
 
     public GameObject looker;
 
-    public ExplorationSquare explorationSquare;
+    private ExplorationSquare explorationSquare;
 
 
+private void Awake() {
+    explorationSquare = GameObject.FindWithTag("ExplorationArea").GetComponent<ExplorationSquare>();
+}
 
     public Vector3 GetMousePosition()
     {   Vector3 result = new Vector3(0, 0, 0);

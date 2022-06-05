@@ -55,8 +55,11 @@ public abstract class BestCandidateManager: MonoBehaviour
         List <Transform> PreprocessL = new List<Transform>(); // Checking again if objects are directed properly
         foreach(Transform item in PossibleToPicked)
         {
-            if(GetRelativeDirection(item) > 0f)
-                PreprocessL.Add(item);
+            if(item != null)
+            {
+                if(GetRelativeDirection(item) > 0f)
+                    PreprocessL.Add(item);
+            }
         }
         int size = PreprocessL.Count;
         if(size == 0)

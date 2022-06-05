@@ -122,10 +122,9 @@ public void InduceTrigger(GameObject gameObject)
                 if(mode != OpponentMode.Faint)
                 {    
                     meetDuringTurn.Add(opponent);
-
-                    OnHit?.Invoke(this);
                     opponentReaction.InvokeReaction(damageType, GetWeaponHoldType(), player, pushForce, pushTime);
-                }
+                    OnHit?.Invoke(this);
+                   }
             }
         }
 }

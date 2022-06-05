@@ -24,7 +24,6 @@
             Sequence sequence = DOTween.Sequence();
             sequence.Append(text.DOColor(color, 0.1f));
             sequence.Join(text.transform.DOScale(new Vector3(3f, 3f, 1f), 0.1f));
-            sequence.Join(text.transform.DOScale(new Vector3(3f, 3f, 1f), 0.1f));
             sequence.SetLoops(2, LoopType.Yoyo);
         }
     }

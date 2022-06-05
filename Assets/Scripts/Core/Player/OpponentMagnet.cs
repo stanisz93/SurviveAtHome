@@ -17,15 +17,14 @@ public class OpponentMagnet : MonoBehaviour
     private Character player;
     private SpecialAttacks specialAttacks;
     private ObstacleInteractionManager obstacleInteractionManager;
-    public event Action<Transform> OnKill = delegate { };
 
     public Transform NearestOpponent {get {return _nearestOpponent;}}
 
     private void Start() {
         OpponentsInRadious = new List<Transform>();
-        obstacleInteractionManager = GetComponentInParent<ObstacleInteractionManager>();
-        specialAttacks = GetComponentInParent<SpecialAttacks>();
-        player = GetComponentInParent<Character>();
+        obstacleInteractionManager = GetComponent<ObstacleInteractionManager>();
+        specialAttacks = GetComponentInChildren<SpecialAttacks>();
+        player = GetComponent<Character>();
         StartCoroutine(LookForBestFit());
     }
     // Start is called before the first frame update
@@ -44,10 +43,12 @@ public class OpponentMagnet : MonoBehaviour
         }
     }
 
-    public void RemoveOpponent(Transform opponent)
-    {
-        OpponentsInRadious.Remove(opponent);
+    public void RemoveOpponent(Opponent opponent)
+{
+        if(OpponentsInRadious.Contains(opponent.transform))
+            OpponentsInRadious.Remove(opponent.transform);
     }
+    
 
     // Update is called once per frame
 

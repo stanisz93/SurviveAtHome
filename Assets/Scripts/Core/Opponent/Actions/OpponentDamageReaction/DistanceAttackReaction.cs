@@ -52,6 +52,7 @@ public class DistanceAttackReaction : MonoBehaviour, IOpponentReaction
             Instantiate(pfThrowKillEffect, weapon.position, Quaternion.identity, weapon);
             StartCoroutine(killUtils.InstantiateBloodTexture(bloodTextureThrowDelay, weapon, offsetAlongOpponentSpine));
             agent.enabled = false;
+            opponent.OnKill?.Invoke(opponent);
             StartCoroutine(killUtils.DestroyOpponentObject(2f));
     }
 

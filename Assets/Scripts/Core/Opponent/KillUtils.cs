@@ -23,12 +23,15 @@ public class KillUtils : MonoBehaviour
 
     bool stoppedRagdoll = false;
 
+    private Opponent opponent;
+
     // Start is called before the first frame update
     void Start()
     {
         floor = GameObject.FindWithTag("Floor").transform;
         vfov = GetComponentInChildren<VisionFieldOfView>();
         animator = GetComponentInChildren<Animator>();
+        opponent = GetComponent<Opponent>();
     }
 
     public Transform GetHeadPos()
@@ -55,7 +58,7 @@ public class KillUtils : MonoBehaviour
             pos = pos + offsetAlongOpponentSpine * new Vector3(head.right.x, 0f, head.right.z);
             int randomTextureIdx = Random.Range(0, pfBloodTextures.Count - 1);
             Vector3 headFwdXZDirection = new Vector3(head.forward.x, 0, head.forward.z);
-            Instantiate(pfBloodTextures[randomTextureIdx], pos, Quaternion.LookRotation(headFwdXZDirection));
+            GameObject blood = Instantiate(pfBloodTextures[randomTextureIdx], pos, Quaternion.LookRotation(headFwdXZDirection));
         }
     }
     // Update is called once per frame
@@ -68,7 +71,9 @@ public class KillUtils : MonoBehaviour
         StartCoroutine(InstantiateBloodTexture(bloodTextureActivateDelay, head, offsetAlongOpponentSpine));
         animator.SetTrigger("KickKill");
         GetComponent<Ragdoll>().ToggleRagdoll(Vector3.zero, 0.0f);
+        opponent.OnKill?.Invoke(opponent);
         StartCoroutine(DestroyOpponentObject(0.3f));
+
 
     }
 
