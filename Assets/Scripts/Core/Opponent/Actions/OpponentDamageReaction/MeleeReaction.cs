@@ -28,7 +28,7 @@ public void InvokeReaction(DamageType damageType, WeaponType holdMode, Transform
             case(WeaponType.WoddenStick):
             {
                 opponent.GotPushed(player, force, pushTime);
-                opponent.SetKickPos(transform.position);
+                opponent.SetDamagePosition(transform.position);
                 break;
             }
             case(WeaponType.None):
@@ -37,7 +37,7 @@ public void InvokeReaction(DamageType damageType, WeaponType holdMode, Transform
                 if(bonus.GetBonusMode() == BonusMode.SuperKick)
                     superKick = true;    
                 opponent.GotPushed(player, force, pushTime, superKick);
-                opponent.SetKickPos(transform.position);
+                opponent.SetDefaultDamagePosition();
                 break;
             }
         }

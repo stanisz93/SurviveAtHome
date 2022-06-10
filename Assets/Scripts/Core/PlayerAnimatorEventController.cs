@@ -13,6 +13,8 @@ public class PlayerAnimatorEventController : MonoBehaviour
     private Animator animator;
     private PlayerInput playerInput;
     private PlayerTriggers playerTriggers;
+
+    private TrailRenderer kickTrail;
   
     void Start()
     {
@@ -20,6 +22,8 @@ public class PlayerAnimatorEventController : MonoBehaviour
         animator = GetComponent<Animator>();
         playerInput = GetComponentInParent<PlayerInput>();
         playerTriggers = GetComponentInParent<PlayerTriggers>();
+        kickTrail = GetComponentInChildren<TrailRenderer>();
+        kickTrail.enabled = false;
     }
 
         
@@ -27,6 +31,11 @@ public class PlayerAnimatorEventController : MonoBehaviour
     {
         currentAttackTrigger.GetComponent<Collider>().enabled = true;
         currentAttackTrigger.ResetHitOpponentsThisTurn();
+    }
+
+    public void ToogleKickTrail()
+    {
+        kickTrail.enabled = !kickTrail.enabled;
     }
 
     public void TurnOffDamage()

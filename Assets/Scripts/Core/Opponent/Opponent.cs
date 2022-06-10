@@ -67,9 +67,14 @@ public class Opponent : MonoBehaviour
 
     
 
-    public void SetKickPos(Vector3 position)
+    public void SetDamagePosition(Vector3 position)
     {
-        opponentActions.pushEffectPosition.position = position;
+        opponentActions.SetCurrentEffectPosition(position);
+    }
+
+    public void SetDefaultDamagePosition()
+    {
+        opponentActions.SetDefaultEffectPosition();
     }
 
     // Update is called once per frame

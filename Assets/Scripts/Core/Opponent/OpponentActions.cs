@@ -9,7 +9,7 @@ public class OpponentActions : MonoBehaviour
 {
 
     public OpponentEventController opponentEventController;
-    public Transform pushEffectPosition;
+    public Transform defaultEffectPosition;
     public GameObject pfObstacleHitEffect;
     public Transform ObstacleHitSpot;
     public LayerMask PushStopperMask;
@@ -34,6 +34,7 @@ public class OpponentActions : MonoBehaviour
 
     public Animator animator;
     private float stoppingDistance = 0.0f;
+    private Transform currentEffectPosition;
     
     OpponentMode opponentMode = OpponentMode.Exploring;
     private OpponentUtils opponentUtils;
@@ -67,6 +68,7 @@ public class OpponentActions : MonoBehaviour
         opponent = GetComponent<Opponent>();
         m_Rigidbody = GetComponent<Rigidbody>();
         OpponentEffects = GetComponent<Effects>();
+        SetDefaultEffectPosition();
     }
 
 
@@ -122,7 +124,7 @@ public class OpponentActions : MonoBehaviour
     public IEnumerator GotStabbed(Transform player, float pushForce, float pushTime)
     {
         agent.speed = 0f;
-        OpponentEffects.RunParticleEffect(ParticleEffect.Blood, pushEffectPosition.position);
+        OpponentEffects.RunParticleEffect(ParticleEffect.Blood, currentEffectPosition.position);
         animator.SetBool("MirrorAnimation", Random.value > 0.5f); 
         animator.SetTrigger("beingStabbed");
         transform.rotation = Quaternion.LookRotation(-player.forward);
@@ -139,7 +141,7 @@ public class OpponentActions : MonoBehaviour
     {
         agent.speed = 0f;
         taskManager.LockEndOfTask();
-        OpponentEffects.RunParticleEffect(ParticleEffect.Push, pushEffectPosition.position);
+        OpponentEffects.RunParticleEffect(ParticleEffect.Push, currentEffectPosition.position);
         if(player.GetComponentInParent<Character>().SpeedBeforeKick > 1f)
         {
             bonusTrigger = true;
@@ -190,6 +192,16 @@ public class OpponentActions : MonoBehaviour
             yield return new WaitForSeconds(damageInterval);
         taskManager.TaskSetToFinish();
 
+    }
+
+    public void SetCurrentEffectPosition(Vector3 position)
+    {
+        currentEffectPosition.position = position;
+    }
+
+    public void SetDefaultEffectPosition()
+    {
+        currentEffectPosition = defaultEffectPosition;
     }
     
     public IEnumerator RunTowardPlayer(Transform player)

@@ -751,7 +751,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pfBloodEffect: {fileID: 1000010191825552, guid: fc79739a87957b44aab59070eeada4e2, type: 3}
-  pfPushEffect: {fileID: 1000010355441670, guid: f9b493d5c08821f41a9707e39ad257ee, type: 3}
+  pfPushEffect: {fileID: 1000010355441670, guid: e84addea89524cd45bcbad87c26b733b, type: 3}
 --- !u!114 &2397819963991360376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -765,7 +765,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   opponentEventController: {fileID: 2397819965307870976}
-  pushEffectPosition: {fileID: 7475134510656341703}
+  defaultEffectPosition: {fileID: 7475134510656341703}
   pfObstacleHitEffect: {fileID: 1000012142692022, guid: 9b362c320c0727844a67d8d9668ef137, type: 3}
   ObstacleHitSpot: {fileID: 2226511771463148707}
   PushStopperMask:
