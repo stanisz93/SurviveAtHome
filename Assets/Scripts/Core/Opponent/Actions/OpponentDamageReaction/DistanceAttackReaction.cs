@@ -50,7 +50,11 @@ public class DistanceAttackReaction : MonoBehaviour, IOpponentReaction
             opponentHit.enabled = false;
             vfov.TurnOffSense();
             Instantiate(pfThrowKillEffect, weapon.position, Quaternion.identity, weapon);
-            StartCoroutine(killUtils.InstantiateBloodTexture(bloodTextureThrowDelay, weapon, offsetAlongOpponentSpine));
+            GameObject stickPointBleeding = new GameObject(); //Instead of weapon
+            //that might be destroy and weird thinks happened
+            stickPointBleeding.transform.position = weapon.transform.position;
+            stickPointBleeding.transform.parent = weapon.transform.parent;
+            StartCoroutine(killUtils.InstantiateBloodTexture(bloodTextureThrowDelay, stickPointBleeding.transform, offsetAlongOpponentSpine));
             agent.enabled = false;
             opponent.OnKill?.Invoke(opponent);
             StartCoroutine(killUtils.DestroyOpponentObject(2f));

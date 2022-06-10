@@ -23,7 +23,7 @@ public class Opponent : MonoBehaviour
    
     
 
-    // Start is called before the first frame update
+    // Start is called before the first frame updatePc
     void Start()
     {   
         agent = GetComponent<NavMeshAgent>();
@@ -31,8 +31,8 @@ public class Opponent : MonoBehaviour
         opponentUtils = GetComponent<OpponentUtils>();
         taskManager = GetComponentInChildren<TaskManager>();
         vfov = GetComponentInChildren<VisionFieldOfView>();
-        opponentMagnet = GameObject.FindWithTag("Player").GetComponent<OpponentMagnet>();
-        OnKill += opponentMagnet.RemoveOpponent;
+        opponentMagnet = GameObject.FindWithTag("Player").GetComponentInChildren<OpponentMagnet>();
+        OnKill += opponentMagnet.RemoveDiedOpponent;
 
     }
 

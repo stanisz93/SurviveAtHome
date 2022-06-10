@@ -39,6 +39,7 @@ public class ThrowableKnife : MonoBehaviour
     private void OnCollisionEnter(Collision other) {
         trail.enabled = false;
         Time.timeScale = 1f;
+        item.interactCollider.enabled = true;
         IThrowStickable stickable = other.gameObject.GetComponent<IThrowStickable>();
         if (stickable != null)
             {
@@ -76,7 +77,6 @@ public class ThrowableKnife : MonoBehaviour
             item.DetachFromPlayer();
             item.transform.localRotation = Quaternion.FromToRotation(Vector3.right, -(targetThrowPos - item.transform.position).normalized);
             rb.isKinematic = false;
-            item.interactCollider.enabled = true;
             
             // hasCollideWhileThrow = false;
             item.physicsCollider.enabled = true;

@@ -85,6 +85,14 @@ public class Ragdoll : MonoBehaviour
         }
     }
 
+    public void DisableAllColliders()
+    {
+        foreach(var coll in ragdollColliders)
+        {
+            coll.enabled = false;
+        }
+    }
+
 
 
 }

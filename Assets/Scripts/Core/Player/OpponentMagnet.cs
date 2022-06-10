@@ -9,6 +9,8 @@ public class OpponentMagnet : MonoBehaviour
 {
     public float ClosestOpponentLookingPeriodCycle = 0.05f;
     public Transform PlayerMesh;
+
+    public LayerMask opponentMask;
     List <Transform> OpponentsInRadious;
 
     public Transform MagnetDebug;
@@ -17,36 +19,45 @@ public class OpponentMagnet : MonoBehaviour
     private Character player;
     private SpecialAttacks specialAttacks;
     private ObstacleInteractionManager obstacleInteractionManager;
+    private CharacterMovement chrMvmnt;
 
     public Transform NearestOpponent {get {return _nearestOpponent;}}
 
+    private HashSet<Transform> ToRemove; //Used to recognize those that dies
+
     private void Start() {
+        MagnetDebug.parent = null;
         OpponentsInRadious = new List<Transform>();
-        obstacleInteractionManager = GetComponent<ObstacleInteractionManager>();
-        specialAttacks = GetComponentInChildren<SpecialAttacks>();
-        player = GetComponent<Character>();
+        ToRemove = new HashSet<Transform>();
+        obstacleInteractionManager = GetComponentInParent<ObstacleInteractionManager>();
+        specialAttacks = GetComponentInParent<SpecialAttacks>();
+        player = GetComponentInParent<Character>();
+        chrMvmnt = GetComponentInParent<CharacterMovement>();
         StartCoroutine(LookForBestFit());
     }
     // Start is called before the first frame update
     void OnTriggerEnter(Collider other) {
         Opponent o = other.GetComponent<Opponent>();
-        if(o != null)
+        if(o != null && !ToRemove.Contains(o.transform))
         {
             OpponentsInRadious.Add(o.transform);
         }
     }
     private void OnTriggerExit(Collider other) {
-            Opponent o = other.GetComponent<Opponent>();
+        Opponent o = other.GetComponent<Opponent>();
         if(o != null)
         {
             OpponentsInRadious.Remove(o.transform);
         }
     }
 
-    public void RemoveOpponent(Opponent opponent)
-{
+    public void RemoveDiedOpponent(Opponent opponent)
+{       _nearestOpponent = null;
+        ToRemove.Add(opponent.transform);
         if(OpponentsInRadious.Contains(opponent.transform))
+        {
             OpponentsInRadious.Remove(opponent.transform);
+        }
     }
     
 
@@ -72,7 +83,7 @@ public class OpponentMagnet : MonoBehaviour
             {
                 Transform closest = filtered.n;
                 MagnetDebug.gameObject.SetActive(true);
-                MagnetDebug.position = transform.position + (new Vector3(closest.position.x, transform.position.y, closest.position.z) - transform.position).normalized;
+                MagnetDebug.position = transform.position + (new Vector3(closest.position.x, transform.position.y, closest.position.z) - transform.position);
                 return closest;
             }
         }
@@ -90,7 +101,7 @@ public class OpponentMagnet : MonoBehaviour
         if (NearestOpponent != null)
         {
             obstacleInteractionManager.InterruptMovementSequence();
-            Vector3 movementDir = NearestOpponent.position - PlayerMesh.position;
+            Vector3 movementDir = NearestOpponent.transform.position - PlayerMesh.position;
             movementDir = new Vector3(movementDir.x, 0f, movementDir.z);
             Sequence seq = DOTween.Sequence();
             Vector3 initPlayerRot = player.transform.eulerAngles ;
@@ -102,26 +113,48 @@ public class OpponentMagnet : MonoBehaviour
         }
     }
 
+    public void AlternativeNearest()
+    {
+        RaycastHit hit;
+        if (Physics.SphereCast(PlayerMesh.transform.position, 3f, PlayerMesh.transform.forward, out hit, 10f, opponentMask))
+        {
+            Opponent opponent = hit.collider.transform.GetComponent<Opponent>();
+            if(opponent != null)
+            {
+                _nearestOpponent = hit.collider.transform;
+                MagnetDebug.gameObject.SetActive(true);
+                MagnetDebug.position = opponent.transform.position;
+
+                if(_nearestOpponent.transform.GetComponent<OpponentActions>().GetOpponentMode() == OpponentMode.Faint)
+                {
+                    specialAttacks.SetTarget(_nearestOpponent);
+                }
+                
+            }
+        }
+    }
+
     IEnumerator LookForBestFit()
     {
         while(true)
             {
-                yield return new WaitForSeconds(ClosestOpponentLookingPeriodCycle);
+                // AlternativeNearest();
+                // yield return new WaitForSeconds(ClosestOpponentLookingPeriodCycle);
                 _nearestOpponent = FindNearestOpponent();
-                if (_nearestOpponent != null)
-                {
-                    var opponent = _nearestOpponent.GetComponent<OpponentActions>();
-                    if(opponent != null)
-                    {   if(_nearestOpponent.GetComponent<OpponentActions>().GetOpponentMode() == OpponentMode.Faint)
-                        {
+                if(_nearestOpponent != null)
+                    {
+                        if(_nearestOpponent.transform.GetComponent<OpponentActions>().GetOpponentMode() == OpponentMode.Faint)
                             specialAttacks.SetTarget(_nearestOpponent);
-                            yield return null;
-                            continue;
-                        }
                     }
-                }
+                yield return new WaitForSeconds(ClosestOpponentLookingPeriodCycle);
                 specialAttacks.RemoveTarget();
+
+                
+
+                
             }
     }
+
+
 }
 

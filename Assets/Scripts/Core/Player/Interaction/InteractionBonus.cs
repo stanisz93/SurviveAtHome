@@ -15,7 +15,7 @@ public class InteractionBonus : MonoBehaviour {
     private void Start() {
         playerInput = GetComponentInParent<PlayerInput>();
         playerAnimatorEventController = GetComponent<PlayerAnimatorEventController>();
-        opponentMagnet = GetComponentInParent<OpponentMagnet>();
+        opponentMagnet = GetComponentInChildren<OpponentMagnet>();
         animator = GetComponent<Animator>();
     }
 

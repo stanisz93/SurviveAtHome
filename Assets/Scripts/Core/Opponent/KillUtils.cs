@@ -70,6 +70,7 @@ public class KillUtils : MonoBehaviour
         Instantiate(pfBloodKillEffect, pos, Quaternion.LookRotation(-headRightXZDirection));
         StartCoroutine(InstantiateBloodTexture(bloodTextureActivateDelay, head, offsetAlongOpponentSpine));
         animator.SetTrigger("KickKill");
+        GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
         GetComponent<Ragdoll>().ToggleRagdoll(Vector3.zero, 0.0f);
         opponent.OnKill?.Invoke(opponent);
         StartCoroutine(DestroyOpponentObject(0.3f));
@@ -89,6 +90,8 @@ public class KillUtils : MonoBehaviour
         {
             if (t.GetType().Name != "Ragdoll")
                 Destroy(t);
+            
         }
+        GetComponent<Ragdoll>().DisableAllColliders();
     }
 }
