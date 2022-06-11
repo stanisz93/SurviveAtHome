@@ -263,6 +263,36 @@ Transform:
   m_Father: {fileID: 8988024182507279932}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &890283887103456175
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5154820101077816490}
+  m_Layer: 0
+  m_Name: BodyPartsCoordinates
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5154820101077816490
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 890283887103456175}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7243347913444595822}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1138819262131236365
 GameObject:
   m_ObjectHideFlags: 0
@@ -850,6 +880,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   head: {fileID: 4597343827526528492}
+  decayStep: 0.01
+  decayTimeIntervalStep: 0.05
+  decayTotalSteps: 500
   pfBloodTextures:
   - {fileID: 100000, guid: 295fd3321dc75894cb55137e16e294bb, type: 3}
   - {fileID: 100000, guid: 1e1d8c8382961094d85192c9bbe5edee, type: 3}
@@ -857,6 +890,8 @@ MonoBehaviour:
   - {fileID: 100000, guid: 4a6cf7a3aa0510345b86258394820117, type: 3}
   - {fileID: 100000, guid: 1d40c6a927b365d47bca39ec11ae4be1, type: 3}
   pfBloodKillEffect: {fileID: 3959511245092731122, guid: 7a166b36e2ad0744090c2665aa7befed, type: 3}
+  pfBodyParts: {fileID: 8103024046892598468, guid: 02acd58fd2abb8e40a213c5bf1f5dd85, type: 3}
+  bodyPartsPosition: {fileID: 5154820101077816490}
   pfThrowKillEffect: {fileID: 6115847214822075018, guid: 665a9905001330142adb9ed828674cd7, type: 3}
   bloodEmmiterHeight: 0.3
   bloodTextureActivateDelay: 0.1
@@ -2634,6 +2669,7 @@ Transform:
   - {fileID: 1333697371789667040}
   - {fileID: 1984412665354694018}
   - {fileID: 360862486358897525}
+  - {fileID: 5154820101077816490}
   m_Father: {fileID: 5077765554922348757}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -9,12 +9,13 @@ public class PlayerAnimatorEventController : MonoBehaviour
     public AttackTrigger currentAttackTrigger;
 
     // Start is called before the first frame update
-    
+    public float TrailKickDecay = 0.1f;
     private Animator animator;
     private PlayerInput playerInput;
     private PlayerTriggers playerTriggers;
 
     private TrailRenderer kickTrail;
+
   
     void Start()
     {
@@ -33,9 +34,16 @@ public class PlayerAnimatorEventController : MonoBehaviour
         currentAttackTrigger.ResetHitOpponentsThisTurn();
     }
 
+    
+    IEnumerator TurnOffKickTrail()
+    {
+        yield return new WaitForSeconds(TrailKickDecay);
+        kickTrail.enabled = false;
+    }
     public void ToogleKickTrail()
     {
-        kickTrail.enabled = !kickTrail.enabled;
+        kickTrail.enabled = true;
+        StartCoroutine(TurnOffKickTrail());
     }
 
     public void TurnOffDamage()

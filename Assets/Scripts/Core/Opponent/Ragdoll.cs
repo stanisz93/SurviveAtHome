@@ -46,7 +46,8 @@ public class Ragdoll : MonoBehaviour
         var components = GetComponents<MonoBehaviour>();
         foreach( var t in components)
         {
-            t.enabled = !isRagdoll;
+            if (t.GetType().Name != "KillUtils")
+                t.enabled = !isRagdoll;
         }
         if (force != Vector3.zero)
             AddForce(force);

@@ -51,7 +51,7 @@ public class SpecialKills : MonoBehaviour
         StartCoroutine(InstantiateBloodTexture(bloodTextureActivateDelay, head.position));
         animator.SetTrigger("KickKill");
         GetComponent<Ragdoll>().ToggleRagdoll(Vector3.zero, 0.0f);
-        Invoke("DestroyOpponentObject", 0.3f);
+        // Invoke("DestroyOpponentObject", 0.3f);
 
     }
 

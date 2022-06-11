@@ -5,8 +5,19 @@ using UnityEngine;
 public class KillUtils : MonoBehaviour
 {
     public Transform head;
+    [SerializeField]
+    public float decayStep = 0.001f;
+    [SerializeField]
+    public float decayTimeIntervalStep = 1f;
+    [SerializeField]
+    public int decayTotalSteps = 100;
+
     public List<GameObject> pfBloodTextures;
     public GameObject pfBloodKillEffect;
+
+    public GameObject pfBodyParts;
+
+    public Transform bodyPartsPosition;
 
     public GameObject pfThrowKillEffect;
     public float bloodEmmiterHeight = 0.1f;
@@ -83,15 +94,34 @@ public class KillUtils : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         GetComponent<Ragdoll>().ToogleRigidbodies(false);
-        stoppedRagdoll = true;
-
-        var components = GetComponents<MonoBehaviour>();
-        foreach( var t in components )
-        {
-            if (t.GetType().Name != "Ragdoll")
-                Destroy(t);
-            
-        }
         GetComponent<Ragdoll>().DisableAllColliders();
+
+
+        // var scripts = GetComponents<MonoBehaviour>();
+        // foreach( var s in scripts )
+        // {
+        //     if (s.GetType().Name != "KillUtils")
+        //         Destroy(s);
+            
+        // }
+
+        stoppedRagdoll = true;
+        int decaySteps = decayTotalSteps;
+        var randomRotation = Quaternion.Euler(0,  Random.Range(0, 360) , 0);
+        GameObject parts = Instantiate(pfBodyParts, new Vector3(bodyPartsPosition.position.x, 0.04f, bodyPartsPosition.position.z), randomRotation);
+        Destroy(parts, 30f);
+        while(decaySteps > 0)
+        {
+            yield return new WaitForSeconds(decayTimeIntervalStep);
+            transform.Translate(-Vector3.up * Time.deltaTime * decayStep, Space.World);
+            decaySteps -= 1;
+        }
+
+  
+
+
+
+
+        Destroy(gameObject);
     }
 }
