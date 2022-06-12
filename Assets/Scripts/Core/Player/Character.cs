@@ -168,6 +168,11 @@ public class Character : MonoBehaviour
         return characterMovement.Velocity.magnitude;
     }
 
+    public Vector3 GetForwardDirection()
+    {
+        return characterMovement.t_mesh.forward;
+    }
+
     public Vector3 GetVelocityVector()
     {
         return characterMovement.Velocity;

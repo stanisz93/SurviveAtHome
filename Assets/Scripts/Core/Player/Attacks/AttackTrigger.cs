@@ -7,7 +7,7 @@ public enum TriggerType{Melee, Distant};
 
 public enum HitType{ManyEnemy, OneVictim};
 
-public enum DamageType{Killing, NormalDamage};
+public enum DamageType{Killing, NormalDamage, ToTheGround};
 public class AttackTrigger : MonoBehaviour {
 
 //delay of moving with dween
@@ -116,11 +116,13 @@ public void InduceTrigger(GameObject gameObject)
                 opponentReaction.targetDirection = gameObject.transform.position - player.position;
                 if(defendItem != null)
                     opponentReaction.weapon = defendItem.transform;
-                opponentReaction.bonus = bonus;
 
                 OpponentMode mode = gameObject.GetComponent<OpponentActions>().GetOpponentMode();
                 if(mode != OpponentMode.Faint)
                 {    
+
+                    if(bonus.GetBonusMode() == BonusMode.SuperKick)
+                        damageType = DamageType.ToTheGround;
                     meetDuringTurn.Add(opponent);
                     opponentReaction.InvokeReaction(damageType, GetWeaponHoldType(), player, pushForce, pushTime);
                     OnHit?.Invoke(this);

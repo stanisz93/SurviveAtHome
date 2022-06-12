@@ -8,35 +8,34 @@ public class MeleeReaction : MonoBehaviour, IOpponentReaction
 
     public Vector3 targetDirection {set; get;}
 
-    public HitBonus bonus {set; get;}
     public Transform weapon {set; get;}
     private Opponent opponent;
     private void Start() {
         opponent = GetComponent<Opponent>();
     }
     
-public void InvokeReaction(DamageType damageType, WeaponType holdMode, Transform player, float force, float pushTime)
+public void InvokeReaction(DamageType damageType, WeaponType holdMode, Transform sourceOfHit, float force, float pushTime)
 {
     {
         switch(holdMode)
         {
             case(WeaponType.Knife):
             {
-                opponent.GotStabbed(player, force, pushTime);
+                opponent.GotStabbed(sourceOfHit, force, pushTime);
                 break;
             }
             case(WeaponType.WoddenStick):
             {
-                opponent.GotPushed(player, force, pushTime);
+                opponent.GotPushed(sourceOfHit, force, pushTime);
                 opponent.SetDamagePosition(transform.position);
                 break;
             }
             case(WeaponType.None):
-            {
-                var superKick = false;
-                if(bonus.GetBonusMode() == BonusMode.SuperKick)
-                    superKick = true;    
-                opponent.GotPushed(player, force, pushTime, superKick);
+            {   
+                bool superHit = false;
+                if(damageType == DamageType.ToTheGround)
+                    superHit = true;
+                opponent.GotPushed(sourceOfHit, force, pushTime, superHit);
                 opponent.SetDefaultDamagePosition();
                 break;
             }

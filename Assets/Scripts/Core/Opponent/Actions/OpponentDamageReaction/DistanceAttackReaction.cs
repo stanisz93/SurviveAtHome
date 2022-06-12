@@ -15,7 +15,6 @@ public class DistanceAttackReaction : MonoBehaviour, IOpponentReaction
 
     public float rotateForce = 1f;
     public Vector3 targetDirection {set; get;}
-    public HitBonus bonus {set; get;}
     public Transform weapon {set; get;}
     private KillUtils killUtils;
     private Animator animator;
@@ -33,7 +32,6 @@ public class DistanceAttackReaction : MonoBehaviour, IOpponentReaction
         animator = GetComponentInChildren<Animator>();
         taskManager = GetComponentInChildren<TaskManager>();
         agent = GetComponent<NavMeshAgent>();
-        bonus = GetComponent<HitBonus>();
         ragdoll = GetComponent<Ragdoll>();
         opponentHit = GetComponentInChildren<OpponentHit>();
     }

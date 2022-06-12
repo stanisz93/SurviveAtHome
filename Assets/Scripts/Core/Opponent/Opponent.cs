@@ -47,10 +47,10 @@ public class Opponent : MonoBehaviour
             taskManager.ForceToRun(opponentActions.Fall(), 1);
     }
 
-    public void GotPushed(Transform transform, float pushForce, float pushTime, bool bonusTrigger=false)
+    public void GotPushed(Transform transform, float pushForce, float pushTime, bool superHit=false)
     {
         if(taskManager.GetCurrentPriority() > 1) 
-            taskManager.ForceToRun(opponentActions.GotPushed(transform, pushForce, pushTime, bonusTrigger), 1);
+            taskManager.ForceToRun(opponentActions.GotPushed(transform, pushForce, pushTime, superHit), 1);
     }
 
     public void GotTackled(Vector3 collisionNormal)

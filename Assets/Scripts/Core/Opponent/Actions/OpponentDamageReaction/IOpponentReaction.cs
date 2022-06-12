@@ -9,7 +9,6 @@ public interface IOpponentReaction
     // Action <Opponent> OnGotAttacked {get; set;} 
     Vector3 targetDirection {set; get;}
 
-    HitBonus bonus {set; get;}
 
     Transform weapon {set; get;}
 

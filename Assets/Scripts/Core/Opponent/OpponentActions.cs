@@ -137,17 +137,19 @@ public class OpponentActions : MonoBehaviour
         yield return null;
         taskManager.TaskSetToFinish();
     }
-    public IEnumerator GotPushed(Transform player, float pushForce, float pushTime, bool bonusTrigger)
+    public IEnumerator GotPushed(Transform sourceOfHit, float pushForce, float pushTime, bool superHit)
     {
         agent.speed = 0f;
         taskManager.LockEndOfTask();
         OpponentEffects.RunParticleEffect(ParticleEffect.Push, currentEffectPosition.position);
-        if(player.GetComponentInParent<Character>().SpeedBeforeKick > 1f)
+        Character c = sourceOfHit.GetComponentInParent<Character>();
+        if(c != null)
         {
-            bonusTrigger = true;
+            if(c.SpeedBeforeKick > 1f)
+                superHit = true;
         }
 
-        Vector3 targetDir = transform.position - player.position;
+        Vector3 targetDir = transform.position - sourceOfHit.position;
         Vector3 targetDirNorm = new Vector3(targetDir.x, transform.position.y, targetDir.z).normalized;
         Vector3 pushVect = new Vector3(pushForce * targetDirNorm.x, 0f, pushForce * targetDirNorm.z);
         // RaycastHit hit;
@@ -169,9 +171,9 @@ public class OpponentActions : MonoBehaviour
                 pushS.Join(transform.DOMove(transform.position  + pushVect - obstacleHitRebound *pushVect.normalized, obstacleHitReboundTime));
             }
 
-        transform.rotation = Quaternion.LookRotation(-player.forward);
+        transform.rotation = Quaternion.LookRotation(-targetDirNorm);
 
-        if(bonusTrigger)
+        if(superHit)
             {
                 SetOpponentMode(OpponentMode.Faint);
                 animator.SetTrigger("beingStronglyHit");

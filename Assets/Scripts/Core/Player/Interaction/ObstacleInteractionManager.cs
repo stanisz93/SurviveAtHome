@@ -52,6 +52,12 @@ public class ObstacleInteractionManager : MonoBehaviour {
                 {
                     playerAnimationController.animator.SetTrigger("ClimbWall");
                 }
+            else if(obstacleInteraction.animType == ObstacleAnimType.PushDoor)
+                {
+                    playerAnimationController.animator.SetTrigger("PushDoor");
+                    obstacleInteraction.ApplyForce(characterMovement.t_mesh.forward);
+
+                }
             else
                 Debug.Log("UnexpecetBehaviour!");
             if(MoveSequence.IsActive())
