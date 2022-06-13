@@ -39,6 +39,11 @@ public class SpecialAttacks : MonoBehaviour
         isCandidateToDie = true;
     }
 
+    public bool isTarget(Transform transform)
+    {
+        return transform == target;
+    }
+
     public void RemoveTarget()
     {
         if(!isKillingEvent)
@@ -65,7 +70,7 @@ public class SpecialAttacks : MonoBehaviour
             Sequence seq = DOTween.Sequence();
             Vector3 dir = TransformUtils.GetXZDirectionWithMargin(transform, opponentHead, playerDistanceFromHead);
             playerTriggers.GetComponent<Collider>().enabled = false;
-            seq.Join(player.DOMove(player.position + dir, 0.2f));
+            seq.Join(player.DOMove(player.position + dir, 0.3f));
             Vector3 rotateDir = TransformUtils.GetXZDirection(transform, opponentHead);
             seq.Join(transform.DORotate(Quaternion.LookRotation(rotateDir).eulerAngles, 0.2f));
             seq.AppendCallback(() => playerTriggers.GetComponent<Collider>().enabled = true);

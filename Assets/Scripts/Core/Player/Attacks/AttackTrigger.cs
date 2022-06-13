@@ -25,9 +25,18 @@ private HitBonus bonus;
 private DefendItem defendItem;
 private StressReceiver stressReceiver;
 
+
+//this happend when hit is success
 private Action<AttackTrigger> OnHit;
 private TriggerType currentTriggerType;
 private HitType hitType = HitType.ManyEnemy;
+
+private IAttackable attackable;
+
+private IThrowable throwable;
+
+private Animator animator;
+private PlayerTriggers playerTriggers;
 
 private DamageType damageType = DamageType.NormalDamage;
 
@@ -38,6 +47,8 @@ private void Awake() {
     stressReceiver = GameObject.FindWithTag("MainCamera").GetComponent<StressReceiver>();
     defendItem = GetComponentInParent<DefendItem>();
     player = GameObject.FindWithTag("PlayerMesh").transform;
+    animator = player.GetComponent<Animator>();
+    playerTriggers = player.GetComponentInParent<PlayerTriggers>();
     bonus = GameObject.FindWithTag("Player").GetComponent<HitBonus>();
     hitTriggerCollider = GetComponent<Collider>();
     meetDuringTurn = new HashSet<Opponent>();
@@ -45,6 +56,8 @@ private void Awake() {
     OnHit += stressReceiver.InduceStressByHit;
     if(defendItem != null) //in case of neutral kick it wont happened
         OnHit += defendItem.ReduceEndurance;
+    attackable = GetComponent<IAttackable>();
+    throwable = GetComponent<IThrowable>();
       
 }
 
@@ -56,6 +69,16 @@ public float GetEnduranceMultiplier()
         TriggerType.Distant => 5f,
         TriggerType.Melee => 1f,
     };
+}
+
+public float GetDistanceLeft()
+{
+      if(currentTriggerType == TriggerType.Melee)
+        {   
+            return attackable.distanceLeft;
+        }
+    else
+        return Mathf.Infinity;
 }
 
 public void SetDamageType(DamageType dType)
@@ -82,6 +105,31 @@ public void ResetHitOpponentsThisTurn()
 {
     hitType = HitType.ManyEnemy;
     meetDuringTurn.Clear();
+}
+
+
+public void ReleaseAttack()
+{
+    if(currentTriggerType == TriggerType.Melee)
+        {   
+
+            attackable.ReleaseAttack();
+            playerTriggers.BlockMovementSeconds(attackable.blockMovement);
+            playerTriggers.ReleaseTriggerAfterSeconds(attackable.releaseTriggerTime);
+            animator.SetTrigger(attackable.animName);
+        }
+    else if(currentTriggerType == TriggerType.Distant)
+    {
+        throwable.ReleaseAttack();
+        animator.SetTrigger(throwable.animName);
+        playerTriggers.BlockMovementSeconds(throwable.blockMovement);
+        playerTriggers.ReleaseTriggerAfterSeconds(throwable.releaseTriggerTime);
+
+    }
+    else
+    {
+        Debug.Log("Some inexpected trigger type!");
+    }
 }
 
 
@@ -137,6 +185,6 @@ private void OnTriggerEnter(Collider other) {
 
        InduceTrigger(other.gameObject);
 
-    }
 
+    }
 }

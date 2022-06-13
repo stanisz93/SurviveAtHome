@@ -8,13 +8,13 @@ public class InteractionBonus : MonoBehaviour {
     private OpponentMagnet opponentMagnet;
     private Animator animator;
     private PlayerInput playerInput; 
-    private PlayerAnimatorEventController playerAnimatorEventController;
+    private AttackTriggersManager attackTriggersManager;
     public bool isVaultContext = false;
     private bool allowToKick = false;
 
     private void Start() {
         playerInput = GetComponentInParent<PlayerInput>();
-        playerAnimatorEventController = GetComponent<PlayerAnimatorEventController>();
+        attackTriggersManager = GetComponent<AttackTriggersManager>();
         opponentMagnet = GetComponentInChildren<OpponentMagnet>();
         animator = GetComponent<Animator>();
     }
@@ -51,7 +51,7 @@ public class InteractionBonus : MonoBehaviour {
 
     public void TurnOffVaultBonus()
     {
-        playerAnimatorEventController.TurnOffDamage();
+        attackTriggersManager.TurnOffDamage();
         isVaultContext = false;
         Time.timeScale = 1f;
     }

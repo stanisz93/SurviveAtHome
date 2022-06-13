@@ -28,7 +28,7 @@ public class PlayerCollider : MonoBehaviour
                 ContactPoint contact = other.contacts[0];
                 GetComponent<PlayerTriggers>().BumpOnZombie(contact.normal);
                 opponent.GotTackled(contact.normal);
-                StartCoroutine(gameObject.GetComponent<PlayerTriggers>().BlockMovementSeconds(BlockMovementWhileBump));
+                gameObject.GetComponent<PlayerTriggers>().BlockMovementSeconds(BlockMovementWhileBump);
         
             }
         }

@@ -1094,6 +1094,19 @@ TrailRenderer:
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
   m_Emitting: 1
+--- !u!114 &260918894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 260918890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceaf83453c273674bb54217fb433fe5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _distanceLeft: 1.2
 --- !u!1 &271226914
 GameObject:
   m_ObjectHideFlags: 0
@@ -14557,6 +14570,14 @@ PrefabInstance:
     - target: {fileID: 894834834, guid: 2f2acb786d48b2a48b1ddf17d16cd292, type: 3}
       propertyPath: m_Intensity
       value: 1.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 1420365617293641404, guid: 2f2acb786d48b2a48b1ddf17d16cd292, type: 3}
+      propertyPath: kickTrigger
+      value: 
+      objectReference: {fileID: 1543809638}
+    - target: {fileID: 1420365617293641404, guid: 2f2acb786d48b2a48b1ddf17d16cd292, type: 3}
+      propertyPath: magnetMoveDelay
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 1442899113134896723, guid: 2f2acb786d48b2a48b1ddf17d16cd292, type: 3}
       propertyPath: m_LocalPosition.y

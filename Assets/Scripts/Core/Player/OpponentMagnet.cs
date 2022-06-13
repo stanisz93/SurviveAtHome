@@ -47,6 +47,8 @@ public class OpponentMagnet : MonoBehaviour
         Opponent o = other.GetComponent<Opponent>();
         if(o != null)
         {
+            if(specialAttacks.isTarget(o.transform));
+                specialAttacks.RemoveTarget();
             OpponentsInRadious.Remove(o.transform);
         }
     }
@@ -95,7 +97,7 @@ public class OpponentMagnet : MonoBehaviour
     }
 
 
-    public void MoveTowardNearestOpponent()
+    public void MoveTowardNearestOpponent(float distLeft=0.5f,float moveDelay=0.4f)
     {
 
         if (NearestOpponent != null)
@@ -104,12 +106,12 @@ public class OpponentMagnet : MonoBehaviour
             Vector3 movementDir = NearestOpponent.transform.position - PlayerMesh.position;
             movementDir = new Vector3(movementDir.x, 0f, movementDir.z);
             Sequence seq = DOTween.Sequence();
-            Vector3 initPlayerRot = player.transform.eulerAngles ;
             Vector3 rot = Quaternion.LookRotation(movementDir.normalized).eulerAngles;
             // maybe here is the problem
-            seq.Join(player.transform.DOMove(player.transform.position + movementDir - 0.5f * movementDir.normalized, .4f));
+            if (distLeft != Mathf.Infinity)
+                seq.Join(player.transform.DOMove(player.transform.position + movementDir - distLeft * movementDir.normalized, moveDelay));
                 
-            seq.Join(PlayerMesh.transform.DORotate(rot, .4f));
+            seq.Join(PlayerMesh.transform.DORotate(rot, .3f));
         }
     }
 

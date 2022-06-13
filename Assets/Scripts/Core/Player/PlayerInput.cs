@@ -39,6 +39,7 @@ public class PlayerInput : MonoBehaviour
     private ObstacleInteractionManager obstacleInteractionManager;
     private InteractionBonus interactionBonus;
     private SpecialAttacks specialAttacks;
+    private AttackTriggersManager attackTriggersManager;
 
     // Start is called before the first frame update
     void Start()
@@ -60,6 +61,7 @@ public class PlayerInput : MonoBehaviour
         hitBonus = GetComponent<HitBonus>();
         playerAnimatorEventController = GetComponentInChildren<PlayerAnimatorEventController>();
         specialAttacks = GetComponentInChildren<SpecialAttacks>();
+        attackTriggersManager = GetComponentInChildren<AttackTriggersManager>();
 
             
     }
@@ -174,7 +176,9 @@ public class PlayerInput : MonoBehaviour
             }
             else if(Input.GetMouseButtonUp(0))
             {
-                character.StartTriggerAction(playerTriggers.ThrowWeapon); //I should create each logic
+                AttackTrigger attackTrigger = attackTriggersManager.GetCurrentAttackTrigger();
+                attackTrigger.SetTriggerType(TriggerType.Distant);
+                attackTrigger.ReleaseAttack();
                 playerTriggers.ResetThrowState();
                 controllerMode = ControllerMode.Normal;
             }
@@ -233,16 +237,21 @@ public class PlayerInput : MonoBehaviour
                 }
                 else
                 {
-                    if(chrMvmnt.GetHoldMode() == WeaponType.WoddenStick)
-                    {
-                        character.StartTriggerAction(playerTriggers.StickAttack);
-                    }
-                    else if(chrMvmnt.GetHoldMode() == WeaponType.Knife)
-                    {
-                        character.StartTriggerAction(playerTriggers.KnifeAttack);
-                    }
-                    else
-                        character.StartTriggerAction(playerTriggers.Kick);
+                    AttackTrigger attackTrigger = attackTriggersManager.GetCurrentAttackTrigger();
+                    attackTrigger.SetTriggerType(TriggerType.Melee);
+                    
+                    character.StartTriggerAction(attackTriggersManager.StartAttack);
+
+                    // if(chrMvmnt.GetHoldMode() == WeaponType.WoddenStick)
+                    // {
+                    //     character.StartTriggerAction(playerTriggers.StickAttack);
+                    // }
+                    // else if(chrMvmnt.GetHoldMode() == WeaponType.Knife)
+                    // {
+                    //     character.StartTriggerAction(playerTriggers.KnifeAttack);
+                    // }
+                    // else
+                    //     character.StartTriggerAction(playerTriggers.Kick);
                 }
 
             }

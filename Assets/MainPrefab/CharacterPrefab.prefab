@@ -382,6 +382,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ClosestOpponentLookingPeriodCycle: 0.1
   PlayerMesh: {fileID: 8975323420904284637}
+  opponentMask:
+    serializedVersion: 2
+    m_Bits: 0
   MagnetDebug: {fileID: 4034265706634982067}
 --- !u!1 &2052908458380196323
 GameObject:
@@ -1716,6 +1719,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 83d11eae8576524499f47ed78e00bdcb, type: 3}
+--- !u!114 &3411197654179505093 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4077682715826286178, guid: 83d11eae8576524499f47ed78e00bdcb, type: 3}
+  m_PrefabInstance: {fileID: 1711883401101872551}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5605935923546321078 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6489016255704792337, guid: 83d11eae8576524499f47ed78e00bdcb, type: 3}
@@ -1807,17 +1821,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &3411197654179505093 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4077682715826286178, guid: 83d11eae8576524499f47ed78e00bdcb, type: 3}
-  m_PrefabInstance: {fileID: 1711883401101872551}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &4117206818740339877
@@ -3397,6 +3400,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a32b89e71fbd51d4d9b3d270682a75ce, type: 3}
+--- !u!95 &1298376828664859815 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 3109598177045465090, guid: a32b89e71fbd51d4d9b3d270682a75ce, type: 3}
+  m_PrefabInstance: {fileID: 4117206818740339877}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8975323420904284637 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5020810793632654712, guid: a32b89e71fbd51d4d9b3d270682a75ce, type: 3}
+  m_PrefabInstance: {fileID: 4117206818740339877}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5392384087713944526 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8356104788382652267, guid: a32b89e71fbd51d4d9b3d270682a75ce, type: 3}
@@ -3417,16 +3430,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8170270873427241093, guid: a32b89e71fbd51d4d9b3d270682a75ce, type: 3}
   m_PrefabInstance: {fileID: 4117206818740339877}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &8975323420904284637 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5020810793632654712, guid: a32b89e71fbd51d4d9b3d270682a75ce, type: 3}
-  m_PrefabInstance: {fileID: 4117206818740339877}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &1298376828664859815 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 3109598177045465090, guid: a32b89e71fbd51d4d9b3d270682a75ce, type: 3}
-  m_PrefabInstance: {fileID: 4117206818740339877}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &130972337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3441,6 +3444,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   kickTrigger: {fileID: 0}
   currentAttackTrigger: {fileID: 0}
+  TrailKickDecay: 0.1
 --- !u!114 &130972338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3473,3 +3477,15 @@ MonoBehaviour:
   stressReceiver: {fileID: 0}
   target: {fileID: 0}
   isKillingEvent: 0
+--- !u!114 &1420365617293641404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5392384087713944526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 304f6cdcc75c42b48b256f7be6624fda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

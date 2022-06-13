@@ -39,32 +39,39 @@ public class PlayerTriggers : MonoBehaviour
     public bool isDebugObjOn = false;
     public Transform debugObj;
     private Vector3 targetThrowPos;
-    PlayerAnimatorEventController playerAnimatorEventController;
+    AttackTriggersManager attackTriggerManager;
 
 
     ///end of Throwing Params
     private HitBonus hitBonus;
 
-
     // Start is called before the first frame update
     void Start()
     {
-        playerAnimatorEventController = GetComponentInChildren<PlayerAnimatorEventController>();
+        attackTriggerManager = GetComponentInChildren<AttackTriggersManager>();
         playerInput = GetComponent<PlayerInput>();
         character = GetComponent<Character>();
         playerAnimationController = GetComponent<PlayerAnimationController>(); 
         characterMovement = GetComponent<CharacterMovement>();
         hitBonus = GetComponent<HitBonus>();
+
         ThrowProjectionCanvas.enabled = false;
         debugObj.gameObject.SetActive(isDebugObjOn);
     }
 
 
-    public IEnumerator ReleaseTriggerAfterSeconds(float time)
+    public void ReleaseTriggerAfterSeconds(float time)
+    {
+        StartCoroutine(ReleaseTriggerAfterSecondsCoroutine(time));
+    }
+
+    IEnumerator ReleaseTriggerAfterSecondsCoroutine(float time)
     {
         yield return new WaitForSeconds(time);
         isTriggerEmpty = true;
     }
+
+
 
     public void ReleaseTrigger()
     {
@@ -80,11 +87,6 @@ public class PlayerTriggers : MonoBehaviour
            playerInput.blockMovement = block;
     }
 
-
-    public void RunReleaseTriggerRoutine(float time)
-    {
-        StartCoroutine(ReleaseTriggerAfterSeconds(time));
-    }
 
 
     public void ReleaseThrow()
@@ -150,46 +152,6 @@ public class PlayerTriggers : MonoBehaviour
         
     }
 
-    public void ThrowWeapon() // later move it to be handled by each weapon script separatable
-    {
-        playerAnimatorEventController.currentAttackTrigger.SetTriggerType(TriggerType.Distant);
-        playerAnimationController.animator.SetTrigger("Throw");
-        StartCoroutine(BlockMovementUntilTriggerIsEmpty());
-        StartCoroutine(ReleaseTriggerAfterSeconds(0.4f));
-    }
-
-    public void Kick()
-    {
-        
-        character.SpeedBeforeKick = character.GetVelocityMagnitude();
-        string kickType = hitBonus.GetBonusMode() == BonusMode.SuperKick ? "SuperKick" : "Kick";
-        playerAnimationController.animator.SetTrigger(kickType);
-        StartCoroutine(BlockMovementUntilTriggerIsEmpty());
-        StartCoroutine(ReleaseTriggerAfterSeconds(0.8f));
-    }
-
-
-    public void StickAttack()
-    {
-        playerAnimatorEventController.currentAttackTrigger.SetTriggerType(TriggerType.Melee);
-        DefendItem defendItem = GetComponentInChildren<DefendItem>();
-        defendItem.ChangeWeaponPositionToAttack();
-        character.SpeedBeforeKick = character.GetVelocityMagnitude();
-        playerAnimationController.animator.SetTrigger("PushStick");
-        StartCoroutine(BlockMovementSeconds(0.4f));
-        StartCoroutine(ReleaseTriggerAfterSeconds(0.5f));
-    }
-
-    public void KnifeAttack()
-    {
-        playerAnimatorEventController.currentAttackTrigger.SetTriggerType(TriggerType.Melee);
-        DefendItem defendItem = GetComponentInChildren<DefendItem>();
-        defendItem.ChangeWeaponPositionToAttack();
-        character.SpeedBeforeKick = character.GetVelocityMagnitude();
-        playerAnimationController.animator.SetTrigger("Stab");
-        StartCoroutine(ReleaseTriggerAfterSeconds(0.4f));
-    }
-
     public void BumpOnZombie(Vector3 collisionNormal)
     {
         Transform player = GameObject.FindWithTag("PlayerMesh").transform;
@@ -199,7 +161,7 @@ public class PlayerTriggers : MonoBehaviour
         Vector3 plannedDir = 1.3f * direction;
         bool hitObstacle = TweenObjectManipulateUtils.LimitMoveWhenObstacleWithinTrajectory(ref plannedDir, player.position, direction, 1.1f * plannedDir.magnitude, ObstaclesMask);
         transform.DOMove(transform.position + plannedDir, 0.4f);
-        StartCoroutine(BlockMovementSeconds(0.4f));
+        BlockMovementSeconds(0.4f);
 
         
     }
@@ -215,12 +177,15 @@ public class PlayerTriggers : MonoBehaviour
     }
     
 
-
-    public IEnumerator BlockMovementSeconds(float duration)
+    IEnumerator BlockMovementCoroutine(float duration)
     {
         playerInput.blockMovement = true;
         yield return new WaitForSeconds(duration);
         playerInput.blockMovement = false;
+    }
+    public void BlockMovementSeconds(float duration)
+    {
+        StartCoroutine(BlockMovementCoroutine(duration));
 
     }
 

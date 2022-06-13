@@ -63,7 +63,7 @@ public class ObstacleInteractionManager : MonoBehaviour {
             if(MoveSequence.IsActive())
                 MoveSequence.Kill();
             MoveSequence = obstacleInteraction.RunSequence(transform);
-            playerTriggers.RunReleaseTriggerRoutine(obstacleInteraction.ReleaseTime);
+            playerTriggers.ReleaseTriggerAfterSeconds(obstacleInteraction.ReleaseTime);
         }
         else
             playerTriggers.isTriggerEmpty = true;

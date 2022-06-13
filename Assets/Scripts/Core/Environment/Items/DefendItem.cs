@@ -8,7 +8,7 @@ using DG.Tweening;
 [RequireComponent(typeof(Rigidbody))]
 public class DefendItem : MonoBehaviour, ICollectible{
     
-    public PlayerAnimatorEventController eventController;
+    
     public GameObject pfDestroyObject;
 
     public Collider interactCollider;
@@ -28,7 +28,7 @@ public WeaponType weaponType;
 
 
     private CharacterMovement characterMovement;
-
+    private AttackTriggersManager attackTriggerManager;
     private Rigidbody m_Rigidbody;
     private WeaponPlaceholder weaponPlaceholder;
     
@@ -46,11 +46,14 @@ public WeaponType weaponType;
     private TrailRenderer trail;
 
     private ItemPickupManager itemPickuper;
+    private PlayerTriggers playerTriggers;
     
     private void Awake() {
         endurance = initialEndurance;
         var plr = GameObject.FindWithTag("Player");
         bonus = plr.GetComponent<HitBonus>();
+        attackTriggerManager = plr.GetComponentInChildren<AttackTriggersManager>();
+        playerTriggers = plr.GetComponent<PlayerTriggers>();
         itemPickuper = plr.GetComponent<ItemPickupManager>();
         if(plr != null)
             {
@@ -77,7 +80,7 @@ public WeaponType weaponType;
         transform.parent = hand;
         ChangeWeaponPositionToHold();
         characterMovement.SetHoldMode(weaponType);
-        eventController.SetAttackTriggerCollider(attackTrigger);
+        attackTriggerManager.SetAttackTriggerCollider(attackTrigger);
         interactCollider.enabled = false;
     }
 
@@ -94,7 +97,7 @@ public WeaponType weaponType;
         
         if(usingAnimation)
             InvokeDestroyObjectAnimation();
-        eventController.SetToDefaultAttackTrigger();
+        attackTriggerManager.SetToDefaultAttackTrigger();
         characterMovement.SetHoldMode(WeaponType.None);
         weaponPlaceholder.RemoveWeapon();
         Destroy(gameObject);
@@ -116,6 +119,8 @@ public WeaponType weaponType;
         return endurance;
     }
 
+
+
     public void Drop()
     {//Difference from detach from Player is that it is a part
     // that is happening while swamping weapon, or getin rid of it
@@ -131,7 +136,7 @@ public WeaponType weaponType;
     {
         OnDetachFromPlayer?.Invoke();
         // this could also be added to OnDrp
-        eventController.SetToDefaultAttackTrigger();
+        attackTriggerManager.SetToDefaultAttackTrigger();
         characterMovement.SetHoldMode(WeaponType.None);
         isCollected = false;
         if(itemPickuper.ExistInList(this.transform))
