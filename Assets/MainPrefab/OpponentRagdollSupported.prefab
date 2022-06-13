@@ -768,6 +768,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 60
+  zombieMesh: {fileID: 5077765554922348757}
 --- !u!114 &1979573050972691322
 MonoBehaviour:
   m_ObjectHideFlags: 0

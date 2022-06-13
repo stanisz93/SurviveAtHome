@@ -8,6 +8,8 @@ public class Opponent : MonoBehaviour
 {
 
     public int damage = 60;
+
+    public Transform zombieMesh;
     private OpponentActions opponentActions;
     private NavMeshAgent agent;
     // private Task performTask;

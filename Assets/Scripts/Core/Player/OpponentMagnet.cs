@@ -11,24 +11,24 @@ public class OpponentMagnet : MonoBehaviour
     public Transform PlayerMesh;
 
     public LayerMask opponentMask;
-    List <Transform> OpponentsInRadious;
+    List <Opponent> OpponentsInRadious;
 
     public Transform MagnetDebug;
-    private Transform _nearestOpponent;
+    private Opponent _nearestOpponent;
 
     private Character player;
     private SpecialAttacks specialAttacks;
     private ObstacleInteractionManager obstacleInteractionManager;
     private CharacterMovement chrMvmnt;
 
-    public Transform NearestOpponent {get {return _nearestOpponent;}}
+    public Opponent NearestOpponent {get {return _nearestOpponent;}}
 
-    private HashSet<Transform> ToRemove; //Used to recognize those that dies
+    private HashSet<Opponent> ToRemove; //Used to recognize those that dies
 
     private void Start() {
         MagnetDebug.parent = null;
-        OpponentsInRadious = new List<Transform>();
-        ToRemove = new HashSet<Transform>();
+        OpponentsInRadious = new List<Opponent>();
+        ToRemove = new HashSet<Opponent>();
         obstacleInteractionManager = GetComponentInParent<ObstacleInteractionManager>();
         specialAttacks = GetComponentInParent<SpecialAttacks>();
         player = GetComponentInParent<Character>();
@@ -38,27 +38,33 @@ public class OpponentMagnet : MonoBehaviour
     // Start is called before the first frame update
     void OnTriggerEnter(Collider other) {
         Opponent o = other.GetComponent<Opponent>();
-        if(o != null && !ToRemove.Contains(o.transform))
+        if(o != null && !ToRemove.Contains(o))
         {
-            OpponentsInRadious.Add(o.transform);
+            RaycastHit hit;
+            var zombiePos =o.zombieMesh.position;
+            Vector3 direction = chrMvmnt.t_mesh.position - new Vector3(zombiePos.x, chrMvmnt.t_mesh.position.y, zombiePos.z);
+            if (!Physics.Raycast(transform.position, direction, out hit, 5f, 1 << LayerMask.NameToLayer("Obstacles")))
+            {
+                OpponentsInRadious.Add(o);
+            }
         }
     }
     private void OnTriggerExit(Collider other) {
         Opponent o = other.GetComponent<Opponent>();
         if(o != null)
         {
-            if(specialAttacks.isTarget(o.transform));
+            if(specialAttacks.isTarget(o));
                 specialAttacks.RemoveTarget();
-            OpponentsInRadious.Remove(o.transform);
+            OpponentsInRadious.Remove(o);
         }
     }
 
     public void RemoveDiedOpponent(Opponent opponent)
 {       _nearestOpponent = null;
-        ToRemove.Add(opponent.transform);
-        if(OpponentsInRadious.Contains(opponent.transform))
+        ToRemove.Add(opponent);
+        if(OpponentsInRadious.Contains(opponent))
         {
-            OpponentsInRadious.Remove(opponent.transform);
+            OpponentsInRadious.Remove(opponent);
         }
     }
     
@@ -67,12 +73,12 @@ public class OpponentMagnet : MonoBehaviour
 
     // hERE I SHOULD TRY TO TAKE FORWARD OF MESH AND FIND THE OPPONENT THAT PLAYER IS THE MOST DIRECTED TO
     //MAYBE USING THIS YT MOVIE WITH BATMAN
-    Transform FindNearestOpponent(float dotThreshold = 0.4f)
+    Opponent FindNearestOpponent(float dotThreshold = 0.4f)
     {
         
         if (OpponentsInRadious.Count != 0)
         { 
-            var filtered = OpponentsInRadious.Select(n => new {n, best = Vector3.Dot(PlayerMesh.forward, (new Vector3(n.position.x, PlayerMesh.position.y, n.position.z) - PlayerMesh.position).normalized)})
+            var filtered = OpponentsInRadious.Select(n => new {n, best = Vector3.Dot(PlayerMesh.forward, (new Vector3(n.transform.position.x, PlayerMesh.position.y, n.transform.position.z) - PlayerMesh.position).normalized)})
                             .OrderBy( p => p.best)
                             .Where(p => p.best >= dotThreshold)
                             .FirstOrDefault();
@@ -83,9 +89,9 @@ public class OpponentMagnet : MonoBehaviour
             }
             else
             {
-                Transform closest = filtered.n;
+                Opponent closest = filtered.n;
                 MagnetDebug.gameObject.SetActive(true);
-                MagnetDebug.position = transform.position + (new Vector3(closest.position.x, transform.position.y, closest.position.z) - transform.position);
+                MagnetDebug.position = transform.position + (new Vector3(closest.transform.position.x, transform.position.y, closest.transform.position.z) - transform.position);
                 return closest;
             }
         }
@@ -103,7 +109,7 @@ public class OpponentMagnet : MonoBehaviour
         if (NearestOpponent != null)
         {
             obstacleInteractionManager.InterruptMovementSequence();
-            Vector3 movementDir = NearestOpponent.transform.position - PlayerMesh.position;
+            Vector3 movementDir = NearestOpponent.zombieMesh.position - PlayerMesh.position;
             movementDir = new Vector3(movementDir.x, 0f, movementDir.z);
             Sequence seq = DOTween.Sequence();
             Vector3 rot = Quaternion.LookRotation(movementDir.normalized).eulerAngles;
@@ -115,26 +121,6 @@ public class OpponentMagnet : MonoBehaviour
         }
     }
 
-    public void AlternativeNearest()
-    {
-        RaycastHit hit;
-        if (Physics.SphereCast(PlayerMesh.transform.position, 3f, PlayerMesh.transform.forward, out hit, 10f, opponentMask))
-        {
-            Opponent opponent = hit.collider.transform.GetComponent<Opponent>();
-            if(opponent != null)
-            {
-                _nearestOpponent = hit.collider.transform;
-                MagnetDebug.gameObject.SetActive(true);
-                MagnetDebug.position = opponent.transform.position;
-
-                if(_nearestOpponent.transform.GetComponent<OpponentActions>().GetOpponentMode() == OpponentMode.Faint)
-                {
-                    specialAttacks.SetTarget(_nearestOpponent);
-                }
-                
-            }
-        }
-    }
 
     IEnumerator LookForBestFit()
     {

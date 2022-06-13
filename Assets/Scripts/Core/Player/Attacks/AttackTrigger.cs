@@ -171,6 +171,8 @@ public void InduceTrigger(GameObject gameObject)
 
                     if(bonus.GetBonusMode() == BonusMode.SuperKick)
                         damageType = DamageType.ToTheGround;
+                    else
+                        damageType = DamageType.NormalDamage;
                     meetDuringTurn.Add(opponent);
                     opponentReaction.InvokeReaction(damageType, GetWeaponHoldType(), player, pushForce, pushTime);
                     OnHit?.Invoke(this);

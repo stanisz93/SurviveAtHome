@@ -33,15 +33,15 @@ public class SpecialAttacks : MonoBehaviour
         playerTriggers = GetComponentInParent<PlayerTriggers>();
         player = GetComponentInParent<Character>().transform;
     }
-    public void SetTarget(Transform opponent)
+    public void SetTarget(Opponent opponent)
     {
         target = opponent.GetComponent<KillUtils>();
         isCandidateToDie = true;
     }
 
-    public bool isTarget(Transform transform)
+    public bool isTarget(Opponent opponent)
     {
-        return transform == target;
+        return opponent == target;
     }
 
     public void RemoveTarget()
