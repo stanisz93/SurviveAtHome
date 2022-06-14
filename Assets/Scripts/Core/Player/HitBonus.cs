@@ -28,6 +28,12 @@ public class HitBonus : MonoBehaviour
 
     private bool isBonusAnimationFinished = true;
 
+    //sometimes some other triggers could temporarily turn on SuperKickmode
+    //fi the trigger was temporar one, we want still to keep player bonus
+    private bool isTemporalBoost = false;
+    private BonusMode beforeTemporalBoost;
+
+
     void Start()
     {
         initScale = bonusFillImg.rectTransform.localScale;
@@ -39,7 +45,7 @@ public class HitBonus : MonoBehaviour
         interactionBonus = GetComponentInChildren<InteractionBonus>();
     }
 
-    void SetBonusMode()
+    void UpdateBonus()
     {
         if(hitCounts % hitsToBonus  == 0 && hitCounts != 0 && !superHitMode)
         {
@@ -59,6 +65,25 @@ public class HitBonus : MonoBehaviour
             superHitMode = false;
             bonusMode = BonusMode.Normal;
         }
+    }
+
+    public void SetSuperKick()
+    {
+        isTemporalBoost = true;
+        beforeTemporalBoost = bonusMode;
+        bonusMode = BonusMode.SuperKick;
+    }
+
+    public void RemoveSuperKick()
+    {
+        if(isTemporalBoost)
+            {
+                bonusMode = beforeTemporalBoost;
+                beforeTemporalBoost = BonusMode.Normal;
+                isTemporalBoost = false;
+            }
+        else
+            bonusMode = BonusMode.Normal;
     }
 
     public BonusMode GetBonusMode()
@@ -88,7 +113,7 @@ public class HitBonus : MonoBehaviour
         counterTxt.text = $"X{hitCounts.ToString()}";
         RunBonusAnimation();
         EvaluateColor();
-        SetBonusMode();
+        UpdateBonus();
     }
 
     void EvaluateColor()
@@ -135,7 +160,7 @@ public class HitBonus : MonoBehaviour
     {
         FadeOutImage();
         hitCounts = 0;
-        SetBonusMode();
+        UpdateBonus();
         // bonusImg.enabled = false;
     }
 

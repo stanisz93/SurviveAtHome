@@ -42,8 +42,8 @@ public class OpponentMagnet : MonoBehaviour
         {
             RaycastHit hit;
             var zombiePos = o.zombieMesh.position;
-            Vector3 direction = chrMvmnt.t_mesh.position - new Vector3(zombiePos.x, chrMvmnt.t_mesh.position.y, zombiePos.z);
-            if (!Physics.Raycast(transform.position, direction, out hit, 5f, 1 << LayerMask.NameToLayer("Obstacles")))
+            Vector3 direction = chrMvmnt.t_mesh.position - zombiePos;
+            if (!Physics.Raycast(chrMvmnt.t_mesh.position, direction, out hit, 5f, 1 << LayerMask.NameToLayer("Obstacles")))
             {
                 OpponentsInRadious.Add(o);
             }

@@ -30,6 +30,16 @@ public class AttackTriggersManager : MonoBehaviour
         playerInput.blockMovement = false;
     }
 
+    public void SetAttackable(IAttackable attackable)
+    {
+        currentAttackTrigger.SetAttackable(attackable); 
+    }
+
+    public IAttackable GetCurrentAttackable()
+    {
+        return currentAttackTrigger.GetAttackable();
+    }
+
     public void StartAttack()
     {
         if (opponentMagnet.NearestOpponent != null)

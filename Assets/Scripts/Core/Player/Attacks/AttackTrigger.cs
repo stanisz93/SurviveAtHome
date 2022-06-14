@@ -114,6 +114,16 @@ public void Throw()
 }
 
 
+public void SetAttackable(IAttackable attackable)
+{
+    this.attackable = attackable;
+}
+
+public IAttackable GetAttackable()
+{
+    return attackable;
+}
+
 public void ReleaseAttack()
 {   
     

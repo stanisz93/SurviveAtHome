@@ -28,6 +28,9 @@ public class Character : MonoBehaviour
 
     public delegate void TriggerAction();
 
+    public delegate IEnumerator OnConditionSatisfiedToInterrupt();
+
+    private TriggerAction LastAllowInterruption;
     private Inventory Inventory;
 
     private Vector3 currrentMouseDirection {get => MouseUtils.MousePositon(mainCamera, characterMovement.t_mesh, terrainMask);}
@@ -72,13 +75,27 @@ public class Character : MonoBehaviour
         return playerTriggers.dying;
     }
 
-    public void StartTriggerAction(TriggerAction triggerAction)
+    IEnumerator TurnOnInteruptionAfter(TriggerAction delayedFun, OnConditionSatisfiedToInterrupt satisfier)
+    //very specific function used to allow for interruption but after specific time
     {
-        if(playerTriggers.isTriggerEmpty)
+        yield return satisfier();
+        LastAllowInterruption = delayedFun;
+    }
+
+    public void StartTriggerAction(TriggerAction triggerAction, TriggerAction allowed=null, OnConditionSatisfiedToInterrupt satisfier=null)
+    {
+
+        if(playerTriggers.isTriggerEmpty || LastAllowInterruption == triggerAction)
         {
             playerTriggers.isTriggerEmpty = false;
             triggeredAction = triggerAction;
+            if(LastAllowInterruption == triggerAction)
+                LastAllowInterruption = null;
         }
+
+        if(allowed != null && satisfier != null)
+            StartCoroutine(TurnOnInteruptionAfter(allowed, satisfier));
+
     }
 
 

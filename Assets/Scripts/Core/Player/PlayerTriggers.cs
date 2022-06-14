@@ -78,6 +78,7 @@ public class PlayerTriggers : MonoBehaviour
         isTriggerEmpty = true;
     }
 
+
     public void BlockTrigger()
     {
         isTriggerEmpty = false;

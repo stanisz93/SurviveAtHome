@@ -218,7 +218,12 @@ public class PlayerInput : MonoBehaviour
             if (Input.GetKey(KeyCode.V))
             {
                 if(obstacleInteractionManager.obstacleInteraction != null)
-                    character.StartTriggerAction(obstacleInteractionManager.InteractObstacle);
+                {
+                    if (obstacleInteractionManager.obstacleInteraction.animType == ObstacleAnimType.vault)
+                        character.StartTriggerAction(obstacleInteractionManager.InteractObstacle, attackTriggersManager.StartAttack, interactionBonus.UntilVault);
+                    else
+                        character.StartTriggerAction(obstacleInteractionManager.InteractObstacle);
+                }
             }
             else if(Input.GetMouseButtonDown(1) && chrMvmnt.GetHoldMode() != WeaponType.None)
             {
@@ -227,11 +232,11 @@ public class PlayerInput : MonoBehaviour
             }
             else if (Input.GetMouseButtonDown(0))
             {
-                if(interactionBonus.isVaultContext)
-                {
-                    StartCoroutine(interactionBonus.SetToKickWhileVault());
-                }
-                else if(specialAttacks.isCandidateToDie)
+                // if(interactionBonus.isVaultContext)
+                // {
+                //     StartCoroutine(interactionBonus.SetToKickWhileVault());
+                // }
+                if(specialAttacks.isCandidateToDie)
                 {
                     character.StartTriggerAction(specialAttacks.KillWhenFaint);
                 }
@@ -239,7 +244,7 @@ public class PlayerInput : MonoBehaviour
                 {
                     AttackTrigger attackTrigger = attackTriggersManager.GetCurrentAttackTrigger();
                     attackTrigger.SetTriggerType(TriggerType.Melee);
-                    
+                    Debug.Log($"CurrentTrigger {attackTriggersManager.GetCurrentAttackable()}");
                     character.StartTriggerAction(attackTriggersManager.StartAttack);
 
                     // if(chrMvmnt.GetHoldMode() == WeaponType.WoddenStick)
