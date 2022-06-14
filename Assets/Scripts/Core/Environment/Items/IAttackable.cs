@@ -12,7 +12,7 @@ public interface IAttackable
     //time that need to pass to have control over player again
     float blockMovement {get;}
 
-    string animName {get;}
+    string meleeAnimName {get;}
     //time when another trigger/action could be run
     float releaseTriggerTime {get;}
 

@@ -42,7 +42,7 @@ public class OpponentHit : MonoBehaviour
             Opponent opponent = gameObject.GetComponentInParent<Opponent>();
             if(opponent != null)
             {
-                health.TakeDamage(gameObject.GetComponentInParent<Opponent>().damage);
+                health.TakeDamage(opponent.damage);
                 isDamageTaken = true;
                 transform.parent = null;
             }

@@ -98,8 +98,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7003124130036513299}
   - component: {fileID: 5303285079879445344}
-  - component: {fileID: 7989006067861340293}
-  - component: {fileID: 4046660424230508235}
   m_Layer: 0
   m_Name: HitTrigger
   m_TagString: Untagged
@@ -134,35 +132,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.6, y: 0.22, z: 0.59}
   m_Center: {x: 0, y: 0.08, z: 0}
---- !u!114 &7989006067861340293
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6569836849111794054}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72c8315bbcbc17c45a8b9be574c43520, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cameraShake: 1.5
-  pushForce: 2
-  pushTime: 0.2
-  ForceOrRagdollPushWhileThrow: 1
---- !u!114 &4046660424230508235
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6569836849111794054}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c233874c393843d42bf4cbe05ae7cf7a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _distanceLeft: 0.8
 --- !u!1 &7544511872196768289
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,6 +146,8 @@ GameObject:
   - component: {fileID: 4618893059352813844}
   - component: {fileID: 6211295615998828727}
   - component: {fileID: 9146579048718051633}
+  - component: {fileID: 147465942445036224}
+  - component: {fileID: 3798384838430591853}
   m_Layer: 0
   m_Name: SpearDefendable
   m_TagString: Untagged
@@ -265,7 +236,6 @@ MonoBehaviour:
   pfDestroyObject: {fileID: 5482885224607544950, guid: ab310c003cabd9a479964719b83ae0fd, type: 3}
   interactCollider: {fileID: 5603977261207660533}
   weaponType: 0
-  attackTrigger: {fileID: 7989006067861340293}
   physicsCollider: {fileID: 3221054336418466359}
   pickPosition: {x: -0.0094, y: 0.01294, z: -0.00665}
   pickRotation: {x: 141.415, y: 66.294, z: 6.455002}
@@ -1544,3 +1514,34 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &147465942445036224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7544511872196768289}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c233874c393843d42bf4cbe05ae7cf7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _distanceLeft: 0.8
+--- !u!114 &3798384838430591853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7544511872196768289}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72c8315bbcbc17c45a8b9be574c43520, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraShake: 1.5
+  pushForce: 2
+  pushTime: 0.2
+  ForceOrRagdollPushWhileThrow: 1
+  hitTriggerCollider: {fileID: 5303285079879445344}
+  hitType: 1

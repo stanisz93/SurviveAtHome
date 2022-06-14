@@ -34,10 +34,16 @@ public class AttackTriggersManager : MonoBehaviour
     {
         if (opponentMagnet.NearestOpponent != null)
             {
-                opponentMagnet.MoveTowardNearestOpponent(currentAttackTrigger.GetDistanceLeft(), magnetMoveDelay);
+               opponentMagnet.MoveTowardNearestOpponent(currentAttackTrigger.GetDistanceLeft(), magnetMoveDelay);
             }
-            currentAttackTrigger.ReleaseAttack();
+        currentAttackTrigger.ReleaseAttack();
             
+    }
+
+    public void ThrowWeapon()
+    {
+        if(currentAttackTrigger.isThrowable())
+            currentAttackTrigger.Throw();
     }
 
     public void SetAttackTriggerCollider(AttackTrigger trigger)
@@ -59,12 +65,12 @@ public class AttackTriggersManager : MonoBehaviour
 
     public void TurnOffDamage()
     {
-        currentAttackTrigger.GetComponent<Collider>().enabled = false;
+        currentAttackTrigger.hitTriggerCollider.enabled = false;
     }
 
         public void TurnOnDamage()
     {
-        currentAttackTrigger.GetComponent<Collider>().enabled = true;
+        currentAttackTrigger.hitTriggerCollider.enabled = true;
         currentAttackTrigger.ResetHitOpponentsThisTurn();
     }
 

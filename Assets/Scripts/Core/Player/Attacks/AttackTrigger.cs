@@ -17,7 +17,10 @@ public float pushTime = 0.1f;
 
 public float ForceOrRagdollPushWhileThrow = 1f; //this is later multiplied by 1000
 
-private Collider hitTriggerCollider;
+public Collider hitTriggerCollider;
+
+[SerializeField]
+private HitType hitType = HitType.ManyEnemy;
 protected Transform player;
 
 private HashSet<Opponent> meetDuringTurn; //add flag true if 
@@ -29,7 +32,6 @@ private StressReceiver stressReceiver;
 //this happend when hit is success
 private Action<AttackTrigger> OnHit;
 private TriggerType currentTriggerType;
-private HitType hitType = HitType.ManyEnemy;
 
 private IAttackable attackable;
 
@@ -45,12 +47,11 @@ private DamageType damageType = DamageType.NormalDamage;
 
 private void Awake() {
     stressReceiver = GameObject.FindWithTag("MainCamera").GetComponent<StressReceiver>();
-    defendItem = GetComponentInParent<DefendItem>();
+    defendItem = GetComponent<DefendItem>();
     player = GameObject.FindWithTag("PlayerMesh").transform;
     animator = player.GetComponent<Animator>();
     playerTriggers = player.GetComponentInParent<PlayerTriggers>();
     bonus = GameObject.FindWithTag("Player").GetComponent<HitBonus>();
-    hitTriggerCollider = GetComponent<Collider>();
     meetDuringTurn = new HashSet<Opponent>();
     OnHit += bonus.IncreaseCounts;
     OnHit += stressReceiver.InduceStressByHit;
@@ -69,6 +70,11 @@ public float GetEnduranceMultiplier()
         TriggerType.Distant => 5f,
         TriggerType.Melee => 1f,
     };
+}
+
+public bool isThrowable()
+{
+    return throwable != null;
 }
 
 public float GetDistanceLeft()
@@ -91,39 +97,49 @@ public void SetTriggerType(TriggerType triggerType)
     currentTriggerType = triggerType;
 }
 
-public void SetHitType(HitType hitType)
-{
-    this.hitType = hitType;
-}
 
 
 private void Start() {
-    GetComponent<Collider>().enabled = false;
+    hitTriggerCollider.enabled = false;
 }
 
 public void ResetHitOpponentsThisTurn()
 {
-    hitType = HitType.ManyEnemy;
     meetDuringTurn.Clear();
+}
+
+public void Throw()
+{
+    throwable.Throw();
 }
 
 
 public void ReleaseAttack()
-{
+{   
+    
+
     if(currentTriggerType == TriggerType.Melee)
         {   
 
             attackable.ReleaseAttack();
             playerTriggers.BlockMovementSeconds(attackable.blockMovement);
             playerTriggers.ReleaseTriggerAfterSeconds(attackable.releaseTriggerTime);
-            animator.SetTrigger(attackable.animName);
+            animator.SetTrigger(attackable.meleeAnimName);
         }
     else if(currentTriggerType == TriggerType.Distant)
     {
-        throwable.ReleaseAttack();
-        animator.SetTrigger(throwable.animName);
-        playerTriggers.BlockMovementSeconds(throwable.blockMovement);
-        playerTriggers.ReleaseTriggerAfterSeconds(throwable.releaseTriggerTime);
+        if(throwable != null)
+            {
+                throwable.ReleaseThrow();
+                animator.SetTrigger(throwable.distantAnimName);
+            }
+        if(attackable != null)
+        {
+            playerTriggers.BlockMovementSeconds(attackable.blockMovement);
+            playerTriggers.ReleaseTriggerAfterSeconds(attackable.releaseTriggerTime);
+        }
+        else
+            Debug.Log("Unexpected. I assume that if weapon is throwable its also attackable!");
 
     }
     else
@@ -141,38 +157,41 @@ WeaponType GetWeaponHoldType()
             return defendItem.weaponType;
     }
 
-public void InduceTrigger(GameObject gameObject)
+public void InduceTrigger(Opponent opponent)
 {
 
-    Opponent opponent = gameObject.GetComponent<Opponent>();
         if(opponent != null && !meetDuringTurn.Contains(opponent))
         {
             IOpponentReaction opponentReaction = null;
             if (currentTriggerType == TriggerType.Melee)
-                opponentReaction = gameObject.GetComponent<MeleeReaction>() as IOpponentReaction;
+                opponentReaction = opponent.GetComponent<MeleeReaction>() as IOpponentReaction;
             else if(currentTriggerType == TriggerType.Distant)
-                opponentReaction = gameObject.GetComponent<DistanceAttackReaction>() as IOpponentReaction;
+                opponentReaction = opponent.GetComponent<DistanceAttackReaction>() as IOpponentReaction;
             
             if(opponentReaction != null)
             {
                 if(hitType == HitType.OneVictim) 
                     {
+                        if(defendItem != null)
+                            defendItem.physicsCollider.enabled = false;
+
                         hitTriggerCollider.enabled = false;
-                        defendItem.interactCollider.enabled = true;
+                        
                     }
 
-                opponentReaction.targetDirection = gameObject.transform.position - player.position;
+                opponentReaction.targetDirection = opponent.transform.position - player.position;
                 if(defendItem != null)
                     opponentReaction.weapon = defendItem.transform;
 
-                OpponentMode mode = gameObject.GetComponent<OpponentActions>().GetOpponentMode();
+                OpponentMode mode = opponent.GetComponent<OpponentActions>().GetOpponentMode();
                 if(mode != OpponentMode.Faint)
                 {    
 
                     if(bonus.GetBonusMode() == BonusMode.SuperKick)
                         damageType = DamageType.ToTheGround;
                     else
-                        damageType = DamageType.NormalDamage;
+                        if(currentTriggerType == TriggerType.Melee)
+                            damageType = DamageType.NormalDamage;
                     meetDuringTurn.Add(opponent);
                     opponentReaction.InvokeReaction(damageType, GetWeaponHoldType(), player, pushForce, pushTime);
                     OnHit?.Invoke(this);
@@ -184,8 +203,12 @@ public void InduceTrigger(GameObject gameObject)
 
 private void OnTriggerEnter(Collider other) {
         
-
-       InduceTrigger(other.gameObject);
+        if(hitTriggerCollider.enabled)
+        {
+            Opponent opponent = other.GetComponent<Opponent>();
+            if (opponent != null)
+            InduceTrigger(opponent);
+        }
 
 
     }

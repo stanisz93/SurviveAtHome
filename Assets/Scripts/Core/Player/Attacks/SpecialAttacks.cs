@@ -53,15 +53,6 @@ public class SpecialAttacks : MonoBehaviour
             }
     }
 
-
-    public void ThrowWeapon()
-    {
-        ThrowableKnife thrownKnife = GetComponentInChildren<ThrowableKnife>();
-        if(thrownKnife != null)
-            thrownKnife.Throw(playerTriggers.GetThrowTargetPos(), playerTriggers.currentThrowDistance);  //this should be moved
-        // from playerTriggers to some throw mechanism managment 
-    }
-
     public void KillWhenFaint()
     {
 

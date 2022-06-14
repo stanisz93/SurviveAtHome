@@ -186,7 +186,7 @@ public class PlayerInput : MonoBehaviour
         }
         else 
         {
-            playerTriggers.ReleaseThrow();
+            playerTriggers.CancelThrow();
             controllerMode = ControllerMode.Normal;
 
         }

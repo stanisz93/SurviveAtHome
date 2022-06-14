@@ -41,7 +41,7 @@ public class OpponentMagnet : MonoBehaviour
         if(o != null && !ToRemove.Contains(o))
         {
             RaycastHit hit;
-            var zombiePos =o.zombieMesh.position;
+            var zombiePos = o.zombieMesh.position;
             Vector3 direction = chrMvmnt.t_mesh.position - new Vector3(zombiePos.x, chrMvmnt.t_mesh.position.y, zombiePos.z);
             if (!Physics.Raycast(transform.position, direction, out hit, 5f, 1 << LayerMask.NameToLayer("Obstacles")))
             {
@@ -78,7 +78,7 @@ public class OpponentMagnet : MonoBehaviour
         
         if (OpponentsInRadious.Count != 0)
         { 
-            var filtered = OpponentsInRadious.Select(n => new {n, best = Vector3.Dot(PlayerMesh.forward, (new Vector3(n.transform.position.x, PlayerMesh.position.y, n.transform.position.z) - PlayerMesh.position).normalized)})
+            var filtered = OpponentsInRadious.Select(n => new {n, best = Vector3.Dot(chrMvmnt.Velocity.normalized, (new Vector3(n.transform.position.x, 0f, n.transform.position.z) - PlayerMesh.position).normalized)})
                             .OrderBy( p => p.best)
                             .Where(p => p.best >= dotThreshold)
                             .FirstOrDefault();

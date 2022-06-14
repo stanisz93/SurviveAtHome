@@ -5,7 +5,6 @@ using System;
 using UnityEngine.UI;
 using DG.Tweening;
 
-[RequireComponent(typeof(Rigidbody))]
 public class DefendItem : MonoBehaviour, ICollectible{
     
     
@@ -13,7 +12,7 @@ public class DefendItem : MonoBehaviour, ICollectible{
 
     public Collider interactCollider;
 public WeaponType weaponType;
-    public AttackTrigger attackTrigger;
+
 
     public Collider physicsCollider;
 
@@ -34,6 +33,8 @@ public WeaponType weaponType;
     
     public Action<ICollectible> OnPickup {get; set;}
     private Action OnDetachFromPlayer;
+
+    private AttackTrigger attackTrigger;
             
     
 
@@ -55,12 +56,13 @@ public WeaponType weaponType;
         attackTriggerManager = plr.GetComponentInChildren<AttackTriggersManager>();
         playerTriggers = plr.GetComponent<PlayerTriggers>();
         itemPickuper = plr.GetComponent<ItemPickupManager>();
+        attackTrigger = GetComponent<AttackTrigger>();
         if(plr != null)
             {
                 hand = plr.GetComponent<Character>().leftHand;
                 characterMovement = plr.GetComponent<CharacterMovement>();
             }
-        m_Rigidbody = GetComponent<Rigidbody>();
+        m_Rigidbody = GetComponentInChildren<Rigidbody>();
         weaponPlaceholder = plr.GetComponent<WeaponPlaceholder>();
         OnPickup += weaponPlaceholder.AttachWeapon;
         OnDetachFromPlayer += weaponPlaceholder.RemoveWeapon;

@@ -43,7 +43,7 @@ public class HitBonus : MonoBehaviour
     {
         if(hitCounts % hitsToBonus  == 0 && hitCounts != 0 && !superHitMode)
         {
-            interactionBonus.TurnOnBonusInteraction();
+            // interactionBonus.TurnOnBonusInteraction();
             bonusMode = BonusMode.SuperKick;
             bonusPulseImg.enabled = true;
             var tempColor = bonusPulseImg.color;

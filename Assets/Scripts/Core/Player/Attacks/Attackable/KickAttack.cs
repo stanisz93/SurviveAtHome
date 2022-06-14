@@ -17,7 +17,7 @@ public class KickAttack : MonoBehaviour, IAttackable
     public float distanceLeft{ get {return _distanceLeft;} set{_distanceLeft = value;}}
 
     private string _animName;
-    public string animName{ get {return _animName;} set {_animName = value;}}
+    public string meleeAnimName{ get {return _animName;} set {_animName = value;}}
 
     private HitBonus hitBonus;
     void Start()
@@ -30,7 +30,7 @@ public class KickAttack : MonoBehaviour, IAttackable
     // Update is called once per frame
     public void ReleaseAttack()
     {
-        animName = hitBonus.GetBonusMode() == BonusMode.SuperKick ? "SuperKick" : "Kick";
+        meleeAnimName = hitBonus.GetBonusMode() == BonusMode.SuperKick ? "SuperKick" : "Kick";
     
     }
 }

@@ -89,7 +89,7 @@ public class PlayerTriggers : MonoBehaviour
 
 
 
-    public void ReleaseThrow()
+    public void CancelThrow()
     {
         ResetThrowState();
         playerInput.blockMovement = false;

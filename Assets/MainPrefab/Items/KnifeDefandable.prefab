@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 1156539610517778050}
   - component: {fileID: 1156539610516810818}
   - component: {fileID: 5773140957513151208}
-  - component: {fileID: 8907907133807126568}
-  - component: {fileID: 6020920154154540848}
+  - component: {fileID: 4544849303164719757}
+  - component: {fileID: 7247421495892675814}
+  - component: {fileID: 6618339606387939537}
   m_Layer: 0
   m_Name: KnifeDefandable
   m_TagString: Untagged
@@ -103,7 +104,6 @@ MonoBehaviour:
   pfDestroyObject: {fileID: 2036080073528332715, guid: 54d478af6eb4837459f6529add936632, type: 3}
   interactCollider: {fileID: 4719238465244992180}
   weaponType: 1
-  attackTrigger: {fileID: 6517578638938719017}
   physicsCollider: {fileID: 6436430692303678042}
   pickPosition: {x: 0, y: 0, z: 0}
   pickRotation: {x: 0, y: 0, z: 0}
@@ -112,7 +112,7 @@ MonoBehaviour:
   icon: {fileID: 0}
   initialEndurance: 200
   enduranceStep: 20
---- !u!54 &8907907133807126568
+--- !u!54 &4544849303164719757
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -128,7 +128,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &6020920154154540848
+--- !u!114 &7247421495892675814
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -137,7 +137,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 1156539610519007874}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 767b3f5768e9e2d4681e46bdbdd8d499, type: 3}
+  m_Script: {fileID: 11500000, guid: 72c8315bbcbc17c45a8b9be574c43520, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraShake: 1
+  pushForce: 1
+  pushTime: 0.1
+  ForceOrRagdollPushWhileThrow: 1
+  hitTriggerCollider: {fileID: 6439607076154394055}
+  hitType: 1
+--- !u!114 &6618339606387939537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1156539610519007874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 314759e1071e92648b229a7e9d251071, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   forceCurve:
@@ -164,8 +182,10 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  trail: {fileID: 7870866715139999537}
   forceTorqueThrow: 500
-  ThrowSlowDown: 1
+  ThrowSlowDown: 0.2
+  _distanceLeft: 0.6
 --- !u!1 &4665263876838457212
 GameObject:
   m_ObjectHideFlags: 0
@@ -190,8 +210,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4665263876838457212}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.044, y: 0.052, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.043999657, y: 0.052000046, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1156539610518580898}
@@ -208,8 +228,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.22, y: 0.13, z: 0.58}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.22553064, y: 0.13, z: 0.10800457}
+  m_Center: {x: 0.0027649417, y: 0, z: -0.002167225}
 --- !u!1 &6763045613092497676
 GameObject:
   m_ObjectHideFlags: 0
@@ -402,9 +422,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4980580183635716656}
   - component: {fileID: 6439607076154394055}
-  - component: {fileID: 6517578638938719017}
-  - component: {fileID: 565303438235877760}
-  - component: {fileID: 3747972714237957414}
   m_Layer: 0
   m_Name: AttackTrigger
   m_TagString: Untagged
@@ -439,44 +456,3 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.42, y: 1, z: 1}
   m_Center: {x: 0.18, y: 0, z: 0}
---- !u!114 &6517578638938719017
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9185457398744789016}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72c8315bbcbc17c45a8b9be574c43520, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cameraShake: 1
-  pushForce: 1
-  pushTime: 0.1
-  ForceOrRagdollPushWhileThrow: 1
---- !u!114 &565303438235877760
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9185457398744789016}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 314759e1071e92648b229a7e9d251071, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _distanceLeft: 0.6
---- !u!114 &3747972714237957414
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9185457398744789016}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5433e089f38aeb0498381b18867914f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

@@ -17,7 +17,7 @@ public class StickAttack : MonoBehaviour, IAttackable
     public float distanceLeft{ get {return _distanceLeft;} set{_distanceLeft = value;}}
 
 
-    public string animName{ get {return "PushStick";}}
+    public string meleeAnimName{ get {return "PushStick";}}
 
     private DefendItem defendItem;
     void Start()
@@ -29,12 +29,7 @@ public class StickAttack : MonoBehaviour, IAttackable
     // Update is called once per frame
     public void ReleaseAttack()
     {
-        // attackTriggerManager.GetCurrentAttackTrigger().SetTriggerType(TriggerType.Melee);
-        // DefendItem defendItem = GetComponentInChildren<DefendItem>();
         defendItem.ChangeWeaponPositionToAttack();
-        // character.SpeedBeforeKick = character.GetVelocityMagnitude();
-        // StartCoroutine(BlockMovementSeconds(0.4f));
-        // StartCoroutine(ReleaseTriggerAfterSeconds(0.5f));
-    
+
     }
 }
