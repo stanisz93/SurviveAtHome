@@ -26,6 +26,8 @@ public class HitBonus : MonoBehaviour
     private bool superHitMode = false;
     private InteractionBonus interactionBonus;
 
+    private bool isBonusAnimationFinished = true;
+
     void Start()
     {
         initScale = bonusFillImg.rectTransform.localScale;
@@ -67,7 +69,7 @@ public class HitBonus : MonoBehaviour
     // Update is called once per frame
     public void IncreaseCounts(AttackTrigger attackTrigger)
     {
-        if(superHitMode)
+        if(hitCounts != 0 && superHitMode)
             slider.value = 0;
         else
         {
@@ -75,25 +77,39 @@ public class HitBonus : MonoBehaviour
             slider.value = (hitCounts-1) % hitsToBonus + 1;
         }    
 
-        if(!bonusFillImg.enabled && hitCounts == 1)
+        if(!bonusFillImg.enabled && hitCounts > 0)
         {
             bonusFillImg.enabled = true;
             bonusBorderImg.enabled = true;
             counterTxt.enabled = true;
-            bonusBorderImg.rectTransform.localScale = initScale;
-            bonusFillImg.rectTransform.localScale = initScale;
 
         }
 
         counterTxt.text = $"X{hitCounts.ToString()}";
-        DoTweenUtils.PoopUpImage(bonusFillImg);
-        DoTweenUtils.PoopUpImage(bonusBorderImg);
+        RunBonusAnimation();
+        EvaluateColor();
+        SetBonusMode();
+    }
+
+    void EvaluateColor()
+    {
         float frac = (float) hitCounts / maxBonus;
         var color = gradient.Evaluate(frac);
         counterTxt.color = color;
         bonusFillImg.color = color;
         bonusPulseImg.color = color;
-        SetBonusMode();
+    }
+
+    void RunBonusAnimation()
+    {
+        if(isBonusAnimationFinished)
+        {
+            isBonusAnimationFinished = false;
+            Sequence s = DOTween.Sequence();
+            s.Append(bonusFillImg.transform.DOScale(new Vector3(1.5f, 1.5f, 1.5f), 0.1f).SetLoops(2, LoopType.Yoyo));
+            s.Join(bonusBorderImg.transform.DOScale(new Vector3(1.5f, 1.5f, 1.5f), 0.1f).SetLoops(2, LoopType.Yoyo));
+            s.AppendCallback(() => isBonusAnimationFinished = true);
+        }
     }
 
     void  OnDisableImage() {
