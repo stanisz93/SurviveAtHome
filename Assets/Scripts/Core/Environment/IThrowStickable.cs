@@ -18,18 +18,5 @@ public class IThrowStickable : MonoBehaviour
     {
         
     }
-    private void OnCollisionEnter(Collision other) {
-            ThrowableKnife throwItem = other.gameObject.GetComponent<ThrowableKnife>();
-                
-            // if(throwItem != null)
-            // {
-            //     SpecialKills opponent = GetComponentInParent<SpecialKills>();
-            //     if(opponent != null)
-            //     {
-            //         throwItem.transform.parent = transform;
-            //         opponent.GotKilledByThrow(throwItem.transform);
-            //     }
 
-            // }
-    }
 }
