@@ -55,9 +55,10 @@ public class InteractionBonus : MonoBehaviour {
     {
         // Debug.Log("TurnOnVault");
         defaultAttackable = attackTriggersManager.GetCurrentAttackable();
+        vaultKickAttackable.enabled = true;
         attackTriggersManager.SetAttackable((IAttackable)vaultKickAttackable);
         isVaultContext = true;
-        vaultKickAttackable.enabled = true;
+
     }
 
     public IEnumerator UntilVault()
@@ -68,9 +69,9 @@ public class InteractionBonus : MonoBehaviour {
     public void TurnOffVaultBonus()
     {
         // Debug.Log("TurnOffVault");
-        vaultKickAttackable.enabled = false;
         attackTriggersManager.TurnOffDamage();
         attackTriggersManager.SetAttackable(defaultAttackable);
+        vaultKickAttackable.enabled = false;
         hitBonus.RemoveSuperKick();
         isVaultContext = false;
     }

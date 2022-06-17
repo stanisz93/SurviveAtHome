@@ -47,6 +47,7 @@ public class CharacterMovement : MonoBehaviour
         velocity = Vector3.zero;
     }
 
+
     void Update()
     {
         // 

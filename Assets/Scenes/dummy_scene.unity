@@ -14556,6 +14556,10 @@ PrefabInstance:
       propertyPath: hitTriggerCollider
       value: 
       objectReference: {fileID: 260918892}
+    - target: {fileID: 531387809918466826, guid: 2f2acb786d48b2a48b1ddf17d16cd292, type: 3}
+      propertyPath: MinSpeedToBump
+      value: 3.5
+      objectReference: {fileID: 0}
     - target: {fileID: 911064358265958689, guid: 2f2acb786d48b2a48b1ddf17d16cd292, type: 3}
       propertyPath: _blockMovement
       value: 0.5

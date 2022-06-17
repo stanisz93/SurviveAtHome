@@ -7,13 +7,18 @@ public class PlayerCollider : MonoBehaviour
 {
     // Start is called before the first frame update
     public float BlockMovementWhileBump = 0.4f;
-    public float MinSpeedToBump = 5.5f;
+    public float MinSpeedToBump = 3.5f;
+
+    public float MinSpeedToPlayerAlmostFall = 5.5f;
     private Collider collider;
+
+    private PlayerTriggers plrTriggers;
 
 
     void Start()
     {
         collider = GetComponent<Collider>();
+        plrTriggers = GetComponent<PlayerTriggers>();
     }
 
     // Update is called once per frame
@@ -23,17 +28,24 @@ public class PlayerCollider : MonoBehaviour
         if(opponent != null)
         {
             OpponentActions opponentActions = other.gameObject.GetComponent<OpponentActions>();
-            if(opponentActions.GetOpponentMode() != OpponentMode.Faint && other.relativeVelocity.magnitude > MinSpeedToBump)
+            if(opponentActions.GetOpponentMode() != OpponentMode.Faint)
             {  
                 ContactPoint contact = other.contacts[0];
-                GetComponent<PlayerTriggers>().BumpOnZombie(contact.normal);
-                opponent.GotTackled(contact.normal);
-                gameObject.GetComponent<PlayerTriggers>().BlockMovementSeconds(BlockMovementWhileBump);
-        
+                if(other.relativeVelocity.magnitude > MinSpeedToBump)
+                    {
+                        plrTriggers.BlockMovementSeconds(BlockMovementWhileBump);
+                        if(opponentActions.GetOpponentMode() != OpponentMode.Attacking)
+                            opponent.GotTackled(contact.normal);
+                        if(other.relativeVelocity.magnitude > MinSpeedToPlayerAlmostFall)
+                            plrTriggers.BumpOnZombie(contact.normal);
+                    }
+            }
+            else
+            {
+                gameObject.GetComponent<PlayerTriggers>().BlockMovementSeconds(BlockMovementWhileBump / 10.0f);
             }
         }
-        gameObject.GetComponent<CharacterMovement>().Velocity = Vector3.zero;
-        gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+         gameObject.GetComponent<PlayerTriggers>().BlockMovementSeconds(BlockMovementWhileBump / 10.0f);
 
     }
     void PlayerStop()
