@@ -15,6 +15,9 @@ public class VaultKickAttack : MonoBehaviour, IAttackable
     [SerializeField]
     private float _releaseTriggerTime = 0.5f;
 
+    public AttackType attackType { get{return AttackType.KickWhileVault;}}
+
+
     public float releaseTriggerTime{ get {return _releaseTriggerTime;} set{_releaseTriggerTime = value;}}
 
 

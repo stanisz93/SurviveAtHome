@@ -12,6 +12,9 @@ public class StickAttack : MonoBehaviour, IAttackable
 
     public float releaseTriggerTime{ get {return 0.5f;}}
 
+    public AttackType attackType { get{return AttackType.Stick;}}
+
+
     [SerializeField]
     private float _distanceLeft = 0.2f;
     public float distanceLeft{ get {return _distanceLeft;} set{_distanceLeft = value;}}

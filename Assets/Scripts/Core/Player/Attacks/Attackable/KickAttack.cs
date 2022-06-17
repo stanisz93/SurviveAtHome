@@ -16,6 +16,9 @@ public class KickAttack : MonoBehaviour, IAttackable
     [SerializeField]
     private float _releaseTriggerTime = 0.8f;
 
+    public AttackType attackType { get{return AttackType.Kick;}}
+
+
     public float releaseTriggerTime{ get {return _releaseTriggerTime;} set{_releaseTriggerTime = value;}}
 
     [SerializeField]

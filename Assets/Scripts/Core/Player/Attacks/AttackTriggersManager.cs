@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackTriggersManager : MonoBehaviour
+public class AttackTriggersManager : MonoBehaviour, IPlayerActionManager
 {
     
     public float magnetMoveDelay = 0.4f;
@@ -13,6 +13,10 @@ public class AttackTriggersManager : MonoBehaviour
     private PlayerInput playerInput;
     private OpponentMagnet opponentMagnet;
 
+    private Endurance endurance;
+
+    private Character character;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +24,8 @@ public class AttackTriggersManager : MonoBehaviour
         playerInput = GetComponentInParent<PlayerInput>();
         playerTriggers = GetComponentInParent<PlayerTriggers>();
         opponentMagnet = GetComponentInChildren<OpponentMagnet>();
+        endurance = GetComponentInParent<Endurance>();
+        character = GetComponentInParent<Character>();
     }
 
     // Update is called once per frame
@@ -35,20 +41,43 @@ public class AttackTriggersManager : MonoBehaviour
         currentAttackTrigger.SetAttackable(attackable); 
     }
 
-    public IAttackable GetCurrentAttackable()
+    public IAttackable GetDefaultAttackable()
     {
-        return currentAttackTrigger.GetAttackable();
+        return currentAttackTrigger.GetDefaultAttackable();
     }
 
     public void StartAttack()
     {
-        if (opponentMagnet.NearestOpponent != null)
+        if(IsEnduranceSatisfied())
+        {
+            if (opponentMagnet.NearestOpponent != null)
             {
                opponentMagnet.MoveTowardNearestOpponent(currentAttackTrigger.GetDistanceLeft(), magnetMoveDelay);
             }
-        currentAttackTrigger.ReleaseAttack();
+            currentAttackTrigger.ReleaseAttack();
+        }
             
     }
+
+    public bool IsEnduranceSatisfied()
+    {
+        int currentEndurance = endurance.GetCurrentEndurance();
+        int expectedEndurance = currentAttackTrigger.GetAttackable().attackType switch
+        {
+            AttackType.Knife => character.energyConsumption.knifeAttack,
+            AttackType.Stick => character.energyConsumption.stickAttack,
+            AttackType.Kick => character.energyConsumption.kickAttack,
+            AttackType.KickWhileVault => character.energyConsumption.kickWhileVault
+        };
+        if (currentEndurance >= expectedEndurance)
+            {
+                endurance.ReduceEndurance(expectedEndurance);
+                return true;
+            }
+        else
+            return false; 
+    }
+    
 
     public void ThrowWeapon()
     {

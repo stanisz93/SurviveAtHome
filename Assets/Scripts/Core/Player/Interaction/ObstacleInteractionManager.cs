@@ -2,7 +2,7 @@
 using UnityEngine;
 using DG.Tweening;
 
-public class ObstacleInteractionManager : MonoBehaviour {
+public class ObstacleInteractionManager : MonoBehaviour, IPlayerActionManager {
     
       public ObstacleInteraction obstacleInteraction;
 
@@ -11,6 +11,10 @@ public class ObstacleInteractionManager : MonoBehaviour {
     private PlayerAnimationController playerAnimationController;
     private Sequence MoveSequence;
     private Character character;
+
+    private Endurance endurance;
+    
+
     
 
     private void Start() {
@@ -18,6 +22,8 @@ public class ObstacleInteractionManager : MonoBehaviour {
         characterMovement = GetComponent<CharacterMovement>();
         playerAnimationController = GetComponent<PlayerAnimationController>();
         character = GetComponent<Character>();
+        endurance = GetComponent<Endurance>();
+
     }
 
 
@@ -29,13 +35,35 @@ public class ObstacleInteractionManager : MonoBehaviour {
                 obstacleInteraction = null;
     }
 
+    public bool IsEnduranceSatisfied()
+    {
+        int currentEndurance = endurance.GetCurrentEndurance();
+        int expectedEndurance = obstacleInteraction.animType switch 
+        {
+             ObstacleAnimType.slide => character.energyConsumption.slide,
+             ObstacleAnimType.vault => character.energyConsumption.vaultOverBox,
+             ObstacleAnimType.climbOverWall => character.energyConsumption.climbWall,
+              ObstacleAnimType.PushDoor => character.energyConsumption.pushDoor
+
+        };
+        if (currentEndurance >= expectedEndurance)
+            {
+                endurance.ReduceEndurance(expectedEndurance);
+                return true;
+            }
+        else
+            return false;
+    }
+
 
     public void InteractObstacle()
     {
         obstacleInteraction.EstimateSide(characterMovement.t_mesh);
         Transform t_startPoint = obstacleInteraction.GetStartPoint();
         Transform t_endPoint = obstacleInteraction.GetEndPoint();
-        if(obstacleInteraction.AreConditionsSatisfied(character))
+
+        int enduranceDecrease = 0;
+        if(obstacleInteraction.AreConditionsSatisfied(character) && IsEnduranceSatisfied())
         {
             // wcharacterMovement.t_mesh.rotation = Quaternion.LookRotation(t_startPoint.forward);
             if(obstacleInteraction.forwardToObstacle)

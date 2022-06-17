@@ -11,6 +11,8 @@ public class PlayerInput : MonoBehaviour
 {
 
     public LayerMask terrainMask;
+
+
     private Character character;
     private CharacterMovement chrMvmnt;
     private CapsuleCollider collider;
@@ -41,6 +43,10 @@ public class PlayerInput : MonoBehaviour
     private SpecialAttacks specialAttacks;
     private AttackTriggersManager attackTriggersManager;
 
+    private Endurance endurance;
+
+    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -62,6 +68,7 @@ public class PlayerInput : MonoBehaviour
         playerAnimatorEventController = GetComponentInChildren<PlayerAnimatorEventController>();
         specialAttacks = GetComponentInChildren<SpecialAttacks>();
         attackTriggersManager = GetComponentInChildren<AttackTriggersManager>();
+        endurance = GetComponent<Endurance>();
 
             
     }
@@ -100,9 +107,9 @@ public class PlayerInput : MonoBehaviour
             else
                 character.AddMovementInput(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
             
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.LeftShift) && endurance.GetCurrentEndurance() >= character.energyConsumption.runningPerFrame)
             {
-                character.SetToRun();
+                    character.SetToRun();
             }
             else
             {
@@ -176,11 +183,20 @@ public class PlayerInput : MonoBehaviour
             }
             else if(Input.GetMouseButtonUp(0))
             {
-                AttackTrigger attackTrigger = attackTriggersManager.GetCurrentAttackTrigger();
-                attackTrigger.SetTriggerType(TriggerType.Distant);
-                attackTrigger.ReleaseAttack();
-                playerTriggers.ResetThrowState();
-                controllerMode = ControllerMode.Normal;
+                if(endurance.GetCurrentEndurance() >= character.energyConsumption.throwEnergy)
+                {
+                    endurance.ReduceEndurance(character.energyConsumption.throwEnergy);
+                    AttackTrigger attackTrigger = attackTriggersManager.GetCurrentAttackTrigger();
+                    attackTrigger.SetTriggerType(TriggerType.Distant);
+                    attackTrigger.ReleaseAttack();
+                    playerTriggers.ResetThrowState();
+                    controllerMode = ControllerMode.Normal;
+                }
+                else
+                {
+                    playerTriggers.CancelThrow();
+                    controllerMode = ControllerMode.Normal;
+                }
             }
   
         }
@@ -244,7 +260,7 @@ public class PlayerInput : MonoBehaviour
                 {
                     AttackTrigger attackTrigger = attackTriggersManager.GetCurrentAttackTrigger();
                     attackTrigger.SetTriggerType(TriggerType.Melee);
-                    Debug.Log($"CurrentTrigger {attackTriggersManager.GetCurrentAttackable()}");
+                    Debug.Log($"CurrentTrigger {attackTriggersManager.GetDefaultAttackable()}");
                     character.StartTriggerAction(attackTriggersManager.StartAttack);
 
                     // if(chrMvmnt.GetHoldMode() == WeaponType.WoddenStick)

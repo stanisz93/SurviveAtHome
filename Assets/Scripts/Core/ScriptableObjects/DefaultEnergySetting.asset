@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd7702839d73a6344866ff81dfe26a93, type: 3}
+  m_Name: DefaultEnergySetting
+  m_EditorClassIdentifier: 
+  knifeAttack: 15
+  kickAttack: 30
+  stickAttack: 20
+  kickWhileVault: 30
+  killWhenFaint: 30
+  vaultOverBox: 20
+  slide: 15
+  climbWall: 30
+  throwEnergy: 10
+  pushDoor: 25
+  runningPerFrame: 0
+  walkEnergyRecovery: 5

@@ -67,6 +67,7 @@ public class PlayerTriggers : MonoBehaviour
 
     IEnumerator ReleaseTriggerAfterSecondsCoroutine(float time)
     {
+        isTriggerEmpty = false;
         yield return new WaitForSeconds(time);
         isTriggerEmpty = true;
     }

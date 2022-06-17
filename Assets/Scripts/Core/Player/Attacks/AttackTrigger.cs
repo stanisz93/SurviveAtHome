@@ -35,6 +35,8 @@ private TriggerType currentTriggerType;
 
 private IAttackable attackable;
 
+private IAttackable defaultAttackable;
+
 private IThrowable throwable;
 
 private Animator animator;
@@ -58,6 +60,7 @@ private void Awake() {
     if(defendItem != null) //in case of neutral kick it wont happened
         OnHit += defendItem.ReduceEndurance;
     attackable = GetComponent<IAttackable>();
+    defaultAttackable = GetComponent<IAttackable>();
     throwable = GetComponent<IThrowable>();
       
 }
@@ -95,6 +98,11 @@ public void SetDamageType(DamageType dType)
 public void SetTriggerType(TriggerType triggerType)
 {
     currentTriggerType = triggerType;
+}
+
+public IAttackable GetDefaultAttackable()
+{
+    return defaultAttackable;
 }
 
 

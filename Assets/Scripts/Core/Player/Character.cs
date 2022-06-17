@@ -7,6 +7,7 @@ using UnityEngine.AI;
 public class Character : MonoBehaviour
 {
     public Transform DebugBall;
+    public EnergyConsumption energyConsumption;
     private CharacterMovement characterMovement;
     public Camera mainCamera;
     public Transform respawn;
@@ -31,11 +32,15 @@ public class Character : MonoBehaviour
     public delegate IEnumerator OnConditionSatisfiedToInterrupt();
 
     private TriggerAction LastAllowInterruption;
+
     private Inventory Inventory;
 
     private Vector3 currrentMouseDirection {get => MouseUtils.MousePositon(mainCamera, characterMovement.t_mesh, terrainMask);}
 
     private HitBonus bonus;
+    private Endurance endurance;
+
+    private Coroutine interruptionCoroutine;
 
     
 
@@ -50,6 +55,7 @@ public class Character : MonoBehaviour
         characterMovement = GetComponent<CharacterMovement>();
         playerTriggers = GetComponent<PlayerTriggers>();
         Inventory = GetComponent<Inventory>();
+        endurance = GetComponent<Endurance>();
         ResetPlayer(); 
         bonus = GetComponent<HitBonus>();
         health.OnDamageTake += healthBar.ReduceValue;
@@ -77,6 +83,16 @@ public class Character : MonoBehaviour
 
     IEnumerator TurnOnInteruptionAfter(TriggerAction delayedFun, OnConditionSatisfiedToInterrupt satisfier)
     //very specific function used to allow for interruption but after specific time
+
+    //This is tricky, there might be case where TriggerAction with allowed interruption
+    //passed, but hasn't been later released, then interruption have managed
+    //to get into satisfier loop, and when another one Trigger with allowed interruption is 
+    //run then this run is still waiting and can be triggered, which it should be canceled.
+    ///PL chodzi o to ze StartTriggerAction moze nie dosc do skutku, ale 
+    //jako ze odpalila sie metoda StartTriggerAction, to allowed metoda
+    //może wejść w czekanie na satisfier, i wtedy przy kolejnym StartTrigger z suckese.
+    //wejdzie i się zrealuzuje, a nie powinno. Powinno moc sie zrealizowac
+    //tylko Interruptor ktory wystapil po Funkcji Trigerującej
     {
         yield return satisfier();
         LastAllowInterruption = delayedFun;
@@ -84,17 +100,23 @@ public class Character : MonoBehaviour
 
     public void StartTriggerAction(TriggerAction triggerAction, TriggerAction allowed=null, OnConditionSatisfiedToInterrupt satisfier=null)
     {
+            if(interruptionCoroutine != null)
+                StopCoroutine(interruptionCoroutine); //This stopping need to be applied, otherwise previous coroutines
+                ///with staisfied satisfier(TurnOnInteruptionAfter)  will be runned
+            if(playerTriggers.isTriggerEmpty || LastAllowInterruption == triggerAction)
+            {    
+                    triggeredAction = triggerAction;
+                    if(LastAllowInterruption == triggerAction)
+                        LastAllowInterruption = null;
+            }
 
-        if(playerTriggers.isTriggerEmpty || LastAllowInterruption == triggerAction)
-        {
-            playerTriggers.isTriggerEmpty = false;
-            triggeredAction = triggerAction;
-            if(LastAllowInterruption == triggerAction)
-                LastAllowInterruption = null;
-        }
 
-        if(allowed != null && satisfier != null)
-            StartCoroutine(TurnOnInteruptionAfter(allowed, satisfier));
+            if(allowed != null && satisfier != null)
+                {
+                    interruptionCoroutine = StartCoroutine(TurnOnInteruptionAfter(allowed, satisfier));
+                }
+
+
 
     }
 

@@ -14,6 +14,8 @@ public class KnifeAttack : MonoBehaviour, IAttackable, IThrowable
 
     public string meleeAnimName { get {return "Stab";}}
 
+    public AttackType attackType { get{return AttackType.Knife;}}
+
     public string distantAnimName { get {return "Throw";}}
 
     public AnimationCurve forceCurve;
@@ -124,4 +126,5 @@ public class KnifeAttack : MonoBehaviour, IAttackable, IThrowable
         SetThrowTarget(playerTriggers.GetThrowTargetPos());
         SetDistance(playerTriggers.currentThrowDistance); 
     }
+
 }
