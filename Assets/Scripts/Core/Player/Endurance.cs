@@ -16,20 +16,23 @@ public class Endurance : MonoBehaviour
     int RestoreValueAtEachStep = 10; ///This is the max speed of restoring value
     [SerializeField]
     float restoreHealthFrequency = 0.4f;
+    [SerializeField]
+    float timeWithoutRunForRegeneration = 3f;
 
     public EnduranceBar enduranceBar;
 
     private  Queue<int> enduranceChangeEvents;
     private int maxQueueLimit = 20;
     private int _currentEndurance; //Do not touch it except Update loop
-    
+    private Character character;
+
     void Start()
     {
         Reset();
+        character = GetComponent<Character>();
         enduranceChangeEvents = new Queue<int>();
         enduranceBar.SetInitalValue(maxEndurance);
         StartCoroutine(RestoreEndurance());
-        StartCoroutine(UpdateEndurance());
     }
 
     public void Reset()
@@ -53,27 +56,49 @@ public class Endurance : MonoBehaviour
 
     public int GetCurrentEndurance() => _currentEndurance;
 
+    IEnumerator TimeWithoutRunning()
+    {
+        float timer = 0f;
+        yield return new WaitUntil(() => character.GetMovement() != MovementMode.Running);
+        while(timer <= timeWithoutRunForRegeneration)
+            {
+                timer += Time.deltaTime;
+                yield return null;
+            }
+    }
+
     IEnumerator RestoreEndurance()
     {
         while(true)
         {
-            yield return new WaitForSeconds(restoreHealthFrequency);
             if(_currentEndurance < maxEndurance)
-                 enduranceChangeEvents.Enqueue(RestoreValueAtEachStep);
+            {
+                if (character.GetMovement() == MovementMode.Running)
+                    yield return TimeWithoutRunning();
+                else
+                {
+                    IncreaseEndurance(RestoreValueAtEachStep);
+                    yield return new WaitForSeconds(restoreHealthFrequency);
+                }
+            }
+            else
+                yield return null;
         }
     }
 
-    IEnumerator UpdateEndurance(){
-        while(true)
-        {
-            yield return new WaitForSeconds(updateEnduranceFrequency);
+    private void Update(){
+
             if(enduranceChangeEvents.Count != 0)
             {
                 int val = enduranceChangeEvents.Dequeue();
-                _currentEndurance = (int)Mathf.Clamp(_currentEndurance + val, 0f, maxEndurance);
-                enduranceBar.SetEndurance(_currentEndurance, val < 0);
+
+                int newEndurance = (int)Mathf.Clamp(_currentEndurance + val, 0f, maxEndurance);
+                if(newEndurance != _currentEndurance)
+                    {
+                        _currentEndurance = newEndurance;
+                        enduranceBar.SetEndurance(_currentEndurance, val < 0);
+                    }
             }
-        }
     }
     
 
