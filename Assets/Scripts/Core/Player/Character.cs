@@ -26,6 +26,7 @@ public class Character : MonoBehaviour
     private Health health;
 
     private PlayerTriggers playerTriggers;
+    private Opponent latestAttacker;
 
     public delegate void TriggerAction();
 
@@ -128,6 +129,29 @@ public class Character : MonoBehaviour
 
 
 
+    }
+
+    public IEnumerator KeepLatestAttacker(Opponent opponent)
+    {
+        float timer = 0f;
+        latestAttacker = opponent;
+        Opponent currentAttacker = opponent;
+        while(timer < 3f)
+        {
+            timer += Time.deltaTime;
+            if(latestAttacker == currentAttacker)
+                yield return null;
+            else
+                break;
+        }
+        if(latestAttacker == currentAttacker)
+            latestAttacker = null;
+
+    }
+
+    public Opponent GetLatestAttacker()
+    {
+        return latestAttacker;
     }
 
 

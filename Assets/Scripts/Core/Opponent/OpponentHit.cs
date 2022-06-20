@@ -37,11 +37,14 @@ public class OpponentHit : MonoBehaviour
     {
     
         Health health = other.GetComponent<Health>();
+        Character character = other.GetComponent<Character>();
         if(health != null && !isDamageTaken)
         {
             Opponent opponent = gameObject.GetComponentInParent<Opponent>();
             if(opponent != null)
             {
+                
+                StartCoroutine(character.KeepLatestAttacker(opponent));
                 health.TakeDamage(opponent.damage);
                 isDamageTaken = true;
                 transform.parent = null;

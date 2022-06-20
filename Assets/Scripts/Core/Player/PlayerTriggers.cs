@@ -44,6 +44,7 @@ public class PlayerTriggers : MonoBehaviour
 
     ///end of Throwing Params
     private HitBonus hitBonus;
+    private OpponentMagnet opponentMagnet;
 
     // Start is called before the first frame update
     void Start()
@@ -57,6 +58,7 @@ public class PlayerTriggers : MonoBehaviour
 
         ThrowProjectionCanvas.enabled = false;
         eventController = GetComponentInChildren<PlayerAnimatorEventController>();
+        opponentMagnet = GetComponentInChildren<OpponentMagnet>();
         debugObj.gameObject.SetActive(isDebugObjOn);
     }
 
@@ -172,6 +174,33 @@ public class PlayerTriggers : MonoBehaviour
     {
         ReleaseTrigger();
         playerInput.blockMovement = false;
+    }
+
+    void BlockPlayerControl()
+    {
+        BlockTrigger();
+        playerInput.blockMovement = true;
+    }
+
+    public void Dodge()
+    {
+        playerAnimationController.animator.SetTrigger("DodgeBack");
+        Vector3 dodgeDir = 1.5f * characterMovement.t_mesh.forward;
+        if(opponentMagnet.NearestOpponent != null)
+            {
+                dodgeDir = opponentMagnet.NearestOpponent.transform.position - characterMovement.t_mesh.position;
+                dodgeDir = 1.5f * new Vector3(dodgeDir.x, 0f, dodgeDir.z).normalized;
+            }
+            
+        BlockPlayerControl();
+        Sequence seq = DOTween.Sequence();
+        TweenObjectManipulateUtils.LimitMoveWhenObstacleWithinTrajectory(ref dodgeDir, transform.position, - dodgeDir.normalized,  1.5f, (1 << LayerMask.NameToLayer("Obstacles")));
+        seq.Append(transform.DOMove(transform.position - dodgeDir, 0.3f));
+        Vector3 rot = Quaternion.LookRotation(dodgeDir.normalized).eulerAngles;
+        seq.Join(characterMovement.t_mesh.DORotate(rot, .1f));
+        
+
+
     }
 
     public void BumpOnZombie(Vector3 collisionNormal)

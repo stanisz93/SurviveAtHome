@@ -32,12 +32,14 @@ public class CharacterMovement : MonoBehaviour
     private Vector3 velocity;
 
     private Character character;
+    private OpponentMagnet opponentMagnet;
 
     
     void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
         character = GetComponent<Character>();
+        opponentMagnet = GetComponentInChildren<OpponentMagnet>();
     }
     
     public Vector3 Velocity {get => rigidbody.velocity; set => velocity = value;}
@@ -66,10 +68,20 @@ public class CharacterMovement : MonoBehaviour
                 
                 // if (character.opponentFocus == null) // there should be provided some animation to walk around enemy
                 // {
-                Quaternion wantedRotation = Quaternion.LookRotation(velocity);
-                t_mesh.rotation = Quaternion.Slerp(t_mesh.rotation, wantedRotation, Time.deltaTime * rotateSpeed);
-                // }
+               // }
             // t_mesh.rotation = wantedRotation;
+                Opponent attacker = character.GetLatestAttacker();
+                if(attacker != null) // || character.PerformAttackToward()
+                {
+                    Vector3 rotationDir = attacker.transform.position - t_mesh.position;
+                    t_mesh.rotation = Quaternion.LookRotation(rotationDir);
+                }
+                else
+                {
+                     Quaternion wantedRotation = Quaternion.LookRotation(velocity);
+                    t_mesh.rotation = Quaternion.Slerp(t_mesh.rotation, wantedRotation, Time.deltaTime * rotateSpeed);
+                
+                }
         }
         else
         {

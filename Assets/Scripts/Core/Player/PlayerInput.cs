@@ -271,6 +271,10 @@ public class PlayerInput : MonoBehaviour
                         character.StartTriggerAction(obstacleInteractionManager.InteractObstacle);
                 }
             }
+            else if(Input.GetKey(KeyCode.E))
+            {
+                character.StartTriggerAction(playerTriggers.Dodge);
+            }
             else if(Input.GetMouseButtonDown(1) && chrMvmnt.GetHoldMode() != WeaponType.None)
             {
                 controllerMode = ControllerMode.Throwing;
