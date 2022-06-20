@@ -11,6 +11,7 @@ public class PlayerAnimatorEventController : MonoBehaviour
     private PlayerInput playerInput;
 
     private TrailRenderer kickTrail;
+    private bool isAnimationFinished = false;
 
   
     void Start()
@@ -30,6 +31,11 @@ public class PlayerAnimatorEventController : MonoBehaviour
         kickTrail.enabled = true;
         StartCoroutine(TurnOffKickTrail());
     }
+
+    public bool IsAnimationFinished() => isAnimationFinished;
+
+    public void StartAnimation() => isAnimationFinished = false;
+    public bool EndAnimation() => isAnimationFinished = true;
 
 
     public void ResetDefaultHoldPosition()

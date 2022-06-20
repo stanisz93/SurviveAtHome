@@ -4,8 +4,8 @@ using DG.Tweening;
 
 public class ObstacleInteractionManager : MonoBehaviour, IPlayerActionManager {
     
-      public ObstacleInteraction obstacleInteraction;
-
+    public ObstacleInteraction obstacleInteraction;
+  
     private PlayerTriggers playerTriggers;
     private CharacterMovement characterMovement;
     private PlayerAnimationController playerAnimationController;
@@ -13,6 +13,7 @@ public class ObstacleInteractionManager : MonoBehaviour, IPlayerActionManager {
     private Character character;
 
     private Endurance endurance;
+    
     
 
     
@@ -35,15 +36,19 @@ public class ObstacleInteractionManager : MonoBehaviour, IPlayerActionManager {
                 obstacleInteraction = null;
     }
 
+    public Transform GetCurrentObstacle() => obstacleInteraction.transform;
+
     public bool IsEnduranceSatisfied()
     {
         int currentEndurance = endurance.GetCurrentEndurance();
-        int expectedEndurance = obstacleInteraction.animType switch 
+        int expectedEndurance = obstacleInteraction.GetAnimType() switch 
         {
              ObstacleAnimType.slide => character.energyConsumption.slide,
              ObstacleAnimType.vault => character.energyConsumption.vaultOverBox,
              ObstacleAnimType.climbOverWall => character.energyConsumption.climbWall,
-              ObstacleAnimType.PushDoor => character.energyConsumption.pushDoor
+            ObstacleAnimType.PushDoor => character.energyConsumption.pushDoor,
+            ObstacleAnimType.SlideUnderBed => 0,
+
 
         };
         if (currentEndurance >= expectedEndurance)
@@ -65,36 +70,23 @@ public class ObstacleInteractionManager : MonoBehaviour, IPlayerActionManager {
         int enduranceDecrease = 0;
         if(obstacleInteraction.AreConditionsSatisfied(character) && IsEnduranceSatisfied())
         {
-            // wcharacterMovement.t_mesh.rotation = Quaternion.LookRotation(t_startPoint.forward);
             if(obstacleInteraction.forwardToObstacle)
                 characterMovement.t_mesh.DORotate(Quaternion.LookRotation(t_startPoint.forward).eulerAngles, 0.2f);
-        
-            if (obstacleInteraction.animType == ObstacleAnimType.slide)
-                 playerAnimationController.animator.SetTrigger("Slide");
-            else if(obstacleInteraction.animType == ObstacleAnimType.vault)
-                {
-                    playerAnimationController.animator.SetTrigger("Vault");
-                    playerAnimationController.animator.SetBool("MirrorAnimation", Random.value > 0.5f); 
-                }
-            else if(obstacleInteraction.animType == ObstacleAnimType.climbOverWall)
-                {
-                    playerAnimationController.animator.SetTrigger("ClimbWall");
-                }
-            else if(obstacleInteraction.animType == ObstacleAnimType.PushDoor)
-                {
-                    playerAnimationController.animator.SetTrigger("PushDoor");
-                    obstacleInteraction.ApplyForce(characterMovement.t_mesh.forward);
 
-                }
-            else
-                Debug.Log("UnexpecetBehaviour!");
+            obstacleInteraction.PerformAction(playerAnimationController.animator, character);
+  
             if(MoveSequence.IsActive())
                 MoveSequence.Kill();
-            MoveSequence = obstacleInteraction.RunSequence(transform);
+            MoveSequence = obstacleInteraction.RunSequence(transform, characterMovement.t_mesh);
             playerTriggers.ReleaseTriggerAfterSeconds(obstacleInteraction.ReleaseTime);
         }
         else
             playerTriggers.isTriggerEmpty = true;
+    }
+
+    public ObstacleAnimType GetCurrentAnimType()
+    {
+        return obstacleInteraction.GetAnimType();
     }
 
     public void InterruptMovementSequence(){

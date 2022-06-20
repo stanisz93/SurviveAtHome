@@ -40,7 +40,7 @@ public class PlayerTriggers : MonoBehaviour
     public Transform debugObj;
     private Vector3 targetThrowPos;
     AttackTriggersManager attackTriggerManager;
-
+    private PlayerAnimatorEventController eventController;
 
     ///end of Throwing Params
     private HitBonus hitBonus;
@@ -56,6 +56,7 @@ public class PlayerTriggers : MonoBehaviour
         hitBonus = GetComponent<HitBonus>();
 
         ThrowProjectionCanvas.enabled = false;
+        eventController = GetComponentInChildren<PlayerAnimatorEventController>();
         debugObj.gameObject.SetActive(isDebugObjOn);
     }
 
@@ -72,7 +73,7 @@ public class PlayerTriggers : MonoBehaviour
         isTriggerEmpty = true;
     }
 
-
+    public bool IsTriggerEmpty() => isTriggerEmpty;
 
     public void ReleaseTrigger()
     {
@@ -154,6 +155,25 @@ public class PlayerTriggers : MonoBehaviour
         
     }
 
+    public IEnumerator LeftBed()
+    {
+        playerAnimationController.animator.SetTrigger("GetOutOfBed");
+        Sequence moveSequence = DOTween.Sequence(); 
+        Transform bed = character.GetCurrentObstacle();
+        moveSequence.Append(characterMovement.t_mesh.DORotate(Quaternion.LookRotation(-bed.forward).eulerAngles, 0.4f));
+        moveSequence.Join(character.transform.DOMove(bed.position + 1.5f * bed.forward, 1f));
+        yield return moveSequence.WaitForCompletion();
+        yield return new WaitUntil(() => eventController.IsAnimationFinished());
+        ReleasePlayerControl();
+
+    }
+
+    public void ReleasePlayerControl()
+    {
+        ReleaseTrigger();
+        playerInput.blockMovement = false;
+    }
+
     public void BumpOnZombie(Vector3 collisionNormal)
     {
         Transform player = GameObject.FindWithTag("PlayerMesh").transform;
@@ -168,15 +188,6 @@ public class PlayerTriggers : MonoBehaviour
         
     }
 
-
-
-        public IEnumerator BlockMovementUntilTriggerIsEmpty()
-    {
-        playerInput.blockMovement = true;
-        yield return new WaitUntil(() => isTriggerEmpty);
-        playerInput.blockMovement = false;
-
-    }
     
 
     IEnumerator BlockMovementCoroutine(float duration)

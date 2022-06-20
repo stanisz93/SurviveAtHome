@@ -71,6 +71,7 @@ GameObject:
   - component: {fileID: 5650099122550901105}
   - component: {fileID: 5650099122550901107}
   - component: {fileID: 5650099122550901111}
+  - component: {fileID: 3240640966519895620}
   m_Layer: 7
   m_Name: slidable
   m_TagString: Untagged
@@ -119,13 +120,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeScaleWhenPerform: 1
   StepDebug: 0
+  hasEndPosition: 1
   forwardToObstacle: 0
   posA: {fileID: 5650099120843495616}
   posB: {fileID: 5650099122260171983}
   MoveToPointTime: 0.2
   MoveToEndPointTime: 0.7
   ReleaseTime: 1
-  animType: 0
   edgeStart: {fileID: 8100278745320409089}
   edgeEnd: {fileID: 8100278746118330507}
   requiredConditions:
@@ -136,6 +137,18 @@ MonoBehaviour:
     param: 1
     value: 0.7
   otherAnims: []
+--- !u!114 &3240640966519895620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5650099122550901110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6c9268b5e67daa459798b5b48a88065, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5651860982650512465
 GameObject:
   m_ObjectHideFlags: 0

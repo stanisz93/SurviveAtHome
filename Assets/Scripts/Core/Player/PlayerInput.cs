@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public enum ControllerMode {Normal, Inventory, SettingTrap, Throwing};
+public enum ControllerMode {Normal, Inventory, SettingTrap, Throwing, UnderBed};
 
 [RequireComponent(typeof(Character))]
 [RequireComponent(typeof(CharacterMovement))]
@@ -45,6 +45,7 @@ public class PlayerInput : MonoBehaviour
 
     private Endurance endurance;
 
+
     
 
     // Start is called before the first frame update
@@ -72,6 +73,8 @@ public class PlayerInput : MonoBehaviour
 
             
     }
+
+    public void SetControllMode(ControllerMode mode) => controllerMode = mode;
 
 
 
@@ -102,6 +105,7 @@ public class PlayerInput : MonoBehaviour
     {
         if (!playerTriggers.dying)
         {
+
             if(blockMovement)
                 character.AddMovementInput(0f, 0f);
             else
@@ -132,6 +136,11 @@ public class PlayerInput : MonoBehaviour
             else if(controllerMode == ControllerMode.Throwing)
             {
                 ManagerThrowControl();
+            }
+            else if(controllerMode == ControllerMode.UnderBed)
+            {
+                if(playerTriggers.IsTriggerEmpty())
+                   StartCoroutine(ManageUnderBedControl());
             }
         }
     }
@@ -210,6 +219,27 @@ public class PlayerInput : MonoBehaviour
 
     }
 
+    IEnumerator ManageUnderBedControl()
+    {
+        character.AddMovementInput(0f, 0f);
+        character.ResetVelocity();
+        character.BlockPlayerControl();
+        yield return new WaitForSeconds(2f);
+        while(controllerMode == ControllerMode.UnderBed)
+        {
+            Vector2 movement = new Vector2(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
+            if(movement.magnitude > 0f)
+                {
+                    yield return playerTriggers.LeftBed();
+                    character.ToogleKinematic();
+                    controllerMode = ControllerMode.Normal;
+                    break;
+                }
+            yield return null;
+        }
+        Debug.Log("Left managedUnderBed");///HERE SOMETHING IS WRONG // STILL MOVING!
+    }
+
     void ManageSettingTrapControl()
     {
         if(Input.GetKey(KeyCode.Escape))
@@ -235,7 +265,7 @@ public class PlayerInput : MonoBehaviour
             {
                 if(obstacleInteractionManager.obstacleInteraction != null)
                 {
-                    if (obstacleInteractionManager.obstacleInteraction.animType == ObstacleAnimType.vault)
+                    if (obstacleInteractionManager.GetCurrentAnimType() == ObstacleAnimType.vault)
                         character.StartTriggerAction(obstacleInteractionManager.InteractObstacle, attackTriggersManager.StartAttack, interactionBonus.UntilVault);
                     else
                         character.StartTriggerAction(obstacleInteractionManager.InteractObstacle);

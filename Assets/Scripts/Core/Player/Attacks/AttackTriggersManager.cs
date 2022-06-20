@@ -32,9 +32,9 @@ public class AttackTriggersManager : MonoBehaviour, IPlayerActionManager
 
     public void ReleasePlayerControl()
     {
-        playerTriggers.ReleaseTrigger();
-        playerInput.blockMovement = false;
+        playerTriggers.ReleasePlayerControl();
     }
+    
 
     public void SetAttackable(IAttackable attackable)
     {

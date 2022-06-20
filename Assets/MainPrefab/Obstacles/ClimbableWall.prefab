@@ -274,6 +274,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bb3bd24c065481459585290633ba1e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damagable: 0
 --- !u!1 &7442517660013351673
 GameObject:
   m_ObjectHideFlags: 0
@@ -315,6 +316,7 @@ GameObject:
   - component: {fileID: 7442517660603934175}
   - component: {fileID: 7442517660603934173}
   - component: {fileID: 7442517660603934172}
+  - component: {fileID: 2153685240661994339}
   m_Layer: 7
   m_Name: climb
   m_TagString: Untagged
@@ -370,13 +372,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeScaleWhenPerform: 1
   StepDebug: 0
+  hasEndPosition: 1
   forwardToObstacle: 1
   posA: {fileID: 7442517659284537006}
   posB: {fileID: 7442517659247544851}
   MoveToPointTime: 0.2
   MoveToEndPointTime: 0.15
   ReleaseTime: 1
-  animType: 2
   edgeStart: {fileID: 7442517661236002193}
   edgeEnd: {fileID: 7442517659428621719}
   requiredConditions:
@@ -473,6 +475,18 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
+--- !u!114 &2153685240661994339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7442517660603934174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd8c46d4293367a4aab8bffcfe7d5fbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7442517660933970178
 GameObject:
   m_ObjectHideFlags: 0

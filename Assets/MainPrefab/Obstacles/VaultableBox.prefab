@@ -200,6 +200,7 @@ GameObject:
   - component: {fileID: 4253359584997719279}
   - component: {fileID: 4253359584997719273}
   - component: {fileID: 4253359584997719278}
+  - component: {fileID: 5730081564905607660}
   m_Layer: 7
   m_Name: vaultable
   m_TagString: Untagged
@@ -248,13 +249,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeScaleWhenPerform: 1
   StepDebug: 0
-  forwardToObstacle: 0
+  hasEndPosition: 1
+  forwardToObstacle: 1
   posA: {fileID: 4253359584987284764}
   posB: {fileID: 4253359583537985964}
   MoveToPointTime: 0.15
   MoveToEndPointTime: 0.5
   ReleaseTime: 1
-  animType: 1
   edgeStart: {fileID: 9136571818720992424}
   edgeEnd: {fileID: 9136571817661077941}
   requiredConditions:
@@ -265,6 +266,18 @@ MonoBehaviour:
     param: 1
     value: 0.7
   otherAnims: []
+--- !u!114 &5730081564905607660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4253359584997719276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d989262c682531439327bb78e46d775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9136571817339948438
 GameObject:
   m_ObjectHideFlags: 0

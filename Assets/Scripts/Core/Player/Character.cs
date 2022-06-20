@@ -37,9 +37,11 @@ public class Character : MonoBehaviour
 
     private Vector3 currrentMouseDirection {get => MouseUtils.MousePositon(mainCamera, characterMovement.t_mesh, terrainMask);}
 
+    private PlayerInput playerInput;
     private HitBonus bonus;
     private Endurance endurance;
 
+    private ObstacleInteractionManager obstManager;
     private Coroutine interruptionCoroutine;
 
     
@@ -61,8 +63,15 @@ public class Character : MonoBehaviour
         health.OnDamageTake += healthBar.ReduceValue;
         health.OnDamageTake += TakeDamageEffect;
         health.OnDie += playerTriggers.Die;
+        playerInput = GetComponent<PlayerInput>();
+        obstManager = GetComponent<ObstacleInteractionManager>();
         }
 
+    public void ResetVelocity() => characterMovement.ResetVelocity();
+
+    public Transform GetCurrentObstacle() => obstManager.GetCurrentObstacle();
+
+    public void SetControlMode(ControllerMode mode) => playerInput.SetControllMode(mode);
 
     public void ResetPlayer()
     {
@@ -97,6 +106,7 @@ public class Character : MonoBehaviour
         yield return satisfier();
         LastAllowInterruption = delayedFun;
     }
+    
 
     public void StartTriggerAction(TriggerAction triggerAction, TriggerAction allowed=null, OnConditionSatisfiedToInterrupt satisfier=null)
     {
@@ -145,6 +155,17 @@ public class Character : MonoBehaviour
         return velocity.normalized;
     }
 
+    public void ToogleKinematic()
+    {
+        characterMovement.ToggleRigidbody();
+    }
+
+    public void BlockPlayerControl()
+    {
+        playerTriggers.BlockTrigger();
+        playerTriggers.BlockMovement();
+    }
+
 
 
     public void TakeDamageEffect(int damage)
@@ -160,28 +181,34 @@ public class Character : MonoBehaviour
     public void AddMovementInput(float forward, float right)
     {
         var mouseMovement = new Vector3(Input.GetAxis("Mouse X"), 0f, Input.GetAxis("Mouse Y"));
-        if(Input.GetMouseButton(1))
-        //maybe worth to use here Slerp instead of sudden rotation
-            SnapTowardOpponent();
+        // if(Input.GetMouseButton(1))
+        // //maybe worth to use here Slerp instead of sudden rotation
+        //     SnapTowardOpponent();
         // var localVelocity = GetVectorRelativeToCamera(forward, right);
-        if(opponentFocus != null)
-            RotateTowardSnappedOpponent();
+        // if(opponentFocus != null)
+        //     RotateTowardSnappedOpponent();
         Vector3 movementRelativeToCamera = GetVectorRelativeToCamera(forward, right);
 
         characterMovement.Velocity = movementRelativeToCamera;
     }
 
-    void RotateTowardSnappedOpponent()
-    {
-        var relDir = transform.position - opponentFocus.position;
-        relDir = - new Vector3(relDir.x, 0f, relDir.z);
+    // void RotateTowardSnappedOpponent()
+    // {
+    //     var relDir = transform.position - opponentFocus.position;
+    //     relDir = - new Vector3(relDir.x, 0f, relDir.z);
 
-        Quaternion wantedRotation = Quaternion.LookRotation(relDir, Vector3.up);
-        characterMovement.t_mesh.rotation = Quaternion.Slerp(characterMovement.t_mesh.rotation, wantedRotation, Time.deltaTime * 20);
-        // characterMovement.t_mesh.LookAt(goal);
-        DebugBall.position = new Vector3(opponentFocus.transform.position.x, DebugBall.position.y, opponentFocus.transform.position.z);
+    //     Quaternion wantedRotation = Quaternion.LookRotation(relDir, Vector3.up);
+    //     characterMovement.t_mesh.rotation = Quaternion.Slerp(characterMovement.t_mesh.rotation, wantedRotation, Time.deltaTime * 20);
+    //     // characterMovement.t_mesh.LookAt(goal);
+    //     DebugBall.position = new Vector3(opponentFocus.transform.position.x, DebugBall.position.y, opponentFocus.transform.position.z);
     
+    // }
+
+    public Vector3 GetForward()
+    {
+        return characterMovement.t_mesh.forward;
     }
+
 
     void SnapTowardOpponent()
     {
@@ -211,6 +238,8 @@ public class Character : MonoBehaviour
     {
         return characterMovement.t_mesh.forward;
     }
+
+    public Transform GetCharacterMeshTransform() => characterMovement.t_mesh;
 
     public Vector3 GetVelocityVector()
     {

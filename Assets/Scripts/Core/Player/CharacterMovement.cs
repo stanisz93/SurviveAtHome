@@ -45,8 +45,11 @@ public class CharacterMovement : MonoBehaviour
     public void ResetVelocity()
     {
         velocity = Vector3.zero;
+        rigidbody.velocity = Vector3.zero;
     }
 
+    public void ToggleRigidbody() => rigidbody.isKinematic = !rigidbody.isKinematic;
+    
 
     void Update()
     {
@@ -61,11 +64,11 @@ public class CharacterMovement : MonoBehaviour
 
                 smoothSpeed = Mathf.Lerp(smoothSpeed, maxSpeed, Time.deltaTime);
                 
-                if (character.opponentFocus == null) // there should be provided some animation to walk around enemy
-                {
-                    Quaternion wantedRotation = Quaternion.LookRotation(velocity);
-                    t_mesh.rotation = Quaternion.Slerp(t_mesh.rotation, wantedRotation, Time.deltaTime * rotateSpeed);
-                }
+                // if (character.opponentFocus == null) // there should be provided some animation to walk around enemy
+                // {
+                Quaternion wantedRotation = Quaternion.LookRotation(velocity);
+                t_mesh.rotation = Quaternion.Slerp(t_mesh.rotation, wantedRotation, Time.deltaTime * rotateSpeed);
+                // }
             // t_mesh.rotation = wantedRotation;
         }
         else

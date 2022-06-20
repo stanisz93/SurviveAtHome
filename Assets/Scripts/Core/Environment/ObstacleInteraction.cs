@@ -5,7 +5,8 @@ using System.Linq;
 using DG.Tweening;
 using System;
 
-public enum ObstacleAnimType {slide, vault, climbOverWall, PushDoor};
+public enum ObstacleAnimType {slide, vault, climbOverWall, PushDoor, SlideUnderBed};
+
 // this on default should be all, but in more advance options
 // like when you want to separately apply different tween moze(different ease) on X and Z
 //You could choose different options
@@ -38,8 +39,11 @@ public class ObstacleInteraction : MonoBehaviour
     public float timeScaleWhenPerform = 1f;
     public bool StepDebug = false;
 
+
     //Sometimes interaction with object require only moving to that object and run animation
     public bool hasEndPosition = true;
+
+    public bool RotateTowardEachPoint = false;
 
     
     public bool forwardToObstacle = false;
@@ -52,19 +56,7 @@ public class ObstacleInteraction : MonoBehaviour
     public float ReleaseTime = 1f;
 
 
-//In general this part with force should be move to some
-//extended version of interactive object, like DamagableInteractive etc.
-//if needed
-    public float forceMultiplier = 100f;
 
-    public float pushWhenHit = 3f;
-    public float timeOfPushing = 1f;
-
-    // Time when to stop create effect
-    public float forceEffectTimeDecay = 0.1f;
-
-
-    public ObstacleAnimType animType;
     public Transform edgeStart;
     public Transform edgeEnd;
 
@@ -74,49 +66,30 @@ public class ObstacleInteraction : MonoBehaviour
     private Transform startP;
     private Transform endP; // TODO this is missleading since when you add
     // additional anims its no longer endP
-    private bool isForceApplied = false;
+    private IObstacleInteractable obstacleInteractable;
+
+    private void Start() {
+        obstacleInteractable = GetComponent<IObstacleInteractable>();
+    }
 
     void OnTriggerEnter(Collider other) {
         ObstacleInteractionManager obs = other.GetComponent<ObstacleInteractionManager>();
         if (obs != null)
-        {
             obs.AssignObstacleInteraction(this, true);
-        }
-        Opponent opponent = other.GetComponent<Opponent>();
-        if(opponent != null && isForceApplied)
-        {
-            opponent.GetComponent<MeleeReaction>().InvokeReaction(DamageType.ToTheGround, WeaponType.None, transform, pushWhenHit, timeOfPushing);
-            //opponent.GotPushed();
-        }
     }
     void OnTriggerExit(Collider other) {
         ObstacleInteractionManager obs = other.GetComponent<ObstacleInteractionManager>();
         if (obs != null)
-        {
            obs.AssignObstacleInteraction(this, false);
-        }
     }
 
-    public void ApplyForce(Vector3 force)
+    public ObstacleAnimType GetAnimType()
     {
-        Rigidbody rb = GetComponent<Rigidbody>();
-        if(rb != null)
-        {
-            isForceApplied = true;
-            rb.AddForce(force * forceMultiplier, ForceMode.Impulse);
-            TrailRenderer tr = GetComponentInChildren<TrailRenderer>();
-            tr.enabled = true;
-            StartCoroutine(ForceEffect(tr));
-        }
+        return obstacleInteractable.animType;
     }
 
-    IEnumerator ForceEffect(TrailRenderer tr)
-    {
-        yield return new WaitForSeconds(forceEffectTimeDecay);
-        isForceApplied = false;
-        tr.enabled = false;
+    public void PerformAction(Animator animator, Character character) => obstacleInteractable.PerformAction(animator, character);
 
-    }
 
     bool IsRequirementSatisfied(Condition condition, float value)
     {
@@ -176,7 +149,9 @@ public class ObstacleInteraction : MonoBehaviour
                     pos.obj.position = pos.obj.position + Vector3.Project(closest - pos.obj.position, pos.obj.right);
             }
         }
-        if(Vector3.Distance(posA.position, player.position) < Vector3.Distance(posB.position, player.position))
+        if (posB != null)
+        {
+            if(Vector3.Distance(posA.position, player.position) < Vector3.Distance(posB.position, player.position))
             {
                 startP = posA;
                 endP = posB;
@@ -185,6 +160,11 @@ public class ObstacleInteraction : MonoBehaviour
             {
                 startP = posB;
                 endP = posA;
+            }
+        }
+        else
+            {
+                startP = posA;
             }
     }
 
@@ -214,8 +194,10 @@ public class ObstacleInteraction : MonoBehaviour
   
     }
 
-    public Sequence RunSequence(Transform player)
+    public Sequence RunSequence(Transform player, Transform playerMeshToRotate)
     {
+
+
         Sequence moveSequence = DOTween.Sequence();
         moveSequence.AppendCallback(() => Time.timeScale = timeScaleWhenPerform);
 
@@ -223,7 +205,11 @@ public class ObstacleInteraction : MonoBehaviour
         
         // Not required, just move to StartPoint a could be enough
         if(hasEndPosition)
-            moveSequence.Append(player.DOMove(endP.position, MoveToEndPointTime));
+            {
+                moveSequence.Append(player.DOMove(endP.position, MoveToEndPointTime));
+                if(RotateTowardEachPoint)
+                    moveSequence.Join(playerMeshToRotate.DORotate(Quaternion.LookRotation(endP.forward).eulerAngles, MoveToEndPointTime));
+            }
         if (otherAnims != null)
         {
             foreach(var otherAnim in otherAnims)
@@ -248,6 +234,7 @@ public class ObstacleInteraction : MonoBehaviour
     {
         return endP;
     }
+
 
     // Update is called once per frame
 }

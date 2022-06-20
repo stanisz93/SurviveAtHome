@@ -163,6 +163,8 @@ public enum VisionState {Founded, Suspicious, None};
                 if(!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
                 {
                     visibleTargets.Add(target);
+                    ShapeUtils.DrawLine(transform.position, transform.position + dirToTarget*dstToTarget, Color.yellow);
+        
                 }
             }
         }
