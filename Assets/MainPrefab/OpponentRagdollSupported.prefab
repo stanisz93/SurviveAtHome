@@ -969,7 +969,7 @@ MonoBehaviour:
   walkingSpeed: 0.5
   runningSpeed: 3
   checkingSpeed: 1.5
-  attackMinDist: 1
+  attackMinDist: 1.5
   damageInterval: 0.7
   rotationSpeed: 10
   TrackPlayerPositionInterval: 0.05
@@ -1025,7 +1025,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
+  m_Radius: 0.26
   m_Height: 1.87
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}

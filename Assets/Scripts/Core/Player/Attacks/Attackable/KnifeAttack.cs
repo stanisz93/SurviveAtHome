@@ -57,6 +57,7 @@ public class KnifeAttack : MonoBehaviour, IAttackable, IThrowable
 
 
     private void OnCollisionEnter(Collision other) {
+
         trail.enabled = false;
         Time.timeScale = 1f;
         defendItem.interactCollider.enabled = true;

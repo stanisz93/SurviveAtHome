@@ -138,6 +138,7 @@ public void SetThrowTarget(Opponent opponent)
 {
     if(throwable != null)
     {
+        Physics.IgnoreCollision(defendItem.physicsCollider, opponent.GetComponent<Collider>());
         throwable.SetThrowTarget(opponent.transform.position);
     }
     else
