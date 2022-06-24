@@ -158,33 +158,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 314759e1071e92648b229a7e9d251071, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 1
-      value: 7
-      inSlope: 2.5555556
-      outSlope: 2.5555556
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 10
-      value: 30
-      inSlope: 2.5555556
-      outSlope: 2.5555556
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
   trail: {fileID: 7870866715139999537}
   forceTorqueThrow: 500
-  ThrowSlowDown: 0.2
+  ThrowSlowDown: 1
+  throwForce: 30
   _distanceLeft: 0.6
 --- !u!1 &4665263876838457212
 GameObject:

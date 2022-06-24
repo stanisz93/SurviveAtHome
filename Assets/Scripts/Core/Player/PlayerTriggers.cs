@@ -15,7 +15,7 @@ public class PlayerTriggers : MonoBehaviour
     private PlayerAnimationController playerAnimationController;
     private CharacterMovement characterMovement;
     private Character character;
-    private PlayerInput playerInput;
+    private PlayerController playerInput;
 
     
     public bool dying = false;
@@ -32,13 +32,11 @@ public class PlayerTriggers : MonoBehaviour
     public float currentThrowDistance = minDistance;
     public float throwDistanceSpeed = 5f;
     public float maxHeightOfThrow = 1f;
-    private bool isAimingStarted = false;
     
-    public Canvas ThrowProjectionCanvas;
+    // public Canvas ThrowProjectionCanvas;
 
     public bool isDebugObjOn = false;
-    public Transform debugObj;
-    private Vector3 targetThrowPos;
+    // private Vector3 targetThrowPos;
     AttackTriggersManager attackTriggerManager;
     private PlayerAnimatorEventController eventController;
 
@@ -46,20 +44,21 @@ public class PlayerTriggers : MonoBehaviour
     private HitBonus hitBonus;
     private OpponentMagnet opponentMagnet;
 
+    // private bool isAimingToThrow = false;
+
     // Start is called before the first frame update
     void Start()
     {
         attackTriggerManager = GetComponentInChildren<AttackTriggersManager>();
-        playerInput = GetComponent<PlayerInput>();
+        playerInput = GetComponent<PlayerController>();
         character = GetComponent<Character>();
         playerAnimationController = GetComponent<PlayerAnimationController>(); 
         characterMovement = GetComponent<CharacterMovement>();
         hitBonus = GetComponent<HitBonus>();
 
-        ThrowProjectionCanvas.enabled = false;
+        // ThrowProjectionCanvas.enabled = false;
         eventController = GetComponentInChildren<PlayerAnimatorEventController>();
         opponentMagnet = GetComponentInChildren<OpponentMagnet>();
-        debugObj.gameObject.SetActive(isDebugObjOn);
     }
 
 
@@ -94,68 +93,74 @@ public class PlayerTriggers : MonoBehaviour
 
 
 
-    public void CancelThrow()
-    {
-        ResetThrowState();
-        playerInput.blockMovement = false;
-        playerAnimationController.animator.SetTrigger("CancelAim");
-    }
+    // public void CancelThrow()
+    // {
+    //     ResetThrowState();
+    //     playerInput.blockMovement = false;
+    //     playerAnimationController.animator.SetTrigger("CancelAim");
+    // }
 
-    public void ResetThrowState()
-    {
-        ThrowProjectionCanvas.enabled = false;
-        isAimingStarted = false;
-    }
+    // public void ResetThrowState()
+    // {
+    //     ThrowProjectionCanvas.enabled = false;
+    //     FinishAiming();
+    // }
 
-    public void StartAim()
-    {
-            BlockMovement(true);
-            playerAnimationController.animator.ResetTrigger("AimToThrow");
-            playerAnimationController.animator.ResetTrigger("Throw");
-            playerAnimationController.animator.SetTrigger("PrepareToAim");
-    }
+    // public void StartAim()
+    // {
+    //         // BlockMovement(true);
+    //         playerAnimationController.animator.ResetTrigger("AimToThrow");
+    //         playerAnimationController.animator.ResetTrigger("Throw");
+    //         playerAnimationController.animator.SetTrigger("PrepareToAim");
+    // }
 
-    public Vector3 GetThrowTargetPos()
-    {
-        return targetThrowPos;
-    }
-    public void ContinueAimToThrow()
-    {
-        if(!isAimingStarted)
-        {
-            currentThrowDistance = minDistance;
-            playerAnimationController.animator.SetTrigger("AimToThrow");
-            ThrowProjectionCanvas.enabled = true;
-            isAimingStarted = true;
-        }
-        if(currentThrowDistance < maxThrowDistance)
-            currentThrowDistance += Time.deltaTime * throwDistanceSpeed;
-        else
-            currentThrowDistance = maxThrowDistance;
-        RaycastHit hit;
-        Vector3 aimPosition = throwingHand.position;
+    // public Vector3 GetThrowTargetPos()
+    // {
+    //     return targetThrowPos;
+    // }
+
+    // public void FinishAiming() => isAimingToThrow = false;
+
+    // public IEnumerator ContinueAimToThrow()
+    // { /// THis METHOD WAS USE TO MOVE POINTER OF THROW SO THAT PLAYER COULD THROW ANYWHERE
+    ///I GUEES ITS NOT NEEDED, CHOOSING OPPONENT SHOULD BE ENOUGHT
+    //     Debug.Log("Continue aiming");
+    //     currentThrowDistance = minDistance;
+    //     playerAnimationController.animator.SetTrigger("AimToThrow");
+    //     ThrowProjectionCanvas.enabled = true;
+    //     isAimingToThrow = true;
         
-        aimPosition = new Vector3(aimPosition.x,maxHeightOfThrow, aimPosition.z);
-        Vector3 characterPos = new Vector3(characterMovement.t_mesh.position.x, maxHeightOfThrow, characterMovement.t_mesh.position.z);
-        Vector3 charTarget = characterPos + characterMovement.t_mesh.forward * currentThrowDistance;
-        charTarget = new Vector3(charTarget.x, maxHeightOfThrow, charTarget.z);
-        Vector3 handToTarget = charTarget - aimPosition;
-        float fixedLength = handToTarget.magnitude; //distance from hand to target
-        if (Physics.Raycast(aimPosition, handToTarget.normalized, out hit, fixedLength, ((1 << LayerMask.NameToLayer("Opponents") | (1 << LayerMask.NameToLayer("Obstacles"))))))
-                targetThrowPos = hit.point;
-                // ThrowProjectionCanvas.transform.rotation = Quaternion.LookRotation(hit.normal);
-        else 
-                targetThrowPos = charTarget;
+    //     while(isAimingToThrow)
+    //     {
+    //         if(currentThrowDistance < maxThrowDistance)
+    //             currentThrowDistance += Time.deltaTime * throwDistanceSpeed;
+    //         else
+    //             currentThrowDistance = maxThrowDistance;
+    //         RaycastHit hit;
+    //         Vector3 aimPosition = throwingHand.position;
+            
+    //         aimPosition = new Vector3(aimPosition.x,maxHeightOfThrow, aimPosition.z);
+    //         Vector3 characterPos = new Vector3(characterMovement.t_mesh.position.x, maxHeightOfThrow, characterMovement.t_mesh.position.z);
+    //         Vector3 charTarget = characterPos + characterMovement.t_mesh.forward * currentThrowDistance;
+    //         charTarget = new Vector3(charTarget.x, maxHeightOfThrow, charTarget.z);
+    //         Vector3 handToTarget = charTarget - aimPosition;
+    //         float fixedLength = handToTarget.magnitude; //distance from hand to target
+    //         if (Physics.Raycast(aimPosition, handToTarget.normalized, out hit, fixedLength, ((1 << LayerMask.NameToLayer("Opponents") | (1 << LayerMask.NameToLayer("Obstacles"))))))
+    //                 targetThrowPos = hit.point;
+    //                 // ThrowProjectionCanvas.transform.rotation = Quaternion.LookRotation(hit.normal);
+    //         else 
+    //                 targetThrowPos = charTarget;
 
-    
-        if(isDebugObjOn)
-            debugObj.position = targetThrowPos;
-        ThrowProjectionCanvas.transform.position = targetThrowPos;
-        var t_mesh = characterMovement.t_mesh.position;
-        Vector3 lookPosition = new Vector3(t_mesh.x, targetThrowPos.y, t_mesh.z);
-        ThrowProjectionCanvas.transform.LookAt(lookPosition); //Camera.main.transform.forward);
         
-    }
+    //         if(isDebugObjOn)
+    //             debugObj.position = targetThrowPos;
+    //         ThrowProjectionCanvas.transform.position = targetThrowPos;
+    //         var t_mesh = characterMovement.t_mesh.position;
+    //         Vector3 lookPosition = new Vector3(t_mesh.x, targetThrowPos.y, t_mesh.z);
+    //         ThrowProjectionCanvas.transform.LookAt(lookPosition); //Camera.main.transform.forward);
+    //         yield return null;
+    //     }
+    // }
 
     public IEnumerator LeftBed()
     {

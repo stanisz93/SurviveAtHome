@@ -3,9 +3,9 @@ class MouseUtils
 {
 
 
-    public static Vector3 MousePositon(Camera camera, Transform relativeTo, LayerMask aimLayerMask)
+    public static Vector3 MousePositonRelativeToCamera(Vector2 mousePos, Camera camera, Transform relativeTo, LayerMask aimLayerMask)
     {
-        Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+        Ray ray = camera.ScreenPointToRay(mousePos);
         
         RaycastHit hit;
         

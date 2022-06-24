@@ -100,6 +100,8 @@ public void SetTriggerType(TriggerType triggerType)
     currentTriggerType = triggerType;
 }
 
+public TriggerType GetCurrentTriggerType() => currentTriggerType;
+
 public IAttackable GetDefaultAttackable()
 {
     return defaultAttackable;
@@ -132,38 +134,30 @@ public IAttackable GetAttackable()
     return attackable;
 }
 
-public void ReleaseAttack()
-{   
-    
-
-    if(currentTriggerType == TriggerType.Melee)
-        {   
-
-            attackable.ReleaseAttack();
-            playerTriggers.BlockMovementSeconds(attackable.blockMovement);
-            playerTriggers.ReleaseTriggerAfterSeconds(attackable.releaseTriggerTime);
-            animator.SetTrigger(attackable.meleeAnimName);
-        }
-    else if(currentTriggerType == TriggerType.Distant)
+public void SetThrowTarget(Opponent opponent)
+{
+    if(throwable != null)
     {
-        if(throwable != null)
-            {
-                throwable.ReleaseThrow();
-                animator.SetTrigger(throwable.distantAnimName);
-            }
-        if(attackable != null)
-        {
-            playerTriggers.BlockMovementSeconds(attackable.blockMovement);
-            playerTriggers.ReleaseTriggerAfterSeconds(attackable.releaseTriggerTime);
-        }
-        else
-            Debug.Log("Unexpected. I assume that if weapon is throwable its also attackable!");
-
+        throwable.SetThrowTarget(opponent.transform.position);
     }
     else
-    {
-        Debug.Log("Some inexpected trigger type!");
-    }
+        Debug.Log("You are trying to throw, while this trigger doesn't have throwable");
+}
+
+
+
+public void ReleaseAttack()
+{   
+    attackable.ReleaseAttack();
+    playerTriggers.BlockMovementSeconds(attackable.blockMovement);
+    playerTriggers.ReleaseTriggerAfterSeconds(attackable.releaseTriggerTime);
+    if(currentTriggerType == TriggerType.Melee)
+        animator.SetTrigger(attackable.meleeAnimName);
+    else if(currentTriggerType == TriggerType.Distant)
+        if(throwable != null)
+            animator.SetTrigger(throwable.distantAnimName);
+    else
+        Debug.Log("Unexpected. I assume that if weapon is throwable its also attackable!");
 }
 
 

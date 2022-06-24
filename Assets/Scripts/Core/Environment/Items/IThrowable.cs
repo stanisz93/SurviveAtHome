@@ -11,7 +11,9 @@ public interface IThrowable
 
     //This method is all operation 
     //on player side
-    void ReleaseThrow();
+    // void ReleaseThrow();
+
+    void SetThrowTarget(Vector3 target);
 
     //this operation reffers to object
     //that is throwed// physics

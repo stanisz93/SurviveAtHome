@@ -48,8 +48,4 @@ public class PlayerCollider : MonoBehaviour
         //  gameObject.GetComponent<PlayerTriggers>().BlockMovementSeconds(BlockMovementWhileBump / 10.0f);
 
     }
-    void PlayerStop()
-    {
-        
-    }
 }

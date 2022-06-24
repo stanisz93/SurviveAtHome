@@ -10,7 +10,7 @@ public class AttackTriggersManager : MonoBehaviour, IPlayerActionManager
     private AttackTrigger currentAttackTrigger;
 
     private PlayerTriggers playerTriggers;
-    private PlayerInput playerInput;
+    private PlayerController playerInput;
     private OpponentMagnet opponentMagnet;
 
     private Endurance endurance;
@@ -21,7 +21,7 @@ public class AttackTriggersManager : MonoBehaviour, IPlayerActionManager
     void Start()
     {
         currentAttackTrigger = kickTrigger;
-        playerInput = GetComponentInParent<PlayerInput>();
+        playerInput = GetComponentInParent<PlayerController>();
         playerTriggers = GetComponentInParent<PlayerTriggers>();
         opponentMagnet = GetComponentInChildren<OpponentMagnet>();
         endurance = GetComponentInParent<Endurance>();
@@ -52,7 +52,16 @@ public class AttackTriggersManager : MonoBehaviour, IPlayerActionManager
         {
             if (opponentMagnet.NearestOpponent != null)
             {
-               opponentMagnet.MoveTowardNearestOpponent(currentAttackTrigger.GetDistanceLeft(), magnetMoveDelay);
+                TriggerType currTriggerType = currentAttackTrigger.GetCurrentTriggerType();
+                if(currTriggerType == TriggerType.Melee)
+                    opponentMagnet.MoveTowardNearestOpponent(currentAttackTrigger.GetDistanceLeft(), magnetMoveDelay);
+            else if(currTriggerType == TriggerType.Distant)
+                    {
+                        opponentMagnet.RotateTowardNearestOpponent();
+                        currentAttackTrigger.SetThrowTarget(opponentMagnet.NearestOpponent);
+                    }
+                else
+                    Debug.Log("Unexpected trigger type!");
             }
             currentAttackTrigger.ReleaseAttack();
         }

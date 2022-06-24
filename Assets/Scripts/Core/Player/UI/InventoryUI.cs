@@ -120,6 +120,7 @@ public class InventoryUI : MonoBehaviour
 
     public void LeftInventory()
     {
+        Debug.Log("Left inventory");
         backpack.enabled = false;
 
         ResetUI();

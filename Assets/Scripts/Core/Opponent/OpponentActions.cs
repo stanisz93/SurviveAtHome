@@ -24,7 +24,7 @@ public class OpponentActions : MonoBehaviour
     public float walkingSpeed = 0.3f;
     public float runningSpeed = 3.0f;
     public float checkingSpeed = 1.5f;
-    public float attackMinDist = 1f;
+    public float attackMinDist = 1.2f;
     public float damageInterval = 0.4f;
     public float rotationSpeed = 10f;
     public float TrackPlayerPositionInterval = .05f;
@@ -33,6 +33,8 @@ public class OpponentActions : MonoBehaviour
     public Transform playerSeenHelper; 
 
     public Animator animator;
+
+    public AudioSource pushSound;
     private float stoppingDistance = 0.0f;
     private Transform currentEffectPosition;
     
@@ -60,6 +62,7 @@ public class OpponentActions : MonoBehaviour
 
     void Start() 
     {
+        pushSound.enabled = true;
         agent = GetComponent<NavMeshAgent>();
         agent.stoppingDistance = attackMinDist;
         opponentUtils = GetComponent<OpponentUtils>();
@@ -141,6 +144,7 @@ public class OpponentActions : MonoBehaviour
     {
         agent.speed = 0f;
         taskManager.LockEndOfTask();
+        pushSound.Play();
         OpponentEffects.RunParticleEffect(ParticleEffect.Push, currentEffectPosition.position);
         Character c = sourceOfHit.GetComponentInParent<Character>();
         if(c != null)
@@ -326,11 +330,7 @@ public class OpponentActions : MonoBehaviour
         taskManager.TaskSetToFinish();
     }
     
-    public IEnumerator WalkFollowMousePosition()
-    {   
-        Vector3 mousePosition = opponentUtils.GetMousePosition();
-        yield return WalkTowardCoordinates(mousePosition, 0f, true, false);
-    }
+
 
     public IEnumerator CheckSuspiciousPlace()
     {

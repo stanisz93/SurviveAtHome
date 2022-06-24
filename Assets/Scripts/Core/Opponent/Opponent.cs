@@ -87,11 +87,7 @@ public class Opponent : MonoBehaviour
         bool busy = taskManager.TaskIsEmpty();
         if(taskManager.isOpenForTask)
         {
-            if(Input.GetMouseButtonDown(2))
-            {
-                taskManager.ForceToRun(opponentActions.WalkFollowMousePosition(), 3);
-            }
-            else if (vfov.FoundedObject() && currPriority > 2)
+            if (vfov.FoundedObject() && currPriority > 2)
                 {
                     taskManager.ForceToRun(opponentActions.AttackSequenceTask(vfov.GetPlayerTarget()), 2);
                 }

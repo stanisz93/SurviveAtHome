@@ -17,11 +17,15 @@ public class CrawlUnderObstacle : MonoBehaviour, IObstacleInteractable
         initalPos = particlePos.position;
     }
 
+
     public void PerformAction(Animator animator, Character character)
     {
+        PlayerController pc = character.GetComponent<PlayerController>();
         particlePos.position = initalPos;
         animator.SetTrigger("GoUnderBed");
-        character.SetControlMode(ControllerMode.UnderBed);
+        StartCoroutine(character.BlockPlayerControlForSeconds(2f));
+        pc.TurnOnBedMap();
+        
         character.ResetVelocity();
         character.ToogleKinematic();
         var swooshEffect = Instantiate(pfSwooshEffect, particlePos.position, Quaternion.identity);

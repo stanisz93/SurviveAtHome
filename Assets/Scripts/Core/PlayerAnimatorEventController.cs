@@ -8,7 +8,7 @@ public class PlayerAnimatorEventController : MonoBehaviour
     // Start is called before the first frame update
     public float TrailKickDecay = 0.1f;
     private Animator animator;
-    private PlayerInput playerInput;
+    private PlayerController playerInput;
 
     private TrailRenderer kickTrail;
     private bool isAnimationFinished = false;

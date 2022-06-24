@@ -8,12 +8,14 @@ using System;
 public class OpponentMagnet : MonoBehaviour
 {
     public float ClosestOpponentLookingPeriodCycle = 0.05f;
+
+    public float maxDistanceToMagnetToOpponent = 0.3f;
     public Transform PlayerMesh;
 
     public LayerMask opponentMask;
-    List <Opponent> OpponentsInRadious;
+    List <Transform> OpponentsInRadious;
 
-    public Transform MagnetDebug;
+    public Transform targetBall;
     private Opponent _nearestOpponent;
 
     private Character player;
@@ -26,8 +28,8 @@ public class OpponentMagnet : MonoBehaviour
     private HashSet<Opponent> ToRemove; //Used to recognize those that dies
 
     private void Start() {
-        MagnetDebug.parent = null;
-        OpponentsInRadious = new List<Opponent>();
+        targetBall.parent = null;
+        OpponentsInRadious = new List<Transform>();
         ToRemove = new HashSet<Opponent>();
         obstacleInteractionManager = GetComponentInParent<ObstacleInteractionManager>();
         specialAttacks = GetComponentInParent<SpecialAttacks>();
@@ -39,15 +41,7 @@ public class OpponentMagnet : MonoBehaviour
     void OnTriggerEnter(Collider other) {
         Opponent o = other.GetComponent<Opponent>();
         if(o != null && !ToRemove.Contains(o))
-        {
-            RaycastHit hit;
-            var zombiePos = o.zombieMesh.position;
-            Vector3 direction = chrMvmnt.t_mesh.position - zombiePos;
-            if (!Physics.Raycast(chrMvmnt.t_mesh.position, direction, out hit, 5f, 1 << LayerMask.NameToLayer("Obstacles")))
-            {
-                OpponentsInRadious.Add(o);
-            }
-        }
+            OpponentsInRadious.Add(o.zombieMesh);
     }
     private void OnTriggerExit(Collider other) {
         Opponent o = other.GetComponent<Opponent>();
@@ -55,16 +49,16 @@ public class OpponentMagnet : MonoBehaviour
         {
             if(specialAttacks.isTarget(o));
                 specialAttacks.RemoveTarget();
-            OpponentsInRadious.Remove(o);
+            OpponentsInRadious.Remove(o.zombieMesh);
         }
     }
 
     public void RemoveDiedOpponent(Opponent opponent)
 {       _nearestOpponent = null;
         ToRemove.Add(opponent);
-        if(OpponentsInRadious.Contains(opponent))
+        if(OpponentsInRadious.Contains(opponent.zombieMesh))
         {
-            OpponentsInRadious.Remove(opponent);
+            OpponentsInRadious.Remove(opponent.zombieMesh);
         }
     }
     
@@ -73,40 +67,93 @@ public class OpponentMagnet : MonoBehaviour
 
     // hERE I SHOULD TRY TO TAKE FORWARD OF MESH AND FIND THE OPPONENT THAT PLAYER IS THE MOST DIRECTED TO
     //MAYBE USING THIS YT MOVIE WITH BATMAN
-    Opponent FindNearestOpponent(float dotThreshold = 0.4f)
+    
+    List<Transform> PrepareFinalCandidates()
     {
-        
-        if (OpponentsInRadious.Count != 0)
+        List<Transform> finalCandidates = new List<Transform>();
+        foreach(Transform o in OpponentsInRadious)
+            {
+                var zombiePos = o.position;
+                Vector3 direction = chrMvmnt.t_mesh.position - zombiePos;
+                if (!Physics.Raycast(chrMvmnt.t_mesh.position, direction.normalized, direction.magnitude, 1 << LayerMask.NameToLayer("Obstacles")))
+                    finalCandidates.Add(o);
+            }
+        return finalCandidates;
+
+    }
+    Opponent FindNearestOpponent()
+    {
+
+        Vector3 stickInput = player.GetTargetInput();
+        List<Transform> finalCandidates = PrepareFinalCandidates();
+        if (finalCandidates.Count != 0 && stickInput.magnitude > 0)
         { 
-            var filtered = OpponentsInRadious.Select(n => new {n, best = Vector3.Dot(chrMvmnt.Velocity.normalized, (new Vector3(n.transform.position.x, 0f, n.transform.position.z) - PlayerMesh.position).normalized)})
-                            .OrderBy( p => p.best)
-                            .Where(p => p.best >= dotThreshold)
+
+             var filtered = finalCandidates.Select(n => new {n, best = Vector3.Dot(stickInput, (new Vector3(n.position.x, PlayerMesh.position.y, n.position.z) - PlayerMesh.position).normalized)})
+                            .OrderByDescending( p => p.best)
+                            // .Where(p => p.best >= dotThreshold) //now we don't care about it
                             .FirstOrDefault();
             if(filtered == null)
             {
-                MagnetDebug.gameObject.SetActive(false);
+                targetBall.gameObject.SetActive(false);
                 return null;
             }
             else
             {
-                Opponent closest = filtered.n;
-                MagnetDebug.gameObject.SetActive(true);
-                MagnetDebug.position = transform.position + (new Vector3(closest.transform.position.x, transform.position.y, closest.transform.position.z) - transform.position);
+                Opponent closest = filtered.n.GetComponentInParent<Opponent>();
+                targetBall.gameObject.SetActive(true);
+                closest.GetComponent<CurrentTarget>().SetOpponentAsTarget(targetBall);
                 return closest;
             }
-        }
+}
         else
         {
-            MagnetDebug.gameObject.SetActive(false);
+            Debug.Log("Noone in area");
+            targetBall.gameObject.SetActive(false);
             return null;
         }
     }
 
 
+    // Opponent AlternativeBestFit()
+    // {
+    //     RaycastHit hit;
+
+    //     // Cast a sphere wrapping character controller 10 meters forward
+    //     // to see if it is about to hit anything.
+    //     if(player.GetTargetInput().magnitude == 0)
+    //         {
+    //             return null;
+    //             targetBall.gameObject.SetActive(false);
+    //         }
+
+    //     Debug.Log($"Stick: {player.GetTargetInput()}");
+    //     if (Physics.SphereCast(player.GetHeadPosition(), 3f, player.GetTargetInput(), out hit, 10,  1 << LayerMask.NameToLayer("Opponents")))
+    //     {
+    //         Debug.Log($"Collide wiht: {hit.collider.transform}");
+    //         Opponent o = hit.collider.transform.GetComponent<Opponent>();
+    //         if(o != null)
+    //         {
+                
+    //             targetBall.gameObject.SetActive(true);
+    //             o.GetComponent<CurrentTarget>().SetOpponentAsTarget(targetBall);
+    //             return o;
+    //         }
+    //         else
+    //             targetBall.gameObject.SetActive(false);
+    //     }
+    //     else
+    //         targetBall.gameObject.SetActive(false);
+    //     return null;
+    // }
+
+    float DistanceFromPlayer() => Vector3.Distance(NearestOpponent.zombieMesh.position, PlayerMesh.position);
+
+
     public void MoveTowardNearestOpponent(float distLeft=0.5f,float moveDelay=0.4f)
     {
 
-        if (NearestOpponent != null)
+        if (NearestOpponent != null && DistanceFromPlayer() <= maxDistanceToMagnetToOpponent)
         {
             obstacleInteractionManager.InterruptMovementSequence();
             Vector3 movementDir = NearestOpponent.zombieMesh.position - PlayerMesh.position;
@@ -119,6 +166,13 @@ public class OpponentMagnet : MonoBehaviour
                 
             seq.Join(PlayerMesh.transform.DORotate(rot, .3f));
         }
+    }
+
+    public void RotateTowardNearestOpponent(float delay=0.3f)
+    {
+        Vector3 movementDir = NearestOpponent.zombieMesh.position - PlayerMesh.position;
+        Vector3 rot = Quaternion.LookRotation(movementDir.normalized).eulerAngles;
+        PlayerMesh.transform.DORotate(rot, delay);
     }
 
 

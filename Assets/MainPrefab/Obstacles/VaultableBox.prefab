@@ -250,6 +250,7 @@ MonoBehaviour:
   timeScaleWhenPerform: 1
   StepDebug: 0
   hasEndPosition: 1
+  RotateTowardEachPoint: 0
   forwardToObstacle: 1
   posA: {fileID: 4253359584987284764}
   posB: {fileID: 4253359583537985964}
@@ -264,7 +265,7 @@ MonoBehaviour:
     value: 3
   - conditionType: 1
     param: 1
-    value: 0.7
+    value: 0.3
   otherAnims: []
 --- !u!114 &5730081564905607660
 MonoBehaviour:

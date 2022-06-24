@@ -18,7 +18,6 @@ public class KnifeAttack : MonoBehaviour, IAttackable, IThrowable
 
     public string distantAnimName { get {return "Throw";}}
 
-    public AnimationCurve forceCurve;
     public TrailRenderer trail;
     
     [SerializeField]
@@ -27,6 +26,8 @@ public class KnifeAttack : MonoBehaviour, IAttackable, IThrowable
     [SerializeField]
     private float ThrowSlowDown = 1.0f;
 
+    [SerializeField]
+    private float throwForce; 
 
     [SerializeField]
     private float _distanceLeft = 0.2f;
@@ -39,10 +40,10 @@ public class KnifeAttack : MonoBehaviour, IAttackable, IThrowable
     private StressReceiver stressReceiver;
     private Rigidbody rb;
 
-    private PlayerTriggers playerTriggers;
+    private Character player;
 
-    private float distance; 
-    private Vector3 targetThrowPos;
+
+    private Vector3 targetThrowPos = Vector3.zero;
 
     void Start()
     {
@@ -51,7 +52,7 @@ public class KnifeAttack : MonoBehaviour, IAttackable, IThrowable
         trail.enabled = false;
         stressReceiver = Camera.main.GetComponent<StressReceiver>();
         rb = GetComponentInParent<Rigidbody>();
-        playerTriggers = GameObject.FindWithTag("Player").gameObject.GetComponent<PlayerTriggers>();
+        player = GameObject.FindWithTag("Player").gameObject.GetComponent<Character>();
     }
 
 
@@ -76,16 +77,12 @@ public class KnifeAttack : MonoBehaviour, IAttackable, IThrowable
                 
     }
 
-    void SetThrowTarget(Vector3 target)
+    public void SetThrowTarget(Vector3 target)
     {
         targetThrowPos = target;
 
     }
 
-    void SetDistance(float throwDistance)
-    {
-        distance = throwDistance; 
-    }
 
 
     public void TurnOnTrail()
@@ -98,7 +95,8 @@ public class KnifeAttack : MonoBehaviour, IAttackable, IThrowable
     {
 
             Vector3 itemPos = defendItem.transform.position;
-            Vector3 targetPos = itemPos + (targetThrowPos - itemPos);
+            if(targetThrowPos == Vector3.zero)
+                targetThrowPos = player.GetCharacterMeshTransform().position + player.GetForwardDirection() * 10f;
             Time.timeScale = ThrowSlowDown;
             // attackTrigger.GetComponent<Collider>().enabled = true;
             TurnOnTrail();
@@ -109,22 +107,21 @@ public class KnifeAttack : MonoBehaviour, IAttackable, IThrowable
             // hasCollideWhileThrow = false;
             defendItem.physicsCollider.enabled = true;
             Vector3 itemModPos = new Vector3(defendItem.transform.position.x, targetThrowPos.y, defendItem.transform.position.z);
-            Vector3 force = (targetThrowPos - itemModPos).normalized * forceCurve.Evaluate(distance);
+            Vector3 force = (targetThrowPos - itemModPos).normalized * throwForce;
             Debug.Log($"Force: {force}");
             rb.AddForce(force, ForceMode.Impulse);
-            rb.AddTorque(transform.forward * forceTorqueThrow);
+            rb.AddTorque(transform.forward * forceTorqueThrow, ForceMode.VelocityChange);
+            targetThrowPos = Vector3.zero;
     }
 
     // Update is called once per frame
     public void ReleaseAttack()
     {
-       defendItem.ChangeWeaponPositionToAttack();
+        if(triggerType == TriggerType.Melee)
+            defendItem.ChangeWeaponPositionToAttack();
+        else if(triggerType == TriggerType.Distant)
+            Throw();
     }
 
-    public void ReleaseThrow()
-    {
-        SetThrowTarget(playerTriggers.GetThrowTargetPos());
-        SetDistance(playerTriggers.currentThrowDistance); 
-    }
 
 }

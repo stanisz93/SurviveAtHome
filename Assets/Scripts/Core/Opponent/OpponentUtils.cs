@@ -13,18 +13,6 @@ private void Awake() {
     explorationSquare = GameObject.FindWithTag("ExplorationArea").GetComponent<ExplorationSquare>();
 }
 
-    public Vector3 GetMousePosition()
-    {   Vector3 result = new Vector3(0, 0, 0);
-        RaycastHit hit;   
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100)) {
-            result = hit.point;   
-        }
-        return result;
-        
-    }
-
-
-
     
     public bool RandomPoint(Vector3 randomPoint, out Vector3 result, int trials=30)
     {   

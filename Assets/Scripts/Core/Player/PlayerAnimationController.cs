@@ -20,7 +20,7 @@ public class PlayerAnimationController : MonoBehaviour
     private Character character;
     private CharacterMovement chrMovement;
     private LayerInvoker layerInvoker;
-    private PlayerInput plrInput;
+    private PlayerController plrInput;
     private CapsuleCollider collider;
     private bool isHitAnimLaunch = false;
     private PlayerTriggers  plrTrigger;

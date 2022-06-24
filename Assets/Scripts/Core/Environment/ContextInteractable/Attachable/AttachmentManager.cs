@@ -24,6 +24,7 @@ public class AttachmentManager: MonoBehaviour
     private bool setTrapAllow = false;
     private Transform player; 
     private Camera mainCamera;
+    private PlayerController playerInput;
 
     private void OnEnable() {
         // ResetAttachmentProcess();
@@ -43,36 +44,37 @@ public class AttachmentManager: MonoBehaviour
             mainCamera = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
             pointA = Instantiate(pfAttacker, Vector3.zero, Quaternion.identity);
             pointB = Instantiate(pfAttacker, Vector3.zero, Quaternion.identity);
+            playerInput = GetComponent<PlayerController>();
     }
 
 
 
-    public void CastSetTrapPoint()
-    {
-        RaycastHit hit;
-        Vector3 mouseToPlayerDir = MouseUtils.MousePositon(mainCamera, player, TerrainMask);
-        if (Physics.Raycast(player.position, mouseToPlayerDir, out hit, 5f, TrapDisturbMask))
-        {
-            currentAttachable = hit.collider.gameObject.GetComponent<IAttachable>();
-            if(currentAttachable != null)
-            {
-                if(!currentPoint.gameObject.active)
-                    currentPoint.gameObject.SetActive(true);
-                plantingOnePartAllow = true;
-                Debug.DrawRay(player.position, player.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
-                currentPoint.position = hit.point;
-                currentPoint.position = new Vector3(currentPoint.position.x+ hit.normal.x * 0.1f, 0.5f, currentPoint.position.z + hit.normal.z * 0.1f);
-            }
-        }
-        else
-            {
-                currentAttachable = null;
-                plantingOnePartAllow = false;
-                if(currentPoint.gameObject.active)
-                    currentPoint.gameObject.SetActive(false);
+    // public void CastSetTrapPoint()
+    // {
+    //     RaycastHit hit;
+    //     Vector3 mouseToPlayerDir = MouseUtils.MousePositonRelativeToCamera(mainCamera, player, TerrainMask);
+    //     if (Physics.Raycast(player.position, mouseToPlayerDir, out hit, 5f, TrapDisturbMask))
+    //     {
+    //         currentAttachable = hit.collider.gameObject.GetComponent<IAttachable>();
+    //         if(currentAttachable != null)
+    //         {
+    //             if(!currentPoint.gameObject.active)
+    //                 currentPoint.gameObject.SetActive(true);
+    //             plantingOnePartAllow = true;
+    //             Debug.DrawRay(player.position, player.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+    //             currentPoint.position = hit.point;
+    //             currentPoint.position = new Vector3(currentPoint.position.x+ hit.normal.x * 0.1f, 0.5f, currentPoint.position.z + hit.normal.z * 0.1f);
+    //         }
+    //     }
+    //     else
+    //         {
+    //             currentAttachable = null;
+    //             plantingOnePartAllow = false;
+    //             if(currentPoint.gameObject.active)
+    //                 currentPoint.gameObject.SetActive(false);
 
-            }
-    }
+    //         }
+    // }
 
     public bool AttachFirstPoint()
     {
@@ -118,7 +120,7 @@ public class AttachmentManager: MonoBehaviour
 
     private void Update() 
     {
-        CastSetTrapPoint();
+        // CastSetTrapPoint();
         if(currentPoint == pointB)
         { 
             Color color;

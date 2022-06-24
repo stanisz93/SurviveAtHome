@@ -36,14 +36,14 @@ public class Character : MonoBehaviour
 
     private Inventory Inventory;
 
-    private Vector3 currrentMouseDirection {get => MouseUtils.MousePositon(mainCamera, characterMovement.t_mesh, terrainMask);}
-
-    private PlayerInput playerInput;
+    private PlayerController playerController;
     private HitBonus bonus;
     private Endurance endurance;
 
     private ObstacleInteractionManager obstManager;
     private Coroutine interruptionCoroutine;
+
+    private Vector3 targetDirection;
 
     
 
@@ -64,7 +64,7 @@ public class Character : MonoBehaviour
         health.OnDamageTake += healthBar.ReduceValue;
         health.OnDamageTake += TakeDamageEffect;
         health.OnDie += playerTriggers.Die;
-        playerInput = GetComponent<PlayerInput>();
+        playerController = GetComponent<PlayerController>();
         obstManager = GetComponent<ObstacleInteractionManager>();
         }
 
@@ -72,7 +72,6 @@ public class Character : MonoBehaviour
 
     public Transform GetCurrentObstacle() => obstManager.GetCurrentObstacle();
 
-    public void SetControlMode(ControllerMode mode) => playerInput.SetControllMode(mode);
 
     public void ResetPlayer()
     {
@@ -149,34 +148,34 @@ public class Character : MonoBehaviour
 
     }
 
-    public Opponent GetLatestAttacker()
-    {
-        return latestAttacker;
-    }
+    // public Opponent GetLatestAttacker()
+    // {
+    //     return latestAttacker;
+    // }
 
 
     private void Update() {
         // ShapeUtils.DrawLine(characterMovement.t_mesh.transform.position, characterMovement.t_mesh.transform.position + characterMovement.t_mesh.forward, Color.red);
         var currPos = characterMovement.t_mesh.transform.position;
-        ShapeUtils.DrawLine(currPos, currPos + characterMovement.t_mesh.transform.forward, Color.red);
-        ShapeUtils.DrawLine(currPos, currPos + characterMovement.Velocity, Color.yellow);
+        // ShapeUtils.DrawLine(currPos, currPos + characterMovement.t_mesh.transform.forward, Color.red);
+        // ShapeUtils.DrawLine(currPos, currPos + characterMovement.Velocity, Color.yellow);
         
     }
 
-    private Vector3 GetVectorRelativeToCamera(float forward, float right)
+    public Vector3 GetVectorRelativeToCamera(float forward, float right)
     {
         Vector3 CamFwd = mainCamera.transform.forward;
         Vector3 CamRight = mainCamera.transform.right;
         Vector3 translation = forward * mainCamera.transform.forward;
         translation += right * mainCamera.transform.right;
         translation.y = 0f;
-        Vector3 velocity = Vector3.zero;
+        Vector3 _velocity = Vector3.zero;
         if (translation.magnitude > 0)
         {
-            velocity = translation;
+            _velocity = translation;
         }
 
-        return velocity.normalized;
+        return _velocity.normalized;
     }
 
     public void ToogleKinematic()
@@ -188,6 +187,14 @@ public class Character : MonoBehaviour
     {
         playerTriggers.BlockTrigger();
         playerTriggers.BlockMovement();
+    }
+
+
+    public IEnumerator BlockPlayerControlForSeconds(float delay)
+    {
+        BlockPlayerControl();
+        yield return new WaitForSeconds(delay);
+        playerTriggers.ReleasePlayerControl();
     }
 
 
@@ -204,16 +211,14 @@ public class Character : MonoBehaviour
 
     public void AddMovementInput(float forward, float right)
     {
-        var mouseMovement = new Vector3(Input.GetAxis("Mouse X"), 0f, Input.GetAxis("Mouse Y"));
-        // if(Input.GetMouseButton(1))
-        // //maybe worth to use here Slerp instead of sudden rotation
-        //     SnapTowardOpponent();
-        // var localVelocity = GetVectorRelativeToCamera(forward, right);
-        // if(opponentFocus != null)
-        //     RotateTowardSnappedOpponent();
         Vector3 movementRelativeToCamera = GetVectorRelativeToCamera(forward, right);
 
         characterMovement.Velocity = movementRelativeToCamera;
+    }
+
+    public void AddTargetInput(float forward, float right)
+    {
+        targetDirection = GetVectorRelativeToCamera(forward, right);
     }
 
     // void RotateTowardSnappedOpponent()
@@ -234,24 +239,8 @@ public class Character : MonoBehaviour
     }
 
 
-    void SnapTowardOpponent()
-    {
-            RaycastHit hit;
-            var headPosition = transform.position;
-            headPosition = new Vector3(headPosition.x, 0.5f, headPosition.z);
-            if (Physics.Raycast(headPosition, currrentMouseDirection, out hit, 5f, opponentSnapMask))
-            {
-                DebugBall.gameObject.SetActive(true);
-                opponentFocus = hit.transform;
-                DebugBall.position = new Vector3(opponentFocus.transform.position.x, DebugBall.position.y, opponentFocus.transform.position.z);
-                DebugBall.parent = opponentFocus;
-            }
-            else
-            {
-                DebugBall.gameObject.SetActive(false);
-                opponentFocus = null;
-            }
-    }
+    public Vector3 GetTargetInput() => targetDirection;
+
     public float GetVelocityMagnitude()
     {
         // Debug.Log(characterMovement.Velocity.magnitude);
@@ -278,7 +267,12 @@ public class Character : MonoBehaviour
 
     public void SetToRun(){characterMovement.SetMovementMode(MovementMode.Running);}
 
-    public void SetToCrounch(){characterMovement.SetMovementMode(MovementMode.Crouching);}
+    public void ToggleCrouch(){
+        if(characterMovement.GetMovementMode() == MovementMode.Crouching)
+            SetToWalk();
+        else
+            characterMovement.SetMovementMode(MovementMode.Crouching);
+        }
     public void SetToWalk(){characterMovement.SetMovementMode(MovementMode.Walking);}
 
 }
