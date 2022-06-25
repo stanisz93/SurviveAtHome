@@ -108,7 +108,6 @@ public class OpponentMagnet : MonoBehaviour
 }
         else
         {
-            Debug.Log("Noone in area");
             targetBall.gameObject.SetActive(false);
             return null;
         }
@@ -180,6 +179,7 @@ public class OpponentMagnet : MonoBehaviour
     {
         while(true)
             {
+                // Debug.Log($"Opponent radious size: {OpponentsInRadious.Count}");
                 // AlternativeNearest();
                 // yield return new WaitForSeconds(ClosestOpponentLookingPeriodCycle);
                 _nearestOpponent = FindNearestOpponent();
