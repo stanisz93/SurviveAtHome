@@ -164,7 +164,7 @@ public class PlayerTriggers : MonoBehaviour
 
     public IEnumerator LeftBed()
     {
-        // BlockPlayerControl();
+        BlockPlayerControl();
         playerAnimationController.animator.SetTrigger("GetOutOfBed");
         Sequence moveSequence = DOTween.Sequence(); 
         Transform bed = character.GetCurrentObstacle();

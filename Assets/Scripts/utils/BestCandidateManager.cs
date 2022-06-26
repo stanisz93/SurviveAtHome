@@ -7,11 +7,15 @@ public abstract class BestCandidateManager: MonoBehaviour
 {
     // Start is called before the first frame update
     public Transform t_mesh; // needed for proper direction
+
     private Character character;
     public bool debugDistance=false;
 
     List <Transform> PossibleToPicked; 
     protected Transform bestOption;
+
+    Outline currentOutlined;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -31,10 +35,7 @@ public abstract class BestCandidateManager: MonoBehaviour
 
     public virtual Transform GetBestOption()
     {
-        if(bestOption != null)
-            return bestOption;
-        else 
-            return null;
+        return bestOption;
     }
 
     public bool ExistInList(Transform obj)
@@ -62,12 +63,34 @@ public abstract class BestCandidateManager: MonoBehaviour
             }
         }
         int size = PreprocessL.Count;
+        Transform potentialOption;
         if(size == 0)
-            bestOption = null;
+            potentialOption = null;
         else if(size == 1)
-            bestOption = PreprocessL[0];
+            potentialOption = PreprocessL[0];
         else
-            bestOption = PreprocessL.Aggregate((i1,i2) => GetRelativeDirection(i1) > GetRelativeDirection(i2) ? i1 : i2);
+            potentialOption = PreprocessL.Aggregate((i1,i2) => GetRelativeDirection(i1) > GetRelativeDirection(i2) ? i1 : i2);
+        
+        if(potentialOption != null)
+            {
+                if(potentialOption != bestOption)
+                {   
+                    if(bestOption != null)
+                        bestOption.GetComponent<Outline>().enabled = false;
+                    bestOption = potentialOption;
+                    bestOption.GetComponent<Outline>().enabled = true;
+                }
+
+            }
+        else
+            {
+                if(bestOption != null)
+                {
+                    bestOption.GetComponent<Outline>().enabled = false;
+                    bestOption = null;
+                }
+            }
+
         if(debugDistance && size > 1)
         {
             Debug.Log($"Best current option: {bestOption}");
@@ -79,7 +102,7 @@ public abstract class BestCandidateManager: MonoBehaviour
         while(true)
         {
             SetBestOption();
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.1f);
         }
     }
     

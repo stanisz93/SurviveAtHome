@@ -34,6 +34,8 @@ public class OpponentActions : MonoBehaviour
 
     public Animator animator;
 
+    public AttackPlayerAlert attackAlert;
+
     public AudioSource pushSound;
     private float stoppingDistance = 0.0f;
     private Transform currentEffectPosition;
@@ -247,6 +249,7 @@ public class OpponentActions : MonoBehaviour
         else if(vfov.FoundedObject())
         {   
             yield return RotateTowardPlayer(player);
+            yield return attackAlert.TurnOnAlertBeforeAttack();
             nextAttack = true;
             if(ReachPlayerRange(player.position))
             {

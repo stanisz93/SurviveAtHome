@@ -23,6 +23,8 @@ public class ItemPickupManager: BestCandidateManager
                 if(collectible != null)
                 {
                     collectible.Collect();
+
+                    /// HERE get outline and disable!
                     return true;
                     
                 }

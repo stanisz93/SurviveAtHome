@@ -35,6 +35,7 @@ public WeaponType weaponType;
     private Action OnDetachFromPlayer;
 
     private AttackTrigger attackTrigger;
+
             
     
 
@@ -50,6 +51,9 @@ public WeaponType weaponType;
     private PlayerTriggers playerTriggers;
     
     private void Awake() {
+
+        var spawnManager = GameObject.FindWithTag("SpawnManager").GetComponent<SpawnManager>();
+        spawnManager.AddOutlineToCollectObject(this);
         endurance = initialEndurance;
         var plr = GameObject.FindWithTag("Player");
         bonus = plr.GetComponent<HitBonus>();

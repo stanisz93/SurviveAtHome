@@ -19,7 +19,7 @@ public class SpoonItem : MonoBehaviour, ICollectible
         if(other.transform.tag == "Player")
         {
             var itemPickuper = other.gameObject.GetComponent<ItemPickupManager>(); /// Here 
-            itemPickuper.AddPotentialObject(this.transform);
+            itemPickuper.AddPotentialObject(transform);
         }
     }
     public  void OnTriggerExit(Collider other) {

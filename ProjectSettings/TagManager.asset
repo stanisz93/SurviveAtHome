@@ -23,8 +23,8 @@ TagManager:
   - BeHearable
   - SnapPlayer
   - PostProcessing
-  - 
-  - 
+  - Mask
+  - SeeThrough
   - 
   - 
   - 

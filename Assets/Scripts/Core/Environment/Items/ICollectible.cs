@@ -13,6 +13,7 @@ public interface ICollectible
 
     Sprite GetImage();
 
+
     Action <ICollectible> OnPickup {get; set;}
     Transform transform {get;}
     GameObject gameObject {get;}
