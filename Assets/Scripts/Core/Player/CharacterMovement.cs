@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum MovementMode {Walking, Running, Crouching, Staying};
+public enum MovementMode {Walking, Running, Crouching, Staying, Fight};
 public enum FightMode {Default, ReceiveDamage};
 public enum WeaponType {WoddenStick, Knife, None};
 
@@ -21,6 +21,8 @@ public class CharacterMovement : MonoBehaviour
     private float RunBackwardSpeed = 2f;
     [SerializeField]
     private float walkingSideSpeed = 1.5f;
+    [SerializeField]
+    private float fightSpeed = 2f;
 
 
 
@@ -43,7 +45,8 @@ public class CharacterMovement : MonoBehaviour
     {
         rigidbody = GetComponent<Rigidbody>();
         character = GetComponent<Character>();
-        SetMovementMode(MovementMode.Walking);
+        //SetMovementMode(MovementMode.Walking);
+        SetMovementMode(MovementMode.Fight);
         opponentMagnet = GetComponentInChildren<OpponentMagnet>();
     }
     
@@ -66,7 +69,7 @@ public class CharacterMovement : MonoBehaviour
         // 
         if (velocity.magnitude > 0f)
         {  
-               rigidbody.velocity =  new Vector3(velocity.normalized.x * smoothSpeed, rigidbody.velocity.y, velocity.normalized.z * smoothSpeed);
+               rigidbody.velocity = new Vector3(velocity.normalized.x * smoothSpeed, rigidbody.velocity.y, velocity.normalized.z * smoothSpeed);
 
                 // rigidbody.velocity = new Vector3(normVel.x * smoothSpeed.x, rigidbody.velocity.y, normVel.y * smoothSpeed.y);
 
@@ -84,8 +87,20 @@ public class CharacterMovement : MonoBehaviour
                 // }
                 // else
                 // {
-                Quaternion wantedRotation = Quaternion.LookRotation(rigidbody.velocity);
-                t_mesh.rotation = Quaternion.Slerp(t_mesh.rotation, wantedRotation, Time.deltaTime * rotateSpeed);
+                if(opponentMagnet.NearestOpponent != null && character.IsFightMode())
+                {
+
+                    Vector3 movementDir = opponentMagnet.NearestOpponent.zombieMesh.position - t_mesh.position;
+                    Quaternion rot = Quaternion.LookRotation(movementDir.normalized);
+                    t_mesh.rotation = Quaternion.Slerp(t_mesh.rotation, rot, Time.deltaTime * rotateSpeed);
+                    // t_mesh.rotation = rot;
+       
+                }
+                else
+                {   
+                    Quaternion wantedRotation = Quaternion.LookRotation(rigidbody.velocity);
+                    t_mesh.rotation = Quaternion.Slerp(t_mesh.rotation, wantedRotation, Time.deltaTime * rotateSpeed);
+                }
                 
                 // }
         }
@@ -96,7 +111,8 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
-    public void SetFightMode(FightMode mode) { fightMode = mode;}
+    public void SetFightMode(FightMode mode) {
+        fightMode = mode;}
     public void SetHoldMode(WeaponType mode) { holdMode = mode;}
     public FightMode GetFightMode() {return fightMode;}
     public WeaponType GetHoldMode() {return holdMode;}
@@ -120,6 +136,11 @@ public class CharacterMovement : MonoBehaviour
             case MovementMode.Crouching:
             {
                 maxSpeed = 1f;
+                break;
+            }
+            case MovementMode.Fight:
+            {
+                maxSpeed = fightSpeed;
                 break;
             }
             

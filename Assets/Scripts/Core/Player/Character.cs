@@ -24,7 +24,7 @@ public class Character : MonoBehaviour
     public Transform head;
     public Transform opponentFocus = null;
     private Health health;
-
+    public Animator animator;
     private PlayerTriggers playerTriggers;
     private Opponent latestAttacker;
 
@@ -44,6 +44,12 @@ public class Character : MonoBehaviour
     private Coroutine interruptionCoroutine;
 
     private Vector3 targetDirection;
+    private OpponentMagnet opponentMagnet;
+
+    private bool isFightModeOn = false;
+    private Coroutine fightCoroutine;
+
+
 
     
 
@@ -66,12 +72,14 @@ public class Character : MonoBehaviour
         health.OnDie += playerTriggers.Die;
         playerController = GetComponent<PlayerController>();
         obstManager = GetComponent<ObstacleInteractionManager>();
+        opponentMagnet = GetComponentInChildren<OpponentMagnet>();
         }
 
     public void ResetVelocity() => characterMovement.ResetVelocity();
 
     public Transform GetCurrentObstacle() => obstManager.GetCurrentObstacle();
 
+    public bool IsFightMode() => isFightModeOn;
 
     public void ResetPlayer()
     {
@@ -89,6 +97,20 @@ public class Character : MonoBehaviour
     {
         return playerTriggers.dying;
     }
+
+
+void SetToFightMode()
+{
+    isFightModeOn = true;
+    animator.SetFloat("FightMode", 1f);
+}
+
+public void SetToDefaultMovement()
+    {
+        isFightModeOn = false;
+        animator.SetFloat("FightMode", 0f);
+    }
+
 
     IEnumerator TurnOnInteruptionAfter(TriggerAction delayedFun, OnConditionSatisfiedToInterrupt satisfier)
     //very specific function used to allow for interruption but after specific time
@@ -197,11 +219,23 @@ public class Character : MonoBehaviour
         playerTriggers.ReleasePlayerControl();
     }
 
+    IEnumerator FightModeForSeconds(float delay)
+    {
+            SetToFightMode();
+            yield return new WaitForSeconds(delay);
+            SetToDefaultMovement();
+    }
 
+    public void TryToRunFightMode()
+    {
+        if(fightCoroutine != null)
+            StopCoroutine(fightCoroutine);
+        fightCoroutine = StartCoroutine(FightModeForSeconds(5f));
+    }
 
     public void TakeDamageEffect(int damage)
     {
-        SetFightmode(FightMode.ReceiveDamage);
+        TryToRunFightMode();
         if(bonus.hitCounts > 0)
             bonus.ResetCounts();
         var bloodEffect = Instantiate(pfBloodEffect, bloodEffectPos.position, bloodEffectPos.rotation);
@@ -254,10 +288,24 @@ public class Character : MonoBehaviour
 
     public Transform GetCharacterMeshTransform() => characterMovement.t_mesh;
 
-    public Vector3 GetVelocityVector()
+    public Vector3 GetVelocityDirection()
     {
-        return characterMovement.Velocity;
-    } 
+        return characterMovement.Velocity.normalized;
+    }
+
+    public Vector3 GetDirectionWithRespectToOpponent() 
+    {
+        if(opponentMagnet.NearestOpponent != null)
+            // {
+            //     Vector3 translation = forward * mainCamera.transform.forward;
+            //     translation += right * mainCamera.transform.right;
+            //     translation.y = 0f;
+            return Vector3.Scale(opponentMagnet.DirectionToOpponent(), characterMovement.Velocity.normalized);
+            // }
+            // return characterMovement.Velocity.normalized;//opponentMagnet.DirectionToOpponent() - characterMovement.Velocity.normalized;
+        else
+            return characterMovement.Velocity.normalized;
+    }
 
     public FightMode GetFightMode(){return characterMovement.GetFightMode();}
 
@@ -265,7 +313,9 @@ public class Character : MonoBehaviour
 
     public void SetFightmode(FightMode mode){characterMovement.SetFightMode(mode); }
 
-    public void SetToRun(){characterMovement.SetMovementMode(MovementMode.Running);}
+    public void SetToRun(){
+        SetToDefaultMovement();
+        characterMovement.SetMovementMode(MovementMode.Running);}
 
     public void ToggleCrouch(){
         if(characterMovement.GetMovementMode() == MovementMode.Crouching)
@@ -273,6 +323,6 @@ public class Character : MonoBehaviour
         else
             characterMovement.SetMovementMode(MovementMode.Crouching);
         }
-    public void SetToWalk(){characterMovement.SetMovementMode(MovementMode.Walking);}
+    public void SetToWalk(){characterMovement.SetMovementMode(MovementMode.Fight);}
 
 }

@@ -109,7 +109,7 @@ public class ObstacleInteraction : MonoBehaviour
             {
                 ParamToBeSatisfied.Velocity => IsRequirementSatisfied(condition, player.GetVelocityMagnitude()),
                 ParamToBeSatisfied.DotProdBetweenStartPointAndPlayerDirection => IsRequirementSatisfied(condition, 
-                                                Vector3.Dot(player.GetVelocityVector().normalized, startP.forward)),
+                                                Vector3.Dot(player.GetVelocityDirection(), startP.forward)),
                 ParamToBeSatisfied.DotBetweenForward =>  IsRequirementSatisfied(condition, 
                                                 Vector3.Dot(player.GetForwardDirection(), startP.forward))
 

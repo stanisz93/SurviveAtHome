@@ -74,7 +74,7 @@ public class OpponentMagnet : MonoBehaviour
         foreach(Transform o in OpponentsInRadious)
             {
                 var zombiePos = o.position;
-                Vector3 direction = chrMvmnt.t_mesh.position - zombiePos;
+                Vector3 direction = new Vector3(zombiePos.x, chrMvmnt.t_mesh.position.y, zombiePos.z)  - chrMvmnt.t_mesh.position;
                 if (!Physics.Raycast(chrMvmnt.t_mesh.position, direction.normalized, direction.magnitude, 1 << LayerMask.NameToLayer("Obstacles")))
                     finalCandidates.Add(o);
             }
@@ -148,6 +148,7 @@ public class OpponentMagnet : MonoBehaviour
 
     float DistanceFromPlayer() => Vector3.Distance(NearestOpponent.zombieMesh.position, PlayerMesh.position);
 
+    public Vector3 DirectionToOpponent() => (NearestOpponent.zombieMesh.position - new Vector3(PlayerMesh.position.x, NearestOpponent.zombieMesh.position.y, PlayerMesh.position.z)).normalized;
 
     public void MoveTowardNearestOpponent(float distLeft=0.5f,float moveDelay=0.4f)
     {
@@ -188,6 +189,11 @@ public class OpponentMagnet : MonoBehaviour
                         if(_nearestOpponent.transform.GetComponent<OpponentActions>().GetOpponentMode() == OpponentMode.Faint)
                             specialAttacks.SetTarget(_nearestOpponent);
                     }
+                else
+                {
+                    if (player.IsFightMode())
+                        player.SetToDefaultMovement();
+                }
                 yield return new WaitForSeconds(ClosestOpponentLookingPeriodCycle);
                 specialAttacks.RemoveTarget();
 

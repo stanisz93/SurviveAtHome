@@ -33,6 +33,8 @@ public class PlayerAnimationController : MonoBehaviour
         layerInvoker = GetComponent<LayerInvoker>();
         collider = GetComponent<CapsuleCollider>();
         plrTrigger = GetComponent<PlayerTriggers>();
+
+
     }
     // Start is called before the first frame update
     // void Awake() => animator = GetComponent<Animator>();
@@ -42,6 +44,8 @@ public class PlayerAnimationController : MonoBehaviour
     {
         if(animator==null) {Debug.LogWarning("No valid animator!"); return;}
         animator.SetFloat("Velocity", character.GetVelocityMagnitude(), 0.1f, Time.deltaTime);
+        animator.SetFloat("MovementVectorX", character.GetDirectionWithRespectToOpponent().x, 0.1f, Time.deltaTime);
+        animator.SetFloat("MovementVectorZ", character.GetDirectionWithRespectToOpponent().z, 0.1f, Time.deltaTime);
 
         MovementMode currentMovement = character.GetMovement();
 

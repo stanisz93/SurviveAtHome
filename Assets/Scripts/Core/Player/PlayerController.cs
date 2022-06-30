@@ -81,7 +81,9 @@ public class PlayerController : MonoBehaviour
         controls.DefaultMovement.Run.performed += ctx => StartRunning();
         controls.DefaultMovement.Run.canceled += ctx => StartCoroutine(WaitForSecondsBeforeWalk());
         controls.DefaultMovement.Interaction.performed += ctx => OnInteraction();
-        controls.DefaultMovement.Dodge.performed += ctx => character.StartTriggerAction(playerTriggers.Dodge);
+        controls.DefaultMovement.Dodge.performed += ctx => {
+            if(character.IsFightMode()) character.StartTriggerAction(playerTriggers.Dodge);
+        };
         // controls.DefaultMovement.Aiming.performed += ctx => OnStartAiming();
         controls.DefaultMovement.Crouch.performed += ctx => character.ToggleCrouch();
         controls.DefaultMovement.PickupItem.performed += ctx => OnPickupItem();
@@ -413,6 +415,7 @@ public class PlayerController : MonoBehaviour
 
     void OnAttack()
     {
+        character.TryToRunFightMode();
         if(specialAttacks.isCandidateToDie)
         {
             character.StartTriggerAction(specialAttacks.KillWhenFaint);

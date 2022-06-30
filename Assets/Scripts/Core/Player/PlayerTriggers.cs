@@ -22,6 +22,12 @@ public class PlayerTriggers : MonoBehaviour
 
     public bool isTriggerEmpty = true;
 
+    ///DODGE
+    public float dodgeMoveSide = 0.2f;
+    public float dodgeMoveBack = 0.3f;
+    public float dodgeDelayDotween = 0.1f;
+    public float dodgeLookAt = 0.1f;
+
 
 //Throwing params, to be moved 
 
@@ -190,24 +196,74 @@ public class PlayerTriggers : MonoBehaviour
 
     public void Dodge()
     {
-        playerAnimationController.animator.SetTrigger("DodgeBack");
-        Vector3 dodgeDir = 1.5f * characterMovement.t_mesh.forward;
-        if(opponentMagnet.NearestOpponent != null)
-            {
-                dodgeDir = opponentMagnet.NearestOpponent.transform.position - characterMovement.t_mesh.position;
-                dodgeDir = 1.5f * new Vector3(dodgeDir.x, 0f, dodgeDir.z).normalized;
-            }
-            
+
+        character.TryToRunFightMode();
+        float back = Vector3.Dot(-characterMovement.t_mesh.forward, character.GetVelocityDirection());
+        float down = Vector3.Dot(characterMovement.t_mesh.right, character.GetVelocityDirection());
+        float up = Vector3.Dot(-characterMovement.t_mesh.right, character.GetVelocityDirection());
         BlockPlayerControl();
         Sequence seq = DOTween.Sequence();
-        TweenObjectManipulateUtils.LimitMoveWhenObstacleWithinTrajectory(ref dodgeDir, transform.position, - dodgeDir.normalized,  1.5f, (1 << LayerMask.NameToLayer("Obstacles")));
-        seq.Append(transform.DOMove(transform.position - dodgeDir, 0.3f));
-        Vector3 rot = Quaternion.LookRotation(dodgeDir.normalized).eulerAngles;
-        seq.Join(characterMovement.t_mesh.DORotate(rot, .1f));
+        seq.PrependInterval(dodgeDelayDotween);
+        Vector3 opponentPos = characterMovement.t_mesh.position + 1.5f * characterMovement.t_mesh.forward;
+        Vector3 opponentDir = characterMovement.t_mesh.forward;
+        Vector3 dodgePos = Vector3.zero;
+        if(opponentMagnet.NearestOpponent != null)
+            {
+                opponentPos = opponentMagnet.NearestOpponent.transform.position;
+                opponentPos = new Vector3(opponentPos.x, characterMovement.t_mesh.position.y, opponentPos.z);
+                opponentDir = (opponentPos - characterMovement.t_mesh.position).normalized;
+            }
+            
+        if(up > back  && up > down)    
+        {
+            playerAnimationController.animator.SetTrigger("DodgeRight");
+            playerAnimationController.animator.SetBool("DodgeDirection", true);
+            Vector2 opponentXZ = new Vector2(opponentPos.x, opponentPos.z);
+            Vector2 playerXZ = new Vector2(characterMovement.t_mesh.position.x, characterMovement.t_mesh.position.z);
+            
+            Vector2 circlePos = travelAlongCircle(playerXZ, opponentXZ, 1.2f);
+            dodgePos = new Vector3(circlePos.x, characterMovement.t_mesh.position.y, circlePos.y);
+            // TweenObjectManipulateUtils.LimitMoveWhenObstacleWithinTrajectory(ref dodgeDir, transform.position, dodgeDir,  1f, (1 << LayerMask.NameToLayer("Obstacles")));
+            
+            seq.Append(transform.DOMove(dodgePos, dodgeMoveSide));
+        }
+        else if(down > up && down > back)
+        {
+            playerAnimationController.animator.SetTrigger("DodgeRight");
+            playerAnimationController.animator.SetBool("DodgeDirection", false);
+            Vector2 opponentXZ = new Vector2(opponentPos.x, opponentPos.z);
+            Vector2 playerXZ = new Vector2(characterMovement.t_mesh.position.x, characterMovement.t_mesh.position.z);
+            
+            Vector2 circlePos = travelAlongCircle(playerXZ, opponentXZ, -1.2f);
+            dodgePos = new Vector3(circlePos.x, characterMovement.t_mesh.position.y, circlePos.y);
+            seq.Append(transform.DOMove(dodgePos, dodgeMoveSide));
+        
+        }
+        else
+        {
+            playerAnimationController.animator.SetTrigger("DodgeBack");
+            // TweenObjectManipulateUtils.LimitMoveWhenObstacleWithinTrajectory(ref opponentDir, transform.position, - opponentDir.normalized,  1.5f, (1 << LayerMask.NameToLayer("Obstacles")));
+            dodgePos = transform.position - 1.2f * opponentDir;
+            seq.Append(transform.DOMove(dodgePos, dodgeMoveBack));
+        }
+        Vector3 finalDir = (dodgePos - characterMovement.t_mesh.position).normalized;
+        // Vector3 rot = Quaternion.LookRotation(finalDir).eulerAngles;
+        seq.Join(characterMovement.t_mesh.DODynamicLookAt(opponentPos, dodgeLookAt));
+        
         
 
 
     }
+
+public Vector2 travelAlongCircle(Vector2 pos, Vector2 center, float distance)
+     {
+         Vector3 axis = Vector3.back;
+         Vector2 dir = pos - center;
+         float circumference = 2.0f * Mathf.PI * dir.magnitude;
+         float angle = distance / circumference * 360.0f;
+         dir = Quaternion.AngleAxis(angle, axis) * dir;
+         return dir + center;
+     }
 
     public void BumpOnZombie(Vector3 collisionNormal)
     {
